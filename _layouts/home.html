@@ -1,0 +1,37 @@
+---
+layout: page
+---
+<div class="header_image_bg">
+    <div class="container">
+        <div style="font-size: 50px; font-weight: 800;">UFO</div>
+        <div style="font-size: 30px; font-weight: 100;">스틸리언 기술 블로그</div>
+    </div>
+</div>
+{%- if site.posts.size > 0 -%}
+<div class="posts container">
+    {%- for post in site.posts -%}
+        {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+        <div class="row">
+            <div class="col-1">
+                <div class="profile">
+                    <img src="{{ post.profile_image }}" class="profile_image"/>
+                    <div class="profile_author">{{ post.author }}</div>
+                </div>
+            </div>
+            <div class="col">
+                <a href="{{ post.url }}">
+                    <div class="post-title">
+                        {{ post.title | escape }}
+                    </div>
+                </a>
+                <div class="post-summary">{{ post.summary | escape }}</div>
+                <div class="post-info">
+                    {{ post.date | date: date_format }}
+                    <span>{{ post.category }}</span>
+                </div>
+            </div>
+        </div>
+    {%- endfor -%}
+</div>
+{%- endif -%}
+<div style="margin-top: 50px;"></div>

@@ -1,0 +1,64 @@
+---
+layout: page
+---
+{%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+<div class="header_image_bg header_image_post" style="background-image: url('{{page.background}}');">
+    <div class="header_image_post_body">
+        <div class="container">
+            <div class="page-category">{{page.category}}</div>
+            <div class="page-title">{{page.title}}</div>
+            <div class="page-summary">
+                <div style="float:left;">
+                    <img class="page-profile_image" src="{{page.profile_image}}" />
+                    <span>{{page.author}}</span>
+                </div>
+                <div style="float:right;" class="page-date">{{page.date|date: date_format}}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container page-content">
+    {{page.content}}
+    <div class="page-profile-detail">
+        <div class="page-profile-detail-info">
+            <div>
+                <img class="page-profile_image-detail" src="{{page.profile_image}}" />
+            </div>
+            <div style="position: relative; top: 12px;left: 10px;">
+                <div class="page-profile-author">{{page.author}}</div>
+                <div class="page-profile-email">{{page.author_email}}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%- if site.posts.size > 0 -%}
+<div class="recent-post-area">
+    <div class="posts container">
+        <div class="h1-recent-post">RECENT POST</div>
+        {%- for post in site.posts limit:2 -%}
+            {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+            <div class="row">
+                <div class="col-1">
+                    <div class="profile">
+                        <img src="{{ post.profile_image }}" class="profile_image"/>
+                        <div class="profile_author">{{ post.author }}</div>
+                    </div>
+                </div>
+                <div class="col">
+                    <a href="{{ post.url }}">
+                        <div class="post-title">
+                            {{ post.title | escape }}
+                        </div>
+                    </a>
+                    <div class="post-summary">{{ post.summary | escape }}</div>
+                    <div class="post-info">
+                        {{ post.date | date: date_format }}
+                        <span>{{ post.category }}</span>
+                    </div>
+                </div>
+            </div>
+        {%- endfor -%}
+    </div>
+</div>
+{%- endif -%}

@@ -1,12 +1,13 @@
 ---
 layout: post
-title:  "Welcome to Jekyll!"
+title:  "Wasdfasdsfall!"
 date:   2020-05-19 15:09:52 +0900
 category: R&D
 author: Gogil
+author_email: gogil@stealien.com
 background: https://ak7.picdn.net/shutterstock/videos/19875547/thumb/1.jpg
 profile_image: https://images.squarespace-cdn.com/content/v1/5168d5cee4b0e454d7706dfc/1456366726068-1IJD0895OR4HU95H9VGT/ke17ZwdGBToddI8pDm48kJuXWY3l8OPxwJVnd8v56BR7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0hHMyhIh2kKzuOL3ydJCryBqZcm_8Vm7INv3Q4RFo-OCi1VAtAR2lQQh9unD81FB0Q/image-asset.jpeg
-summary: ou’ll fou’ll find this post in your `_posts` directory. Go ahead anaiusadfjasifasidfjoasjdfiasjfiuajdfiuashiufhaiufhiasdfhiuadfhiuashdfiusdhfiuahiufahsiudfsaidfhiuashfiasdfd edit it and re-build the site to see your changes. You can rebuild the site in many different waysind this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways
+summary: ou’ll find this post in your `_posts` directory. Go ahead anaiusadfjasifasidfjoasjdfiasjfiuajdfiuashiufhaiufhiasdfhiuadfhiuashdfiusdhfiuahiufahsiudfsaidfhiuashfiasdfd edit it and re-build the site to see your changes. You can rebuild the site in many different ways
 thumbnail: https://i.ytimg.com/vi/d_T5P-zIIAs/maxresdefault.jpg
 ---
 You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.

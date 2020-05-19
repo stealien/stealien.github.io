@@ -1,0 +1,226 @@
+* {
+    font-family: 'Nanum Gothic', sans-serif;
+}
+
+#header {
+}
+
+.header_image_logo {
+    width: 100px;
+    margin: 20px;
+}
+
+body {
+    margin: 0px;
+}
+
+.header_image_bg {
+    background-image: url("/assets/bg.png");
+    background-size: cover;
+    background-position: center center;
+    width: 100vw;
+    padding: 100px 0px;
+    color: #fff;
+}
+
+.posts > div > div {
+    display: inline-block;
+}
+
+.posts > .row {
+    margin-top: 50px;
+}
+
+.posts .profile {
+    text-align: center;
+    margin-top: 17.5px;
+}
+
+.profile_image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50px;
+}
+
+.profile_author {
+    color: #aaa;
+    font-size: 13px;    
+    margin-top: 5px;
+}
+
+.post-title {
+    font-size: 25px;
+    font-weight: bold;
+    color: #000;
+
+    text-overflow: ellipsis;
+    overflow: hidden; 
+    width: 100%;
+    max-width: 1200px;
+    white-space: nowrap;
+}
+
+.post-summary {
+    color: #777;
+    text-overflow: ellipsis;
+    overflow: hidden; 
+    width: 100%;
+    max-width: 1200px;
+    white-space: nowrap;
+}
+
+.post-info {
+    margin-top: 5px;
+    color: #aaa;
+    font-size: 12px;
+}
+
+.post-info > span {
+    color: #ff7777;
+}
+
+footer {
+    padding: 30px 10px;
+    background-color: #000;
+    padding-bottom: 100px;
+}
+
+.footer-logo {
+    width: 100px;
+    float: left;
+}
+
+.footer-copyright {
+    float: right;
+    color: #fff;
+    font-size: 13px;
+}
+
+.page {
+    padding: 50px 10px;
+}
+
+.header_image_post {
+    padding: 0px;
+}
+
+.header_image_post_body {
+    padding-top: 100px;
+    padding-bottom: 50px;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.page-profile_image {
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    margin-right: 3px;
+}
+
+.page-category {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.page-title {
+    font-size: 25px;
+    font-weight: 800;
+    margin-bottom: 5px;   
+    text-overflow: ellipsis;
+    overflow: hidden; 
+    width: 100%;
+    max-width: 1200px;
+    white-space: nowrap;
+}
+
+.page-summary {
+    font-size: 14px;
+}
+
+.page-content {
+    padding-top: 50px;
+}
+
+.page-profile-detail {
+    margin-top: 50px;
+    width: 300px;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+.page-profile-detail-info > div {
+    display: inline-block;
+}
+
+.page-profile_image-detail {
+    width: 45px;
+    height: 45px;
+    border-radius: 30px;
+    margin-right: 3px;
+}
+
+.page-profile-author {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.page-profile-email {
+    font-size: 14px;
+}
+
+.recent-post-area {
+    padding: 50px;
+    background: #f7f7f7;
+    margin-top: 50px;
+    padding-bottom: 100px;
+}
+
+.h1-recent-post {
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.page-content {
+    font-size: 15px;
+    max-width: 950px;
+    text-align: justify;
+}
+
+.page-content table {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.page-content table td, .page-content table th {
+    text-align: center;
+}
+
+.page-content table td {
+    font-size: 13px;
+    color: #777;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
