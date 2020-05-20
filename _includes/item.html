@@ -1,0 +1,29 @@
+{%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+<div class="row">
+    <div class="col-12">
+        <img src="{{include.thumbnail}}" class="post-thumbnail-mobile" style="width:100%;"/>
+    </div>
+    <div class="col-sm-2 col-md-1">
+        <div class="profile">
+            <img src="{{ include.profile_image }}" class="profile_image" />
+            <div class="profile_author">{{ include.author }}</div>
+        </div>
+    </div>
+    <div class="col">
+        <a href="{{ include.url }}">
+            <div class="post-title">
+                {{ include.title | escape }}
+            </div>
+        </a>
+        <div class="post-summary">{{ include.summary | escape }}</div>
+        <div class="post-info">
+            <span style="color: #545454" class="post-author-mobile">
+                {{ include.author }}
+                <span style="color: #f5f5f5; margin: 2px">|</span>
+            </span>
+            {{ include.date | date: date_format }}
+            <span style="color: #f5f5f5; margin: 2px">|</span>
+            <span>{{ include.category }}</span>
+        </div>
+    </div>
+</div>

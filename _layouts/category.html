@@ -12,27 +12,18 @@ layout: page
     <div class="row">
         <div class="posts col">
             {%- for post in site.categories[page.category] -%}
-            {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-            <div class="row">
-                <div class="col-sm-2 col-md-1">
-                    <div class="profile">
-                        <img src="{{ post.profile_image }}" class="profile_image" />
-                        <div class="profile_author">{{ post.author }}</div>
-                    </div>
-                </div>
-                <div class="col">
-                    <a href="{{ post.url }}">
-                        <div class="post-title">
-                            {{ post.title | escape }}
-                        </div>
-                    </a>
-                    <div class="post-summary">{{ post.summary | escape }}</div>
-                    <div class="post-info">
-                        {{ post.date | date: date_format }}
-                        <span>{{ post.category }}</span>
-                    </div>
-                </div>
-            </div>
+                {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+                {%
+                    include item.html
+                    thumbnail=post.thumbnail
+                    profile_image=post.profile_image
+                    author=post.author
+                    url=post.url
+                    title=post.title
+                    summary=post.summary
+                    date=post.date
+                    category=post.category
+                %}
             {%- endfor -%}
         </div>
         <div class="col-12 col-sm-2">

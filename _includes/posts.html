@@ -1,0 +1,14 @@
+{%- for post in include.posts limit:include.limit | 100000 -%}
+    {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+    {%
+        include item.html
+        thumbnail=post.thumbnail
+        profile_image=post.profile_image
+        author=post.author
+        url=post.url
+        title=post.title
+        summary=post.summary
+        date=post.date
+        category=post.category
+    %}
+{%- endfor -%}

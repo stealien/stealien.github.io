@@ -32,33 +32,10 @@ layout: page
     </div>
 </div>
 
-{%- if site.posts.size > 0 -%}
 <div class="recent-post-area">
     <div class="posts container">
         <div class="h1-recent-post">RECENT POST</div>
-        {%- for post in site.posts limit:2 -%}
-            {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-            <div class="row">
-                <div class="col-1">
-                    <div class="profile">
-                        <img src="{{ post.profile_image }}" class="profile_image"/>
-                        <div class="profile_author">{{ post.author }}</div>
-                    </div>
-                </div>
-                <div class="col">
-                    <a href="{{ post.url }}">
-                        <div class="post-title">
-                            {{ post.title | escape }}
-                        </div>
-                    </a>
-                    <div class="post-summary">{{ post.summary | escape }}</div>
-                    <div class="post-info">
-                        {{ post.date | date: date_format }}
-                        <span>{{ post.category }}</span>
-                    </div>
-                </div>
-            </div>
-        {%- endfor -%}
+            {% include posts.html posts=site.posts limit=2 %}
+        </div>
     </div>
 </div>
-{%- endif -%}
