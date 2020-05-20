@@ -15,7 +15,7 @@ layout: page
             {%- for post in site.posts -%}
             {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
             <div class="row">
-                <div class="col-1">
+                <div class="col-sm-2 col-md-1">
                     <div class="profile">
                         <img src="{{ post.profile_image }}" class="profile_image" />
                         <div class="profile_author">{{ post.author }}</div>
@@ -37,8 +37,8 @@ layout: page
             {%- endfor -%}
         </div>
         {%- endif -%}
-        <div class="col-2">
-        {%- include category.html -%}
+        <div class="col-12 col-sm-2">
+            {%- include category.html -%}
         </div>
     </div>
 </div>

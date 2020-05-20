@@ -224,7 +224,42 @@ footer {
     margin-top: 50px;
 }
 
-
+@media (max-width: 768px) {
+    .header_image_logo {
+        margin: 10px 0px;
+    }
+    .post-title {
+        font-size: 15px;
+        margin-top: 10px;
+    }
+    .post-summary {
+        font-size: 12px;
+    }
+    .posts > .row {
+        margin-top: 20px;
+    }
+    .page {
+        padding: 10px 10px;
+    }
+    .category-h-text {
+        margin-top: 20px;
+    }
+    .header_image_bg > div > div:first-child {
+        font-size: 30px !important;
+    }
+    .header_image_bg > div > div:last-child {
+        font-size: 20px !important;
+    }
+    .header_image_bg {
+        padding: 20px 10px;
+    }
+    .page-content img {
+        max-width: 100%;
+    }
+    .header_image_post {
+        padding: 0px;
+    }
+}
 
 
 
