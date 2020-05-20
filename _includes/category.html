@@ -1,0 +1,6 @@
+<div class="categories-text">Categories</div>
+<div class="categories">
+    {% for category in site.categories %}
+    <div><a href="/categories/{{category[0]}}">{{ category[0] }}</a></div>
+    {% endfor %}
+</div>

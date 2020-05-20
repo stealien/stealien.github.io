@@ -200,12 +200,29 @@ footer {
     color: #777;
 }
 
+.categories-text {
+    margin-top: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
 
+.categories {
+    font-size: 14px;
+    text-decoration: underline;
+    margin-top: 10px;
+}
 
+.categories a {
+    color: #414141;
+}
 
-
-
-
+.category-h-text {
+    font-size: 30px;
+    font-weight: bold;
+    color: #555;
+    margin-top: 50px;
+}
 
 
 

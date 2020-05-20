@@ -7,12 +7,11 @@ layout: page
         <div style="font-size: 30px; font-weight: 100;">스틸리언 기술 블로그</div>
     </div>
 </div>
-
 <div class="container">
+    <div class="category-h-text"># {{ page.category }}</div>
     <div class="row">
-        {%- if site.posts.size > 0 -%}
         <div class="posts col">
-            {%- for post in site.posts -%}
+            {%- for post in site.categories[page.category] -%}
             {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
             <div class="row">
                 <div class="col-1">
@@ -36,9 +35,8 @@ layout: page
             </div>
             {%- endfor -%}
         </div>
-        {%- endif -%}
         <div class="col-2">
-        {%- include category.html -%}
+            {%- include category.html -%}
         </div>
     </div>
 </div>
