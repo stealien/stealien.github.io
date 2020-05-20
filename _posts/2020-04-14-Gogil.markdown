@@ -25,7 +25,7 @@ thumbnail: https://i.ytimg.com/vi/d_T5P-zIIAs/maxresdefault.jpg
 | ------------------------------------------------------------ |
 | 그림 1. Diaphora의 비교 결과                                 |
 
- `Parser::Parse`, `CScriptRuntime::EnsureGcAlloc`, `ScrFncObj::PerformCall`, `CSession::GetVarStack` 함수 등이 추가되었다.
+ Parser::Parse, CScriptRuntime::EnsureGcAlloc, ScrFncObj::PerformCall, CSession::GetVarStack 함수 등이 추가되었다.
 
  변경된 코드 중 Garbage Collector(GC)와 관련된 코드에 주목한다. 패치 이후 ScrFncObj::Call 함수가 간소화되고 기존 ScrFncObj::Call 함수의 코드가 새로운 이름의 ScrFncObj::PerformCall 함수에 구현되었다. 패치 이전 ScrFncObj::Call 함수의 코드가 ScrFncObj::PerformCall 함수로 이동된 부분을 제외하면, 추가된 코드는 ScavVarList::Init 함수 호출이다.
 
