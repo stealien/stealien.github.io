@@ -28,12 +28,22 @@ body {
 }
 
 .posts > .row {
-    margin-top: 50px;
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 1px solid #f2f2f2;
+}
+
+.posts > .row:first-child {
+    border-top: 0px solid;
+}
+
+.posts > .row:last-child {
+    margin-bottom: 40px;
 }
 
 .posts .profile {
     text-align: center;
-    margin-top: 17.5px;
+    margin-top: 7px;
 }
 
 .profile_image {
@@ -224,9 +234,17 @@ footer {
     margin-top: 50px;
 }
 
+.post-author-mobile {
+    display: none;
+}
+
+.post-thumbnail-mobile {
+    display: none;
+}
+
 @media (max-width: 768px) {
     .header_image_logo {
-        margin: 10px 0px;
+        margin: 20px 10px;
     }
     .post-title {
         font-size: 15px;
@@ -235,8 +253,12 @@ footer {
     .post-summary {
         font-size: 12px;
     }
+    .posts {
+
+    }
     .posts > .row {
-        margin-top: 20px;
+        margin-top: 25px;
+        padding-top: 10px;
     }
     .page {
         padding: 10px 10px;
@@ -258,6 +280,20 @@ footer {
     }
     .header_image_post {
         padding: 0px;
+    }
+    .profile {
+        display: none;
+    }
+    .profile_image_mobile {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+    }
+    .post-author-mobile {
+        display: inline;
+    }
+    .post-thumbnail-mobile {
+        display: block;
     }
 }
 
