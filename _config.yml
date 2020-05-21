@@ -33,6 +33,12 @@ plugins:
   - jekyll-seo-tag
   # - jekyll-feed
 
+markdown: kramdown
+
+kramdown:
+  input: GFM
+  syntax_hightlighter: rouge
+
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to

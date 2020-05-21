@@ -1,5 +1,7 @@
 ---
 layout: post
+markdown: kramdown
+highlighter: rouge
 title:  지원 종료된 Windows 7을 겨냥한 N-Day 원격 코드 실행 취약점
 date:   2020-04-14 15:09:52 +0900
 category: R&D
@@ -84,7 +86,7 @@ thumbnail: https://1.bp.blogspot.com/-hTMwq9JBsIE/Xrph2uoMPCI/AAAAAAAAAdE/ROD3mo
 
 
 
-```
+```html
 <script language="Jscript.Encode">
     var arr = new Array(1, 2);
     arr.sort(fncCompare);
