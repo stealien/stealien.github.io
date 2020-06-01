@@ -9,7 +9,7 @@ author: Gogil
 author_email: gogil@stealien.com
 background: https://ak7.picdn.net/shutterstock/videos/19875547/thumb/1.jpg
 profile_image: https://images.squarespace-cdn.com/content/v1/5168d5cee4b0e454d7706dfc/1456366726068-1IJD0895OR4HU95H9VGT/ke17ZwdGBToddI8pDm48kJuXWY3l8OPxwJVnd8v56BR7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0hHMyhIh2kKzuOL3ydJCryBqZcm_8Vm7INv3Q4RFo-OCi1VAtAR2lQQh9unD81FB0Q/image-asset.jpeg
-summary: 지원 종료된 Windows 7을 겨냥한 N-Day 원격 코드 실행 취약점
+summary: 2020년 1월 14일, Microsoft Windows 7 운영체제의 지원이 중단되었다. 지원 중단된 운영체제를 사용할 경우, 보안 업데이트가 중단되어 악성 프로그램에 감염될 확률이 높다. 본 게시글은 공격자 관점에서 원격 코드 실행 취약점을 구현한다. 취약점을 구현하는 과정에서 요구되는 기술을 소개하고 보안 업데이트의 경각심을 높인다.
 thumbnail: https://1.bp.blogspot.com/-hTMwq9JBsIE/Xrph2uoMPCI/AAAAAAAAAdE/ROD3mom7bwU_pRubdy6Qhh0UN9BXn-GUACLcBGAsYHQ/s1600/19.png
 ---
 ### 개요
@@ -27,7 +27,7 @@ thumbnail: https://1.bp.blogspot.com/-hTMwq9JBsIE/Xrph2uoMPCI/AAAAAAAAAdE/ROD3mo
 | ------------------------------------------------------------ |
 | 그림 1. Diaphora의 비교 결과                                 |
 
- `Parser::Parse`, `CScriptRuntime::EnsureGcAlloc`, `ScrFncObj::PerformCall`, `CSession::GetVarStack` 함수 등이 추가되었다.
+ Parser::Parse, CScriptRuntime::EnsureGcAlloc, ScrFncObj::PerformCall, CSession::GetVarStack 함수 등이 추가되었다.
 
  변경된 코드 중 Garbage Collector(GC)와 관련된 코드에 주목한다. 패치 이후 ScrFncObj::Call 함수가 간소화되고 기존 ScrFncObj::Call 함수의 코드가 새로운 이름의 ScrFncObj::PerformCall 함수에 구현되었다. 패치 이전 ScrFncObj::Call 함수의 코드가 ScrFncObj::PerformCall 함수로 이동된 부분을 제외하면, 추가된 코드는 ScavVarList::Init 함수 호출이다.
 
