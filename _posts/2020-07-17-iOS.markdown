@@ -2,14 +2,14 @@
 layout		: post
 markdown	: kramdown
 highlighter	: rouge
-title		: iOS 앱 보안 기법과 우회
+title		: iOS 앱 보안과 우회 기법
 date		: 2020-07-17 17:00:52 +0900
 category	: R&D
 author		: 함세련, 고기완
 author_email: srham@stealien.com, gogil@stealien.com
 background	: /assets/posts/thumbnails/apple.jpg
 profile_image: /assets/posts/thumbnails/apple.jpg
-summary		: iOS 앱 보안 기법과 우회
+summary		: iOS 앱 보안과 우회 
 thumbnail	:  /assets/posts/thumbnails/apple.jpg
 ---
 
