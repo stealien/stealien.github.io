@@ -9,7 +9,7 @@ author		: 함세련, 고기완
 author_email: srham@stealien.com, gogil@stealien.com
 background	: /assets/posts/thumbnails/apple.jpg
 profile_image: /assets/posts/thumbnails/apple.jpg
-summary		: iOS 앱 보안과 우회 
+summary		: iOS 앱 보안과 우회 기법
 thumbnail	:  /assets/posts/thumbnails/apple.jpg
 ---
 
@@ -77,9 +77,9 @@ iOS 애플리케이션의 바이너리는 Mach-O구조로 이루어진다. Mach
 
 ### 3) 메모리 해킹
 
-공격자의 동적 라이브러리는 애플리케이션의 메모리에 자유롭게 접근한다. 함수 후킹을 위해서 함수 시작 부분의 명령어나 주소 테이블 내 주소를 변조할 수있다. Frida를 이용하여 API 인라인 후킹을 구현한 코드는 다음과 같다. 
+공격자의 동적 라이브러리는 애플리케이션의 메모리에 자유롭게 접근한다. 보안 모듈의 디버깅 방지 기능은 타 프로세스에서의 접근을 방지하므로 동적 라이브러리 삽입을 통한 메모리 접근은 디버깅 방지 기능에 영향을 받지 않는다. 함수 후킹을 위해서 함수 시작 부분의 명령어나 주소 테이블 내 주소를 변조할 수있다. Frida를 이용하여 API 인라인 후킹을 구현한 코드는 다음과 같다. 
 <table style="border-collapse: collapse; width: 100%; height: 65px;border: 1px solid;" ><tbody><tr style="height: 65px;"><td style="height: 65px;"><p style="text-align: left;" data-ke-size="size14">#대상 프로세스 attach<br>session = host.attach(TARGE_PID)<br>#스크립트 로드<br>script.session.create_script('''<br>Interceptor.attach(<br>&nbsp; &nbsp; Module.findExportByName(null,"fopen"),{ //fopen 함수를 찾는다.<br><span style="color: #333333;">&nbsp; &nbsp;&nbsp;</span><span style="color: #333333;"> &nbsp; onEnter: function(args){<br><span style="color: #333333;">&nbsp; &nbsp;&nbsp;</span><span style="color: #333333;">&nbsp; &nbsp;&nbsp;</span><span style="color: #333333;"> &nbsp; if(args[0].isNull())return;<br><span style="color: #333333;">&nbsp; &nbsp;&nbsp;</span><span style="color: #333333;">&nbsp; &nbsp;&nbsp;</span><span style="color: #333333;"> &nbsp; var path=args[0].readUtf8String();&nbsp; //현재 fopen 함수의 인자를 출력한다.<br></span></span></span><span style="color: #333333;">&nbsp; &nbsp;&nbsp;</span><span style="color: #333333;">&nbsp; &nbsp;&nbsp;</span><span style="color: #333333;"><span>&nbsp;</span>&nbsp;<span> console.log("[+] fopen "+path);&nbsp; &nbsp; &nbsp;//인자로 전달된 원본파일명<br><span style="color: #333333;">&nbsp; &nbsp;&nbsp;</span><span style="color: #333333;">&nbsp; &nbsp;&nbsp;</span><span style="color: #333333;"><span>&nbsp;</span>&nbsp;<span> if(path.match("TARGET_PATH")){</span></span><br><span style="color: #333333;">&nbsp; &nbsp;&nbsp;</span><span style="color: #333333;">&nbsp; &nbsp;&nbsp;</span><span style="color: #333333;"><span>&nbsp;</span>&nbsp;<span> &nbsp; &nbsp;console.log(" --&gt; Change It!!");<br><span style="color: #333333;">&nbsp; &nbsp;&nbsp;</span><span style="color: #333333;">&nbsp; &nbsp;&nbsp;</span><span style="color: #333333;"><span>&nbsp;</span>&nbsp;<span> &nbsp; &nbsp;args[0].writeUtf8String("CHANGED_PATH"); //후킹하여 변조하는 인자<br><span style="color: #333333;">&nbsp; &nbsp;&nbsp;</span><span style="color: #333333;">&nbsp; &nbsp;&nbsp;</span><span style="color: #333333;"><span>&nbsp;</span>&nbsp;<span> }<br>&nbsp; &nbsp; &nbsp; &nbsp; }<br>&nbsp; &nbsp; });<br></span></span></span></span></span></span></span></span>''')<br>script.on('message',on_message)<br>script.load()</p></td></tr></tbody></table>
-보안 모듈의 디버깅 방지 기능은 타 프로세스에서의 접근을 방지하므로 동적 라이브러리 삽입을 통한 메모리 접근은 디버깅 방지 기능에 영향을 받지 않는다. 
+
 
 ### 4) 메소드 스위즐링
 
