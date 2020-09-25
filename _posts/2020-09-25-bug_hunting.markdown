@@ -1,4 +1,4 @@
-\---
+---
 
 layout   : post
 
@@ -24,7 +24,7 @@ summary   : 좌충우돌 버그헌팅기
 
 thumbnail  : /assets/2020-09-25-bug_hunting/chrome.png
 
-\---
+---
 
 # 이번생에 버그헌팅은 처음이라
 
