@@ -101,9 +101,18 @@ footer {
 }
 
 .footer-copyright {
-    float: right;
     color: #fff;
     font-size: 13px;
+}
+
+.footer-icons {
+    margin-top: -10px;
+    margin-right: 10px;
+}
+
+.footer-icons img {
+    width: 40px;
+    height: 40px;
 }
 
 .page {
