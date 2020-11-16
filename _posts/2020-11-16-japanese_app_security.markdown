@@ -7,10 +7,10 @@ date    : 2020-11-16 18:00:00 +0900
 category  : R&D
 author   : 양찬우
 author_email: cyang@stealien.com
-background : /assets/2020-11-16/ecu_background.jpg
-profile_image: /assets/2020-11-16/profile.jpg
+background : /assets/2020-11-16/background.jpg
+profile_image: /assets/stealien_inverse.png
 summary   : 日本のアプリケーションセキュリティー分析
-thumbnail  : /assets/2020-11-16/profile.jpg
+thumbnail  : /assets/2020-11-16/background.jpg
 ---
 
 **日本のアプリケーションセキュリティー措置**
@@ -59,7 +59,7 @@ JEBツールを使ってAPKをデコンパイルしてみました。
 
 アプリケーションの改ざん検証が行われているかを確認する方法は、アプリケーションをrepackagingしてみるか、smaliコードを変更してみるかの二つの方法があります。私はアプリケーションをrepackagingする方法を使てみました。
 
-<img src="/Users/randomip/Desktop/스크린샷 2020-11-13 오후 2.45.03.png" alt="스크린샷 2020-11-13 오후 2.45.03" style="zoom: 50%;" />
+<img src="/assets/2020-11-16/스크린샷 2020-11-13 오후 2.45.03.png" alt="스크린샷 2020-11-13 오후 2.45.03" style="zoom: 50%;" />
 
 ​[図3] jarsignerを使ってresign
 
