@@ -1,3 +1,18 @@
+---
+layout          : post
+markdown        : kramdown
+highlighter     : rouge
+title           : Javascript Prototype Pollution in REALWORLD
+date            : 2020-12-23 16:00:00 +0900
+category        : R&D
+author          : 윤석찬
+author_email    : scyoon@stealien.com
+background      : /assets/bg.png
+profile_image   : /assets/2020-12-23-javascript-prototype-pollution/blog_profile.png
+summary         : Introduce Javascript Prototype Pollution Attack and show CVE example
+thumbnail       : /assets/stealien.png
+---
+
 # Javascript Prototype Pollution in *REALWORD*
 
 
