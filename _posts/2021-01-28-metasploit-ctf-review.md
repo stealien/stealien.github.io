@@ -138,7 +138,7 @@ $ find / -user root -perm -4000 2>/dev/null
     <i>사실 이거 푼다고 시간을 꽤 썼다.</i>
 </p>
 
-우선 로그를 `/etc/passwd`에 다음과 같이 작성하게 되면, `Attempting to connect to server with a and `까지가 Username이 되고, 그 뒤의 값이 Password가 된다. 사실 되게 간단한 문제[^5]인데 아이디어를 생각 하는데 이렇게 오래 걸렸는지.... '가끔 그럴때가 있어야 인간미가 있다'고 생각하려고 한다.
+우선 로그를 `/etc/passwd`에 다음과 같이 작성하게 되면, `Attempting to connect to server with a and `까지가 Username이 되고, 그 뒤의 값이 Password가 된다. 사실 되게 간단한 문제[^6]인데 아이디어를 생각 하는데 이렇게 오래 걸렸는지.... '가끔 그럴때가 있어야 인간미가 있다'고 생각하려고 한다.
 
 <br>
 
@@ -159,4 +159,5 @@ $ find / -user root -perm -4000 2>/dev/null
 [^2]: https://metasploitctf.com/
 [^3]: https://nmap.org/
 [^4]: https://en.wikipedia.org/wiki/Exif
-[^5]: https://materials.rangeforce.com/tutorial/2019/11/07/Linux-PrivEsc-SUID-Bit/
+[^5]: https://www.hackerschool.org/
+[^6]: https://materials.rangeforce.com/tutorial/2019/11/07/Linux-PrivEsc-SUID-Bit/
