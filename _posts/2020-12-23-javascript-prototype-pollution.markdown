@@ -10,7 +10,7 @@ author_email    : scyoon@stealien.com
 background      : /assets/bg.png
 profile_image   : /assets/2020-12-23-javascript-prototype-pollution/blog_profile.png
 summary         : Introduce Javascript Prototype Pollution Attack and show CVE example
-thumbnail       : /assets/stealien.png
+thumbnail       : /assets/2020-12-23-javascript-prototype-pollution/thumbnail.png
 ---
 
 # Javascript Prototype Pollution in *REALWORD*
