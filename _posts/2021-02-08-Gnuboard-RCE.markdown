@@ -52,8 +52,8 @@ for($i=0;$i<count($_POST['chk_bn_id']);$i++)
 `/bbs/new_delete.php 12~29 line` 에서 'chk_bn_id' 파라미터를 count하여 반복문을 통해 SELECT 하는것을 볼수 있다.
  방어기법이 적용된 입력값은 $bo_table에 적용된 반면에 이 코드에서 사용하고 있는 변수는 $_POST['bo_table']의 값을 가져와 `$bo_table`을 재정의 하기 때문에 `common.php`의 방어 코드는 실행되지 않는다.
  따라서 SQL Injection이 가능하다.
-
-## Local FIle Inclusion
+ 
+## 2. Local FIle Inclusion
 PHP 에서 Local File Inclusion 은 `include,require,include_once,require_once` 등의 함수의 인자를 다음과 같이 User input에서 컨트롤이 가능하다면 발생하는 취약점이다.
 ```php
 <?php
@@ -121,7 +121,7 @@ function get_board_db($bo_table, $is_cache=false){
 ```
 `/lib/get_data_lib.php 68~91 line` 을 보면 해당 함수는 `$bo_table` 을 인자로 받아 `g5_board` 테이블에서 select 해 그 결과를 변수에 저장한다.
 따라서 `g5_board.bo_include_head` 필드의 내용을 실행하고 싶은 PHP 코드가 담긴 파일경로로 변경하면 RCE를 진행 할 수있다는 것이다.
-## Exploit
+## 3. Exploit
 ```php
 for($i=0;$i<count($_POST['chk_bn_id']);$i++)
 {
