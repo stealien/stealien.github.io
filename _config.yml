@@ -24,6 +24,7 @@ description: >- # this means to ignore newlines until "baseurl:"
   첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://ufo.stealien.com" # the base hostname & protocol for your site, e.g. http://example.com
+og_image: "http://ufo.stealien.com/assets/og_image.png"
 twitter_username: stealien
 github_username:  stealien
 
