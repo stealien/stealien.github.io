@@ -10,7 +10,7 @@ body {
     font-family: 'Nanum Gothic', sans-serif;
 }
 
-code * {
+code.highlighter-rouge, code * {
     font-family: 'Ubuntu', sans-serif;
 }
 
@@ -331,7 +331,8 @@ h2 {
     line-height: 48px;
 }
 
-img, div.highlight{
+/* 글쓴이 프로필 빼고 적용 */
+img:not(.profile_image), div.highlight{
     margin-top: 28px;
     margin-bottom: 28px;
 }
