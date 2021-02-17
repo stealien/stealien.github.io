@@ -331,8 +331,9 @@ h2 {
     line-height: 48px;
 }
 
-div.highlight {
-
+img, div.highlight{
+    margin-top: 28px;
+    margin-bottom: 28px;
 }
 
 
