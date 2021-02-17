@@ -329,6 +329,7 @@ h2 {
     font-size: 18px;
     font-weight: 800;
     line-height: 48px;
+    margin-bottom: 0;
 }
 
 /* 글쓴이 프로필 빼고 적용 */
@@ -337,6 +338,29 @@ img:not(.profile_image, .page-profile_image, .page-profile_image-detail), div.hi
     margin-bottom: 28px;
 }
 
+div.container:not(.page-content) {
+    width: 860px;
+}
+
+div.container.page-content {
+    width: 780px;
+}
+
+div.highlight {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    width: 770px;
+}
+
+pre.highlight {
+    width: 730px;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+div.posts.container {
+    width: 860px;
+}
 
 
 
