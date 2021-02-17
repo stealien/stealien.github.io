@@ -1,5 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@700&display=swap');
+
+body {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
 * {
     font-family: 'Nanum Gothic', sans-serif;
+}
+
+code {
+    font-family: 'Ubuntu', sans-serif;
 }
 
 #header {
@@ -54,7 +66,7 @@ body {
 
 .profile_author {
     color: #aaa;
-    font-size: 13px;    
+    font-size: 13px;
     margin-top: 5px;
 }
 
@@ -64,7 +76,7 @@ body {
     color: #000;
 
     text-overflow: ellipsis;
-    overflow: hidden; 
+    overflow: hidden;
     width: 100%;
     max-width: 1200px;
     white-space: nowrap;
@@ -73,7 +85,7 @@ body {
 .post-summary {
     color: #777;
     text-overflow: ellipsis;
-    overflow: hidden; 
+    overflow: hidden;
     width: 100%;
     max-width: 1200px;
     white-space: nowrap;
@@ -144,9 +156,9 @@ footer {
 .page-title {
     font-size: 25px;
     font-weight: 800;
-    margin-bottom: 5px;   
+    margin-bottom: 5px;
     text-overflow: ellipsis;
-    overflow: hidden; 
+    overflow: hidden;
     width: 100%;
     max-width: 1200px;
     white-space: nowrap;
@@ -306,17 +318,22 @@ footer {
     }
 }
 
+h1 {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 48px;
+    font-family: 'Noto Sans KR', sans-serif;
+}
 
+h2 {
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 48px;
+}
 
+div.highlight {
 
-
-
-
-
-
-
-
-
+}
 
 
 
