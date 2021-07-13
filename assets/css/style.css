@@ -338,7 +338,7 @@ img:not(.profile_image, .page-profile_image, .page-profile_image-detail), div.hi
 }
 
 div.container:not(.page-content) {
-    width: 860px;
+    width: 960px;
 }
 
 div.container.page-content {
