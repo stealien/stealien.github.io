@@ -192,7 +192,7 @@ def action():
 
 이렇게 해주면 slackbot을 (드디어)interactive하게 사용할 수 있다.
 
-| <img src="/assets/2021-07-08-Slackbot을-활용한-ERP-시스템-구축/9. interactive_sample.png" style="max-width:800px; height:auto;" /> |
+| <img src="/assets/2021-07-08-Slackbot을-활용한-ERP-시스템-구축/9.interactive_sample.png" style="max-width:800px; height:auto;" /> |
 
 지정한 input이 들어오면 버튼을 생성해주고
 
