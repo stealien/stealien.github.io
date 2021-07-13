@@ -8,9 +8,9 @@ category        : Dev
 author          : 이창호
 author_email    : chlee@stealien.com
 background      : /assets/bg.png
-profile_image   : /assets/2021-07-08-Slackbot을-활용한-ERP-시스템-구축/slackbot.png
+profile_image   : /assets/2021-07-13-Slackbot을-활용한-ERP-시스템-구축/slackbot.png
 summary         : Slackbot의 Event Subscriptions 기능을 사용해 ERP 시스템 구축
-thumbnail       : /assets/2021-07-08-Slackbot을-활용한-ERP-시스템-구축/thumbnail.png
+thumbnail       : /assets/2021-07-13-Slackbot을-활용한-ERP-시스템-구축/thumbnail.png
 ---
 
 # Slackbot을 활용한 ERP 시스템 구축
@@ -20,7 +20,7 @@ thumbnail       : /assets/2021-07-08-Slackbot을-활용한-ERP-시스템-구축/
 
 회사 내부에서는 예전부터 사내 메신저로 Slack을 사용해왔기 때문에 Slack에서 결재 프로세스를 관리해 보자는 의견이 있었고, 처음에는 이를 활용할 수 있는 Slack의 서드파티 앱들을 찾아보았다.
 
-| <img src="/assets/2021-07-08-Slackbot을-활용한-ERP-시스템-구축/thirdparty.png" alt="thirdparty" style="max-width:800px; height:auto;" /> |
+| <img src="/assets/2021-07-13-Slackbot을-활용한-ERP-시스템-구축/thirdparty.png" alt="thirdparty" style="max-width:800px; height:auto;" /> |
 | ------------------------------------------------------------ |
 | 우리가 원하던 앱은 없었다.                         |
 
@@ -44,21 +44,21 @@ app.run(host="0.0.0.0", port=8391)
 <br>
 이후 https://api.slack.com/apps에서 bot과 관련된 설정을 해준다.
 
-| <img src="/assets/2021-07-08-Slackbot을-활용한-ERP-시스템-구축/1.create_slackbot.png" alt="create_slackbot" style="max-width:800px; height:auto;" /> |
+| <img src="/assets/2021-07-13-Slackbot을-활용한-ERP-시스템-구축/1.create_slackbot.png" alt="create_slackbot" style="max-width:800px; height:auto;" /> |
 | ------------------------------------------------------------ |
 | 봇을 만들어주고                         |
 
-| <img src="/assets/2021-07-08-Slackbot을-활용한-ERP-시스템-구축/2.event_subscription.png" alt="event_subscription" style="max-width:800px; height:auto;" /> |
+| <img src="/assets/2021-07-13-Slackbot을-활용한-ERP-시스템-구축/2.event_subscription.png" alt="event_subscription" style="max-width:800px; height:auto;" /> |
 | ------------------------------------------------------------ |
 | Event Subscriptions을 설정해 주고     |
 
-| <img src="/assets/2021-07-08-Slackbot을-활용한-ERP-시스템-구축/3.request_url.png" alt="request_url" style="max-width:800px; height:auto;" /> |
+| <img src="/assets/2021-07-13-Slackbot을-활용한-ERP-시스템-구축/3.request_url.png" alt="request_url" style="max-width:800px; height:auto;" /> |
 | ------------------------------------------------------------ |
 | 미리 만들어둔 서버의 url을 입력한다.     |
 
 이제 구축한 환경이 정상적으로 동작하는지 테스트해보자.
 
-| <img src="/assets/2021-07-08-Slackbot을-활용한-ERP-시스템-구축/4.dm_slack.png" alt="request_url" style="max-width:800px; height:auto;" /> |
+| <img src="/assets/2021-07-13-Slackbot을-활용한-ERP-시스템-구축/4.dm_slack.png" alt="request_url" style="max-width:800px; height:auto;" /> |
 
 slackbot에 dm을 보내보면
 
@@ -78,7 +78,7 @@ slackbot에 dm을 보내보면
 ```
 이벤트가 잘 동작하는것을 볼 수 있다.
 
-| <img src="/assets/2021-07-08-Slackbot을-활용한-ERP-시스템-구축/5.slackbot_token.png" style="max-width:800px; height:auto;" /> |
+| <img src="/assets/2021-07-13-Slackbot을-활용한-ERP-시스템-구축/5.slackbot_token.png" style="max-width:800px; height:auto;" /> |
 | ------------------------------------------------------------ |
 | 토큰은 외부에 노출되지 않도록 하자     |
 
@@ -105,7 +105,7 @@ app.run(host="0.0.0.0", port=8391)
 
 이런식으로 코드를 짜주면
 
-| <img src="/assets/2021-07-08-Slackbot을-활용한-ERP-시스템-구축/6.response.png" style="max-width:800px; height:auto;" /> |
+| <img src="/assets/2021-07-13-Slackbot을-활용한-ERP-시스템-구축/6.response.png" style="max-width:800px; height:auto;" /> |
 
 사용자와 slackbot이 상호작용 하는 것을 볼 수 있다.
 
@@ -129,7 +129,7 @@ $휴가신청
 
 이에 대한 대안으로 찾은 것이 slackbot의 modal이다.
 
-| <img src="/assets/2021-07-08-Slackbot을-활용한-ERP-시스템-구축/7.slackbot_modal.png" style="max-width:800px; height:auto;" /> |
+| <img src="/assets/2021-07-13-Slackbot을-활용한-ERP-시스템-구축/7.slackbot_modal.png" style="max-width:800px; height:auto;" /> |
 | ------------------------------------------------------------ |
 | 자세한 내용은 https://api.slack.com/surfaces/modals/using 에서 확인할 수 있다.|
 
@@ -139,7 +139,7 @@ modal은 개발자가 원하는 방식대로 폼을 만들어 두고 사용자�
 
 modal을 사용하기 위해서는 사용자의 action을 처리할 수 있도록 설정해줘야 한다.(event와 action은 다르다.)
 
-| <img src="/assets/2021-07-08-Slackbot을-활용한-ERP-시스템-구축/8.action_url.png" style="max-width:800px; height:auto;" /> |
+| <img src="/assets/2021-07-13-Slackbot을-활용한-ERP-시스템-구축/8.action_url.png" style="max-width:800px; height:auto;" /> |
 | ------------------------------------------------------------ |
 | 여기는 Event Subscriptions와는 다르게 등록하는 url의 검증과정이 필요하지 않다.|
 
@@ -192,11 +192,11 @@ def action():
 
 이렇게 해주면 slackbot을 (드디어)interactive하게 사용할 수 있다.
 
-| <img src="/assets/2021-07-08-Slackbot을-활용한-ERP-시스템-구축/9.interactive_sample.png" style="max-width:800px; height:auto;" /> |
+| <img src="/assets/2021-07-13-Slackbot을-활용한-ERP-시스템-구축/9.interactive_sample.png" style="max-width:800px; height:auto;" /> |
 
 지정한 input이 들어오면 버튼을 생성해주고
 
-| <img src="/assets/2021-07-08-Slackbot을-활용한-ERP-시스템-구축/10.modal.png" style="max-width:800px; height:auto;" /> |
+| <img src="/assets/2021-07-13-Slackbot을-활용한-ERP-시스템-구축/10.modal.png" style="max-width:800px; height:auto;" /> |
 | ------------------------------------------------------------ |
 | 개발은 텍스트 input으로 받는게 더 쉬웠다는건 비밀     |
 
@@ -216,7 +216,7 @@ slackbot을 활용해 보면서 느낀 점은 slack을 활용하기에 따라서
 
 결재요청 프로그램을 만들고 나서 회사가 자율출퇴근제로 변경이 됐는데, 지금은 출결관리도 slackbot으로 하고 있다.
 
-| <img src="/assets/2021-07-08-Slackbot을-활용한-ERP-시스템-구축/11.app_home.png" style="max-width:800px; height:auto;" /> |
+| <img src="/assets/2021-07-13-Slackbot을-활용한-ERP-시스템-구축/11.app_home.png" style="max-width:800px; height:auto;" /> |
 | ------------------------------------------------------------ |
 | 이거 만들려고 원래 있던 코드 싹 갈아 엎고 새로 만들었다.     |
 
