@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
 
 body {
     overflow-y: scroll;
@@ -10,7 +10,8 @@ body {
 }
 
 * {
-    font-family: 'Nanum Gothic', sans-serif;
+    /*font-family: 'Nanum Gothic', sans-serif;*/
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 code.highlighter-rouge, code * {
@@ -213,7 +214,8 @@ footer {
 
 .page-content {
     font-size: 15px;
-    max-width: 950px;
+    max-width: 780px;
+    width: 80%;
     text-align: justify;
 }
 
@@ -351,7 +353,7 @@ div.highlight {
 }
 
 pre.highlight {
-    width: 730px;
+    max-width: 730px;
     padding-right: 0;
     padding-left: 0;
 }
