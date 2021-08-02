@@ -334,6 +334,13 @@ h2 {
     margin-bottom: 0;
 }
 
+h3 {
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 48px;
+    margin-bottom: 0;
+}
+
 /* 글쓴이 프로필 빼고 적용 */
 img:not(.profile_image, .page-profile_image, .page-profile_image-detail), div.highlight{
     margin-top: 28px;
