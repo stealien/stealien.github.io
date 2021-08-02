@@ -91,6 +91,7 @@ code.highlighter-rouge, code * {
     width: 100%;
     max-width: 1200px;
     white-space: nowrap;
+    word-break: break-all;
 }
 
 .post-info {
@@ -170,10 +171,6 @@ footer {
     font-size: 14px;
 }
 
-.page-content {
-    padding-top: 50px;
-}
-
 .page-profile-detail {
     margin-top: 50px;
     width: 300px;
@@ -218,6 +215,8 @@ footer {
     max-width: 780px;
     width: 80%;
     text-align: justify;
+    padding-top: 50px;
+    word-break: break-all;
 }
 
 .page-content table {
