@@ -363,7 +363,8 @@ pre.highlight {
 }
 
 div.posts.container {
-    width: 860px;
+    max-width: 860px;
+    width: 88%;
 }
 
 
