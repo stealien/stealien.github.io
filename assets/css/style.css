@@ -9,6 +9,7 @@ body {
     font-size: 16px;
 }
 
+/* 2021-08-02 scyoon : Nanum Gothic -> NOto Sans KR */
 * {
     /*font-family: 'Nanum Gothic', sans-serif;*/
     font-family: 'Noto Sans KR', sans-serif;
@@ -339,8 +340,9 @@ img:not(.profile_image, .page-profile_image, .page-profile_image-detail), div.hi
     margin-bottom: 28px;
 }
 
+/* 상단바 */
 div.container:not(.page-content) {
-    width: 960px;
+    max-width: 960px;
 }
 
 div.highlight {
