@@ -343,10 +343,6 @@ div.container:not(.page-content) {
     width: 960px;
 }
 
-div.container.page-content {
-    width: 780px;
-}
-
 div.highlight {
     margin-top: 16px;
     margin-bottom: 16px;
