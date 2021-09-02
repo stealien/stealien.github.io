@@ -32,7 +32,13 @@ github_username:  stealien
 # theme: minima
 plugins:
   - jekyll-seo-tag
+  - jekyll-polyglot
   # - jekyll-feed
+
+languages: ["ko", "id"]
+default_lang: "en"
+exclude_from_localization: ["assets"]
+
 
 markdown: kramdown
 
