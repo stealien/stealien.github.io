@@ -1,4 +1,92 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2021-09-03T16:36:03+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry><title type="html">CVE-2020-26934 - phpMyAdmin Reflected Cross-site scripting</title><link href="http://ufo.stealien.com/2021-09-02/CVE-2020-26934-phpMyAdmin-Reflected-Cross-site-scripting" rel="alternate" type="text/html" title="CVE-2020-26934 - phpMyAdmin Reflected Cross-site scripting" /><published>2021-09-02T15:55:50+09:00</published><updated>2021-09-02T15:55:50+09:00</updated><id>http://ufo.stealien.com/2021-09-02/CVE-2020-26934%20-%20phpMyAdmin%20Reflected%20Cross-site%20scripting</id><content type="html" xml:base="http://ufo.stealien.com/2021-09-02/CVE-2020-26934-phpMyAdmin-Reflected-Cross-site-scripting">&lt;h1 id=&quot;개요&quot;&gt;개요&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2021-10-13T20:23:19+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">MikroTik Post-Auth execve() call.</title><link href="http://ufo.stealien.com/2021-10-13/MikroTik-PostAuth-RCE" rel="alternate" type="text/html" title="MikroTik Post-Auth execve() call." /><published>2021-10-13T19:00:00+09:00</published><updated>2021-10-13T19:00:00+09:00</updated><id>http://ufo.stealien.com/2021-10-13/MikroTik-PostAuth-RCE</id><content type="html" xml:base="http://ufo.stealien.com/2021-10-13/MikroTik-PostAuth-RCE">&lt;h1 id=&quot;mikrotik-arbitrary-call-execve-post-authentication&quot;&gt;MikroTik arbitrary call &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;execve()&lt;/code&gt; (Post Authentication)&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;Affect version : 6.48.3 to 6.48.? (not checked. sorry.)&lt;/li&gt;
+  &lt;li&gt;Impact : &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Low&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Difficulty : &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Low&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;report&quot;&gt;Report&lt;/h2&gt;
+
+&lt;p&gt;본 취약점은…&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;MikroTik RouterOS 6.48.3에서 발견되었습니다.&lt;/li&gt;
+  &lt;li&gt;디바이스의 설정에 관계 없이 발생합니다.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/nova/bin/mepty&lt;/code&gt; 컴포넌트에서 발생합니다.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sub_804B2BC()&lt;/code&gt; 함수에서 취약점이 발생합니다.&lt;/li&gt;
+  &lt;li&gt;최종적으로, 악의적인 사용자가 임의의 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;execve()&lt;/code&gt;를 통해 프로세스를 만들 수 있습니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;코드-분석-root-cause-analysis&quot;&gt;코드 분석 (Root cause analysis)&lt;/h3&gt;
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sub_804B2BC&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;v52&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;u32_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;v12&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v60&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [1]&lt;/span&gt;
+
+    &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v59&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;setenv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;TERM&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v59&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;v30&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [2]&lt;/span&gt;
+
+    &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(...)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;snprintf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x50u&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;%s&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v60&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;execl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/nova/bin/telser&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;telser&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_DWORD&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;/nova/bin/telnet&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;argv&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;/nova/bin/telnet&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;v31&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;-4&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v15&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;v31&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;-6&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;v71&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v31&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;v30&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v72&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;nl&quot;&gt;default:&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [3]&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+    &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_DWORD&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v30&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v60&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [4]&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_DWORD&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v30&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v56&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [5]&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;nv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;findFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nv&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v55&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v56&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [6]&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;execv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v55&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [7]&lt;/span&gt;
+
+    &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;v60&lt;/code&gt;에 9번 인자의 문자열을 할당합니다. (익스플로잇 코드에서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;s9&lt;/code&gt;)&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;v30&lt;/code&gt;에 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;s&lt;/code&gt;를 대입합니다.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;default&lt;/code&gt;문에서, &lt;strong&gt;할당 된 변수들을 초기화 하거나, 함수를 끝내는 등 적절한 조치를 취하지 않습니다.&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;*v30&lt;/code&gt;에 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;v60+4&lt;/code&gt;(문자열의 실제 주소)를 대입합니다.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;v56&lt;/code&gt;에 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;s&lt;/code&gt;를 할당합니다. 여기서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;s&lt;/code&gt;에는 4번 단계에서 넣은 값(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;s9&lt;/code&gt;)이 들어가 있습니다.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;execve()&lt;/code&gt;를 통해 원하는 프로세스를 생성할 수 있습니다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;악용&quot;&gt;악용&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;본 취약점을 활용하여 장비의 관리자 권한을 획득 할 수 있습니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;한계&quot;&gt;한계&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;업로드 한 임의의 바이너리에 &lt;strong&gt;실행 권한을 부여하여&lt;/strong&gt; 실행해야만 최종적으로 권한을 획득할 수 있습니다.&lt;/li&gt;
+  &lt;li&gt;인증(로그인) 후 사용 가능한 취약점입니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;공격-코드&quot;&gt;공격 코드&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;https://github.com/d0now/vulnerabilities/MikroTik_RouterOS/2021-10-13-post-auth-execve/exploit.py&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>김도현</name></author><category term="R&amp;D" /><summary type="html">MikroTik arbitrary call execve() (Post Authentication) Affect version : 6.48.3 to 6.48.? (not checked. sorry.) Impact : Low Difficulty : Low</summary></entry><entry><title type="html">CVE-2020-26934 - phpMyAdmin Reflected Cross-site scripting</title><link href="http://ufo.stealien.com/2021-09-02/CVE-2020-26934-phpMyAdmin-Reflected-Cross-site-scripting" rel="alternate" type="text/html" title="CVE-2020-26934 - phpMyAdmin Reflected Cross-site scripting" /><published>2021-09-02T15:55:50+09:00</published><updated>2021-09-02T15:55:50+09:00</updated><id>http://ufo.stealien.com/2021-09-02/CVE-2020-26934%20-%20phpMyAdmin%20Reflected%20Cross-site%20scripting</id><content type="html" xml:base="http://ufo.stealien.com/2021-09-02/CVE-2020-26934-phpMyAdmin-Reflected-Cross-site-scripting">&lt;h1 id=&quot;개요&quot;&gt;개요&lt;/h1&gt;
 &lt;p&gt;phpMyAdmin은 MySQL/MariaDB 데이터베이스를 관리하기 위한 웹 인터페이스 서비스다. PHP 언어로 구현되어 있으며 웹서버에 설치하여 사용한다. 사용자는 웹 브라우저를 통해 phpMyAdmin 웹페이지에 로그인한 후, 데이터베이스 열람 및 수정이 가능하다.&lt;/p&gt;
 
 &lt;h1 id=&quot;변환transformation-기능&quot;&gt;변환(Transformation) 기능&lt;/h1&gt;
@@ -1870,174 +1958,4 @@ where 1=0 union/*asdfasdfsadfsadfsa*/select
   &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;p&gt;C.T(스로틀 전폐), W.O.T(스로틀 전개) 상태에 따라 요구되는 출력 전압이 다르다. 이에 따라 악셀러레이터 페달의 저항값, 그리고 센서 2의 입력에 해당되는 곳의 저항값을 조절하는 회로를 구성하여 ECU가 요구하는 전압 값을 만족시킬 수 있다. 차후 연구에서는 악셀러레이터 페달 값을 임의로 주고 그에 따른 ECU의 반응을 살펴볼 계획이다.&lt;/p&gt;</content><author><name>서영일</name></author><category term="R&amp;D" /><summary type="html">Prologue 최근 자동차 해킹에 대해 관심을 가지는 사람들이 늘고 있다. 워낙 차를 좋아해서 기회가 생기면 자동차 해킹을 해봐야겠다고 생각했었는데 마침 기술 블로그에 기고할 차례가 되어 글을 쓰게 되었다.</summary></entry><entry><title type="html">이번생에 버그헌팅은 처음이라</title><link href="http://ufo.stealien.com/2020-09-25/bug_hunting" rel="alternate" type="text/html" title="이번생에 버그헌팅은 처음이라" /><published>2020-09-25T14:00:00+09:00</published><updated>2020-09-25T14:00:00+09:00</updated><id>http://ufo.stealien.com/2020-09-25/bug_hunting</id><content type="html" xml:base="http://ufo.stealien.com/2020-09-25/bug_hunting">&lt;h1 id=&quot;이번생에-버그헌팅은-처음이라&quot;&gt;이번생에 버그헌팅은 처음이라&lt;/h1&gt;
-
-&lt;p&gt;많은 주니어 해커들은 CTF로 해킹을 배운다. 나 역시도 많은 CTF를 참여하며 실력을 키워나갔다. CTF는 제한된 시간안에 많은 지식을 배울수있는 좋은 “Play”다. 하지만 리얼월드와 상당한 괴리감이 존재한다고 생각한다. 내가 CTF에서 일명 고인물이 돼가는 시점에서 버그헌팅을 시작했을때 정말 막막했다. 어떤 소프트웨어를 대상으로 할지도 몰랐고 Fuzzer를 만들어야될지 순수 오디팅으로 찾아야될지 선택하는것도 정말 어려웠다. CTF와 달리 버그헌팅은 명확한 Goal과 Methodology이 존재하지않았다.&lt;/p&gt;
-
-&lt;p&gt;인터넷상에는 1day 분석글이나 Exploitation관한 기술론 밖에 없었다. 버그헌팅하는데에 많은 도움을 주었지만 처음시작하는 사람들에게는 이러한글보다 버그헌팅 스토리가 더 도움이 될거라고 생각한다.&lt;/p&gt;
-
-&lt;p&gt;이 글에서는 기술적인 내용보다 내가 2019년부터 오늘날까지 버그헌팅을 하기위해 어떤노력을 하였고 어떻게 학습하였는지를 이야기할 것이다.&lt;/p&gt;
-
-&lt;h2 id=&quot;포석&quot;&gt;포석&lt;/h2&gt;
-
-&lt;p&gt;바둑에서는 초반에 돌을 두는 방법들을 총칭하여 &lt;a href=&quot;https://ko.wikipedia.org/wiki/%ED%8F%AC%EC%84%9D&quot;&gt;포석&lt;/a&gt;이라한다. 이는 대국 중반부터 게임을 이끌어나가기위한 중요한 열쇠이기때문에 신중하게 두곤한다. 나도 버그헌팅을 처음 시작할때 좋은 포석을 두기위해 많은 고민을 했다. 먼저 나의 장점과 단점을 생각해보았다. CTF을 할때부터 나는 리버싱실력이 다른 동기들에 비해 수준이하였지만 취약점은 나름 빠르고 쉽게 찾았던거 같았다. 그래서 리버싱이 비교적 많이 필요한 &lt;a href=&quot;https://en.wikipedia.org/wiki/Proprietary_software&quot;&gt;클로즈소스 소프트웨어&lt;/a&gt;보다 소스코드가 공개돼있는 &lt;a href=&quot;https://en.wikipedia.org/wiki/Open-source_software&quot;&gt;오픈소스 소프트웨어&lt;/a&gt;를 타겟으로 하기로 마음먹었다.&lt;/p&gt;
-
-&lt;p&gt;오픈소스는 상당히 진입장벽이 높았다. 대게 버그바운티를 하는 오픈소스들은 많은 해커들의 타겟이 되어왔고 이미 많은 취약점들이 발견됐다. 그 중 웹브라우저는 레드오션 그 자체였다. 하지만 그 만큼 부와 명예가 따르고 있었기때문에 나의 첫 취약점을 웹브라우저 취약점으로 멋있게 장식하고 싶었다.&lt;/p&gt;
-
-&lt;h4 id=&quot;삼자택일&quot;&gt;삼자택일&lt;/h4&gt;
-
-&lt;p&gt;웹브라우저는 대표적으로 Firefox, Safari, Chrome, Edge가 있다. 그 중 Edge는 현재 Chromium 코드를 사용하지만 내가 버그헌팅을 시작했을때는 Mshtml과 ChakraCore엔진을 사용하고있었다.&lt;/p&gt;
-
-&lt;p&gt;FireFox와 Chrome은 다른 브라우저보다 최신 Web Platform 기능들을 빨리 적용하는 특징이 있었다. 또한 Chrome의 경우 다양한 레퍼런스가 Public하게 제공되어서 전체적인 아키텍처를 이해하는데 많은 도음을 받을수있었다. 이러한 이유때문인지 Chrome은 많은 버그들이 제보되어왔고 지금은 Critical한 버그들이 많이 줄어든 상태이다. 흔히들 난공불락이라고도 부른다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2020-09-25-bug_hunting/chrome-vrp.png&quot; alt=&quot;chrome-vrp&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;하지만 &lt;a href=&quot;https://www.google.com/about/appsecurity/chrome-rewards/&quot;&gt;버그바운티 금액&lt;/a&gt;이 상당히 높기때문에 해볼만한 도전이라고 생각했다. 그리고 앞서 말했듯이 공개된 레퍼런스가 많아서 혼자 학습하는데 좋은 조건이였다.&lt;/p&gt;
-
-&lt;h4 id=&quot;콩-심은-데-콩-나고-팥-심은-데-팥-난다&quot;&gt;콩 심은 데 콩 나고 팥 심은 데 팥 난다&lt;/h4&gt;
-
-&lt;p&gt;CTF를 하다보면 문득 고등학교때 수학문제를 푸는 상황이 연상될때가 있다. 정해진 답이 있고 필요한 것은 연필, 지우개만 있으면 됐다. CTF도 마찬가지로 시스템해킹문제가 나오면 문제바이너리를 실행할수있는 VM환경과 리버싱을 위한 IDA 하나면 충분했고 출제자의 “의도”대로 취약점을 찾으면 됐다.&lt;/p&gt;
-
-&lt;p&gt;하지만 버그헌팅은 달랐다. 출제자의 의도라는건 애초에 존재하지않고 CTF보다 비교도 안되게 큰 리얼월드 바이너리를 편하게 분석할 수 있는 환경을 만드는것이 보기보다 어려운 작업이였다.&lt;/p&gt;
-
-&lt;p&gt;내 타겟은 크로미움이였고 매우 큰 오픈소스 프로젝트이기때문에 필연적으로 분석할수있는 충분한 성능의 데스크탑이 필요하였다.(성능이 안좋을경우 생각보다 빌드시간이 많이 낭비된다)&lt;/p&gt;
-
-&lt;p&gt;빌드환경 구축은 구글에서 충분히 자세하게 문서로 정리되어있었다. (해당 문서가 생각보다 길어보일수있는데 유용한 팁들이 많이 적혀있으니 꼼꼼히 읽어봐야한다. 예를 들어 빌드시간을 단축할수있는 팁)&lt;/p&gt;
-
-&lt;p&gt;처음에는 빌드하기도 어려웠고 디버깅하기도 어려웠다. 하지만 여러가지 시행착오를 겪으며 노하우가 생기고 나에게 맞는 환경을 구축할 수 있게되었다.&lt;/p&gt;
-
-&lt;p&gt;(빌드, 디버깅, Exploit 개발 환경을 효율적으로 구축하는 것도 실력이고 자산이라는 것을 알게되었다.)&lt;/p&gt;
-
-&lt;h2 id=&quot;사활&quot;&gt;사활&lt;/h2&gt;
-
-&lt;p&gt;Chromium의 Attack Surface는 대표적으로 자바스크립트 엔진인 v8과 Web Platform엔진인 Blink가 있다. 나의 경우 2017년에 ChakraCore엔진을 본 경험이 있어서 V8를 먼저 보기로하였다. 지금 생각해보면 이 선택이 지금까지 Chromium에서 취약점을 찾는데에 있어서 좋은 기반을 쌓게해준거 같다. (웹브라우저의 원격 취약점들은 다양한 컴포넌트들이 있지만 대부분 Javascript로 Trigger한다. 이 때문에 javascript 엔진을 정확히 이해하는것은 많은 도움이 된다.)&lt;/p&gt;
-
-&lt;h4 id=&quot;고찰&quot;&gt;고찰&lt;/h4&gt;
-
-&lt;p&gt;Fuzzing 은 정말 매력적인 기법이다. 이미 많은 해커들이 Fuzzing을 해왔고 지금 이 순간에도 취약점들이 찾아지고있을것이다. 누구나 버그헌팅을 시작할때 Fuzzer를 만들어볼까라는 생각이 해보았을것이고 나도 그런 생각을 많이 했다. 하지만 과연 내가 지금 Fuzzer만들어서 의미있는 결과를 만들수 있을까?라는 생각이 더 지배적이였다. 물론 창의적인 Fuzzing Idea를 생각해내면 좋은 결과가 나왔었겠지만 나는 뭐 딱히 좋은 아이디어가 생각나지 않았다. 그래서 좋은 아이디어가 생각날때까지 Fuzzing을 사용하지않고 소스오디팅을 하기로하였다. (아직까지도 소스오디팅을 하고 있다..)&lt;/p&gt;
-
-&lt;p&gt;처음에는 무작정 코드를 읽었고 6개월이상동안 열심히 하였지만 취약점을 하나도 못찾았다. 이 일을 겪은 후 난 무작정 소스오디팅으로 찾는건 비효율적이라는것을 깨달았다. 오래전부터 Javascript대상으로 Fuzzing연구들이 많이 되어왔기때문이다. 이 깨달음은 별거없어보이지만 내 버그헌팅에 있어서 큰 전환점이 되었다.&lt;/p&gt;
-
-&lt;p&gt;이후 난 Fuzzing과의 싸움에서 이길수 있는 방법을 계속해서 고민했고 여러가지 시행착오를 거쳐 몇가지 결과를 도출해냈다.&lt;/p&gt;
-
-&lt;h4 id=&quot;도약&quot;&gt;도약&lt;/h4&gt;
-
-&lt;p&gt;v8 코드와 열심히 싸우는 도중에 우연히 Project Zero 블로그에서 글 하나를 보게되었다. 내용은 대충 WebAssembly 취약점에 관한 것이였다. 버그 클래스들은 딱히 흥미로운게 없었다.하지만 난 WebAssembly의 미래와 관심도(?)를 유심있게 보았다. 내가 왜 이러한 생각을 한 것인지 이해하려면 꽤 오래전으로 거슬러 올라가야한다.&lt;/p&gt;
-
-&lt;p&gt;2016년, ChakraCore가 처음으로 공개되었을때 취약점이 아주 많이 발생했다. 대게 ECMAScript6 와 관련된 취약점이였다. 왜 이런 취약점이 많이 발생했을까? 물론 ChakraCore가 릴리즈된지 얼마안돼서 그런것 일 수 도 있다. 하지만 근본적인 문제는 ECMAScript 6 표준 구현이라고 생각한다. 표준을 코드로서 구현하는것은 매우 어려운일이다. V8, SpiderMonkey, JavascriptCore들은 ECMAscript라는 같은 표준을 사용하지만 구현코드를 보면 전혀 다르다. ChakraCore는 릴리즈된지 얼마되지도 않았을뿐만 아니라 ECMAScript 6도 Draft가 끝난지 얼마 안된상태에서 구현을 했기때문에 매우 불안정한 상태였을것이다. 이는 ChakraCore의 수많은 취약점들이 증명해준다.&lt;/p&gt;
-
-&lt;p&gt;난 이 상황이 WebAssembly에도 적용될것이라고 생각했다. WebAssembly또한 ECMAscript처럼 표준이 존재하며 현재 많은 기능들이 추가되고 있다. 무엇보다 V8과 SpiderMonkey는 다른 Javascript엔진들보다 훨씬 빨리 표준을 구현하고있다. 표준이 구현된지 얼마 안되었고 계속해서 개발되고있기때문에 분명히 취약점이 있을거라고 확신했다.&lt;/p&gt;
-
-&lt;p&gt;또한 WebAssembly 취약점에 대한 조사를 하던도중 흥미로운 것을 발견하였다. The Problems and Promise of WebAssembly 포스팅은 2018.8에 작성되었고 10개 남짓한 Webassembly 취약점들은 2018 ~ 2017 사이에 발견되었다. 이 말은 2018년 이후 WebAssembly 취약점이 발견되지 않았다는것이다. 위에서 언급했듯이 WebAssembly는 활발히 개발되고있었기때문에 2018년 이후에 새로 나온 기능들이 상당히 많았다. 이 기능들은 아직 해커들에게 관심을 못했기때문에 충분한 &lt;strong&gt;블루오션&lt;/strong&gt;이였다.&lt;/p&gt;
-
-&lt;h4 id=&quot;데뷔전&quot;&gt;데뷔전&lt;/h4&gt;
-
-&lt;p&gt;나의 첫번째 두번째 취약점은 WebAssembly에서 나왔고 위 전략이 효과적이었다는것을 증명해준다.&lt;/p&gt;
-
-&lt;p&gt;나의 첫 취약점, &lt;a href=&quot;https://bugs.chromium.org/p/chromium/issues/detail?id=964607&quot;&gt;issue 964607&lt;/a&gt; 는 WebAssembly Reference Table 구현 코드에서 발생했다. 이 기능은 활발히 개발중(experimental)이였기때문에 보안성이 매우 떨어진 상태였다. 리포트를 보면 알 수 있듯이 취약점 자체는 매우 쉽고 간단했다. 하지만 우리는 여기서 취약점의 복잡성, 창의성보다는 이 취약점이 &lt;strong&gt;어떻게 기인되었는지&lt;/strong&gt;를 주목해야한다.&lt;/p&gt;
-
-&lt;p&gt;WebAssembly는 초기에 Function Table만 있었지만 Any Reference Table이 새로 생기게되었다. 이러한 &lt;strong&gt;객체 타입의 확장&lt;/strong&gt;은 이전기능과 새로운 기능 구현 코드들이 필연적으로 병합된다. 기존에 구현된 코드에서 사용된 모듈들은 새로 추가된 기능들에 맞춰 변화해야 될 수 도있다. 이 과정에서 예기치 못한 상황이 발생될수있다. 예를 들어 배열 길이의 증가, 배열 타입 변형, User callback(side effect) 등이 있다. &lt;a href=&quot;https://bugs.chromium.org/p/chromium/issues/detail?id=964607&quot;&gt;issue 964607&lt;/a&gt; 는 변화한 배열 길이의 증가를 예상하지 못해 발생했다.&lt;/p&gt;
-
-&lt;p&gt;두번째 취약점(&lt;a href=&quot;https://bugs.chromium.org/p/chromium/issues/detail?id=980475&quot;&gt;issue 980475&lt;/a&gt;)도 WebAssembly Reference Table과 관련이 깊다. 첫 취약점과 다른점이 있다면 WebAssembly의 새로운 기능인 bulk memory와도 관련이 있다는것이다. 이 취약점 역시 새로 추가된 기능이 기존 모듈에 영향을 줄 수 있다는 것을 예상하지못해 발생했다.&lt;/p&gt;
-
-&lt;p&gt;나의 데뷔전은 이렇게 마무리가 되었다. 비록 Stable이 아닌 experimental 취약점들이여서 CVE는 못 받았지만 이것으로 인해 많은 성장을 이루었다는것은 확실하다.(Stable이 아니여도 포상금을 똑같이 받을수있다!)&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2020-09-25-bug_hunting/comment.png&quot; alt=&quot;comment&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;수명주기&quot;&gt;수명주기&lt;/h4&gt;
-
-&lt;p&gt;수험생 시절 역사 선생님들이 항상 하시던 말이 있었다. 역사는 반복된다. 전 세대에 있었던 일이 현 세대에도 일어날수 있다는 말이다. 1-day 취약점들을 조사하면서 이 말이 버그에 적용될수도 있다는 생각이 들었다.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://bugs.chromium.org/p/chromium/issues/detail?id=1024758&quot;&gt;Issue 782145&lt;/a&gt;는 2017년 11월에 발생한 취약점이다. RegExp 객체는 fast type과 slow type이 존재한다. Replace함수는 인자로 RegExp 객체를 받을 수 있는데 타입에 따라 함수 Flow가 달라진다. 하지만 해당함수에서는 타입을 적절하게 검사하지 못하여 Type Confusion이 일어날수 있었다.&lt;/p&gt;
-
-&lt;p&gt;다음은 pwn2own 2019에서 사용된 &lt;a href=&quot;https://bugs.chromium.org/p/chromium/issues/detail?id=944971&quot;&gt;Issue 944971&lt;/a&gt;이다. 해당 취약점은 Issue 782145와 매우 유사하였다. poc코드를 보면 더욱 비슷해보일뿐만 아니라 Root Cause도 같은 패턴이었다. 마치 생명주기를 보는듯 했다. 이와 비슷한 현상을 갖는 취약점들은 한 두개가 아니였다.&lt;/p&gt;
-
-&lt;p&gt;이로부터 내가 얻은 교훈이 있었다.&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;1-day 분석은 전체적인 코드의 흐름뿐만 아니라 미래의 다시 나올 취약점에 대비를 할수있다.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;안전했던 코드도 첨삭을 통해 다시 취약해질수 있다.&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4 id=&quot;때로는-우연히&quot;&gt;때로는 우연히&lt;/h4&gt;
-
-&lt;p&gt;WebAssembly 취약점을 찾은후 학교생활을때문에 몇달간 버그헌팅을 못했다. 2020년 2월부터 다시 시작했는데 이때는 Chrome Mojo(Sandbox Escape 취약점) 붐이 일어나고 있었다. 원래 Javascript 취약점을 다시 찾고싶었지만 트렌드에 따라 Mojo 취약점을 보기 시작했다.&lt;/p&gt;
-
-&lt;p&gt;Mojo에 관련된 레퍼런스들은 생각보다 많았고 &lt;a href=&quot;https://bugs.chromium.org/p/chromium/issues/list?q=reporter%3Amarkbrand%40google.com&amp;amp;can=1&quot;&gt;Mark Brand&lt;/a&gt;와 &lt;a href=&quot;https://bugs.chromium.org/p/chromium/issues/list?can=1&amp;amp;q=reporter%3Ammo%40semmle.com&quot;&gt;Man Yue Mo&lt;/a&gt;가 찾은 Mojo 취약점들은 아주 많은 도움이 됐다. Mojo를 공부한지 한달이 됐을 무렵에 소스오디팅을 시작했다. Mojo붐은 이미 1년넘게 지속된지라 블루오션에서 레드오션으로 변화되는 시점이였다. 지푸라기라도 잡고싶은 심정으로 코드를 주구장창 보았다. 하지만 2주넘게 수확이 없었다.&lt;/p&gt;
-
-&lt;p&gt;포기 할 때 쯤 우연히 한 &lt;a href=&quot;https://chromium.googlesource.com/chromium/src/+/307321d474256f41b12b53220e4dec1f2d6fdba8&quot;&gt;커밋&lt;/a&gt;을 보았다. 이 커밋은 내가 1주전에 보았던 WebSocket Mojo Service 부분이였고 몇몇의 함수을 추가하는 커밋이었다.&lt;/p&gt;
-
-&lt;p&gt;처음에는 별 생각 안하고 리뷰를 했지만 이 커밋으로 인해 전에는 없었던 &lt;a href=&quot;https://bugs.chromium.org/p/chromium/issues/detail?id=1065704&quot;&gt;UAF 취약점&lt;/a&gt;이 일어날수 있다는것을 인지하는데 그리 많은시간이 걸리지 않았다. 난 이 취약점을 발견하고 나서 꾸준히 커밋을 보는 습관이 생겼다. 이 습관은 향후 내 버그헌팅 삶의 많은 발전을 기여했다. 버그헌팅을 부업으로 삼고있는 사람에게 딱 한개의 조언을 할 수있다면 난 무조건 커밋 읽는 습관을 들이라고 말 할 것이다.&lt;/p&gt;
-
-&lt;p&gt;때때로 취약점은 작은 커밋 하나로 기인 될 수 있다.&lt;/p&gt;
-
-&lt;h4 id=&quot;같은-그림찾기&quot;&gt;같은 그림찾기&lt;/h4&gt;
-
-&lt;p&gt;스타크래프트에는 다양한 치트키가 있다. Show me the money라고 치면 미네랄과 가스를 얻을 수 있고 Power Overwhelming를 치면 무적이 될 수 있다. 버그헌팅에는 당연히 치트키가 없다. 하지만 비슷한 것은 있다! 바로 버그클래스다. 좋은 버그 클래스를 발견하면 그것 하나로도 상당히 많은 취약점을 찾을 수 있다. 나도 몇개의 버그 클래스로 많은 재미를 봤다.&lt;/p&gt;
-
-&lt;p&gt;좋은 버그 클래스는 무엇일까? 난 두 가지 조건이 필요하다고 생각한다.&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;다른 해커는 모르고 나만 아는 버그 클래스이다.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;개발자는 모르고 해커만 인지하고 있다.&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;사실 첫번째 조건이 충족되면 두번째 조건도 충족될것이다. 하지만 두번째 조건만 충족해도 많은 재미를 볼 수 있을것이다. 버그클래스가 한번 리포트되면 해커들에게 알려지는건 시간문제이고 다른해커들이 찾기전에 내가 더 빨리 찾으면 된다.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://bugs.chromium.org/p/chromium/issues/detail?id=931640&quot;&gt;Issue 931640&lt;/a&gt; 리포트를 보면 재밌는 트릭이 있다.&lt;/p&gt;
-
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;Object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;prototype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;__defineGetter__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-
-  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then_counter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-
-   &lt;span class=&quot;nx&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-
-   &lt;span class=&quot;nx&quot;&gt;performMicrotaskCheckpoint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
- &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;이 트릭은 &lt;a href=&quot;https://bugs.chromium.org/p/chromium/issues/detail?id=663476#c10&quot;&gt;2016년 UXSS 취약점&lt;/a&gt;에서 기인한 트릭이다.&lt;/p&gt;
-
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;thenable&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Promise&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;resolve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;thenable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Promise.resolve는 인자로 오브젝트를 받으면 then이라는 property를 가져온다. 이때 유저는 getter를 사용하여 then를 가져올때 user-defined function를 실행할수있다. 아마 이 글을 읽고있는 대부분의 독자분들은 몰랐을것이다. 보통의 개발자들도 이러한 스펙을 알지 못했을것이다. 이러한 side effect는 많은 취약점을 야기 시킬 수 있다.&lt;/p&gt;
-
-&lt;p&gt;내가 이 Thenable Obejct 트릭을 인지하고 찾기 시작했을때는 다른 해커들이 별로 관심을 갖지않고 있었다. 덕분에 많은 취약점을 찾을 수 있었다. 하지만 3~4달후에 해커들이 해당 트릭을 인지하고 많은 버그들이 Kill 되어버렸다…&lt;/p&gt;
-
-&lt;p&gt;재미를 본 또다른 버그클래스는 render_frame_host라는 raw pointer의 lifetime 문제였다. 이 클래스는 Plaid CTF 문제로 출제되었다. 이로인해 해커들에게 많은 관심을 받게되었다. 그래서 난 빠르게 취약점을 찾아 바로바로 신고하였다.&lt;/p&gt;
-
-&lt;p&gt;앞서말한 좋은 버그 클래스의 조건중에서 첫번째 조건을 만족 시키는것은 매우 어려운 일이다. 그렇기때문에 이미 공개된 버그클래스를 선별하여 빠르게 찾는게 더 효율적인 방법이라고 생각한다.&lt;/p&gt;
-
-&lt;h2 id=&quot;초읽기&quot;&gt;초읽기&lt;/h2&gt;
-
-&lt;p&gt;크롬에서 버그헌팅을 하다보면 정식버전(stable)이 아닌 취약점을 찾을때가 많다. 솔직히 버그를 찾는 입장에서 Stable취약점을 찾아 CVE credit을 받고 싶을것이다.(stable이 아니면 CVE Credit안줌) 그래서 이러한 취약점을 찾았을때 난 가끔 &lt;a href=&quot;https://namu.wiki/w/%EC%B4%88%EC%9D%BD%EA%B8%B0&quot;&gt;초읽기&lt;/a&gt;를 한다.  크롬은 보통 한달마다 버전업을 한다. 스케쥴이 엄청 체계적이며 베타, 개발자 버전에서 많은 취약점들이 제거된다. 때문에 자신의 취약점이 정식버전으로 되는것은 여간 쉬운일이 아니다. 버그 초읽기를 하는건 정말 스트레스를 받는 일 이었다. 이제는 내 버그가 정말 찾기 어려운 버그인지 자가진단을 하고 초읽기를 하는 편이다.&lt;/p&gt;
-
-&lt;p&gt;나의 진단법은 chrome release security update를 보는것이다. 크롬은 일주일마다 보안업데이트를 하는데 그 주에 패치된 버그들의 ID를 공개해준다. 이를 통해 패치된 버그의 Root Cause를 분석하여 버그클래스를 알아낼수있다.&lt;/p&gt;
-
-&lt;p&gt;버그클래스들은 유행를 타기 때문에 내가 찾은 버그와 같은 클래스라면 초읽기를 그만두고 신고해야한다.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://chromestatus.com/features/schedule&quot;&gt;Chrome Platform Status&lt;/a&gt; 사이트에서 크롬 릴리즈 스케쥴을 확인할수있다. 이것을 보고 기도를 하자&lt;/p&gt;
-
-&lt;h2 id=&quot;복기&quot;&gt;복기&lt;/h2&gt;
-
-&lt;p&gt;버그헌팅을 시작한지 2년차가 되어서야 실적이 조금씩 생기기 시작했다. 난 남들처럼 재능이 있는 해커가 아니었기때문에 코드를 “읽는다” 라는 것보다는 “익숙해진다”라는 느낌으로 해왔던거 같다. 매일매일 아침을 먹으며 코드와 커밋을 보니 이해가 안되던 크롬 아키텍처가 조금씩 익숙해졌다. 구조가 익숙해짐으로써 코드를 빠르게 읽어갈수있게되었고 취약점이 보이기 시작했다.&lt;/p&gt;
-
-&lt;p&gt;내가 버그를 찾았던 순간은 잠을 줄여가며 코드를 보던 밤이 아니라 편안한 숙면을 취하고 간단하게 코드를 리뷰하던 아침이었다. 버그헌팅은 CTF처럼 짧은 시간에 끝내는 놀이가 아니였다. &lt;strong&gt;멀리보며 꾸준히 코드를 읽는게 중요하다는 것을 깨달았다.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;물론 내가 부족했던점도 있었다. 레퍼런스들을 잘 보지 않았다는 것이다. 때때로 코드에서는 수천줄을 읽어야 되는 것을 레퍼런스 한개만 읽어도 이해되는 구조가 몇몇 있었다. 이러한 시행착오를 격고 최근에서는 레퍼런스를 열심히 읽는중이다.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;이 글은 오로지 저의 생각이며 정답이 아닙니다. :D&lt;/strong&gt;&lt;/p&gt;</content><author><name>오우진</name></author><category term="R&amp;D" /><summary type="html">이번생에 버그헌팅은 처음이라</summary></entry></feed>
+&lt;p&gt;C.T(스로틀 전폐), W.O.T(스로틀 전개) 상태에 따라 요구되는 출력 전압이 다르다. 이에 따라 악셀러레이터 페달의 저항값, 그리고 센서 2의 입력에 해당되는 곳의 저항값을 조절하는 회로를 구성하여 ECU가 요구하는 전압 값을 만족시킬 수 있다. 차후 연구에서는 악셀러레이터 페달 값을 임의로 주고 그에 따른 ECU의 반응을 살펴볼 계획이다.&lt;/p&gt;</content><author><name>서영일</name></author><category term="R&amp;D" /><summary type="html">Prologue 최근 자동차 해킹에 대해 관심을 가지는 사람들이 늘고 있다. 워낙 차를 좋아해서 기회가 생기면 자동차 해킹을 해봐야겠다고 생각했었는데 마침 기술 블로그에 기고할 차례가 되어 글을 쓰게 되었다.</summary></entry></feed>

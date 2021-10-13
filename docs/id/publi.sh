@@ -1,4 +1,4 @@
-git checkout master
+# git checkout master
 rm -rf _site/
 bundle exec jekyll build
 git add --all
