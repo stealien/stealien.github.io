@@ -1,0 +1,24 @@
+---
+permalink: /
+lang: id
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	{%- include header.html -%}
+</head>
+<body>
+	<header>
+		<div class="container">
+			{%- include nav.html -%}
+		</div>
+		{%- include page_header-{{lang}}.html -%}
+	</header>
+	<section>
+		<div>
+			{{ content }}
+		</div>
+	</section>
+	{%- include footer.html -%}
+</body>
+</html>
