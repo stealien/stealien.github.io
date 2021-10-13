@@ -1,0 +1,157 @@
+<div class="header_image_bg header_image_post" style="background-image: url('/assets/2020-11-16/background.jpg');">
+    <div class="header_image_post_body">
+        <div class="container">
+            <div class="page-category">R&D</div>
+            <div class="page-title">日本のアプリケーションセキュリティー措置</div>
+            <div class="page-summary">
+                <div style="float:left;">
+                    <img class="page-profile_image" src="/assets/stealien_inverse.png" />
+                    <span>양찬우</span>
+                </div>
+                <div style="float:right;" class="page-date">Nov 16, 2020</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container page-content">
+    <p><strong>日本のアプリケーションセキュリティー措置</strong></p>
+
+<p>概要</p>
+
+<p>今回は日本のアプリケーションの特徴と、セキュリティ措置について確認するため、APKファイルを改ざんしたりhookingを通じてモバイル安全性を確認するいくつかのテストを行います。</p>
+
+<p>１。アプリの具現方法</p>
+
+<p>日本のアプリケーションの特徴を調べるために、日本のショッピングアプリケーションを一例として分析してみます。オンラインショッピングアプリは大体ウェブビューで具現されています。</p>
+
+<p>２。root化の有無を確認</p>
+
+<p>日本のアプリケーションの特徴および問題点</p>
+
+<p>金融関係のアプリケーションを除き、日本の一般的なアプリケーションはアンドロイドのroot化が出来ているかを確認していない場合があります。しかし、root化の有無を確認するのはアプリケーションセキュリティに対する大事な問題です。</p>
+
+<p>インストールして実行してみると、アプリケーションはroot化の有無を確認していませんでした。これについて個人的には、root化の有無を確認しないとハッカーがアプリを改ざんしたり、システム権限を利用してシステムを操作する場合があります。なので、rootingの有無を確認することをお勧めします。</p>
+
+<p>SUコマンドを検証、プロセスリスト探知、rooting関連アプリの有無を確認さればroot化の有無が簡単に確認できます。</p>
+
+<p><img src="/assets/2020-11-16/16.png" alt="16" style="zoom:33%;" /></p>
+
+<p>​[図1] rootingされたデバイスで実行されたアプリケーション</p>
+
+<p>3。難読化</p>
+
+<p>難読化は、文字通り読みにくくするという意味です。</p>
+
+<p>難読化はデコンパイルしたソースコードを変更して解りにくくし、解析を困難にしてサイバー攻撃から守ります。</p>
+
+<p>JEBツールを使ってAPKをデコンパイルしてみました。</p>
+
+<p><img src="/assets/2020-11-16/7.png" alt="7" /></p>
+
+<p>​[図2] 難読化が出来ていないソースコード</p>
+
+<p>４。アプリの改ざん検証</p>
+
+<p>アプリケーションの改ざん検証が行われているかを確認する方法は、アプリケーションをrepackagingしてみるか、smaliコードを変更してみるかの二つの方法があります。私はアプリケーションをrepackagingする方法を使てみました。</p>
+
+<p><img src="/assets/2020-11-16/8.png" alt="8" style="zoom: 50%;" /></p>
+
+<p>​[図3] jarsignerを使ってresign</p>
+
+<p>repackagingの後resigningして偽造されたアプリを実行して見ると</p>
+
+<p><img src="/assets/2020-11-16/3.png" alt="3" style="zoom:25%;" /></p>
+
+<p>​[図4] 強制終了されたアプリケーション</p>
+
+<p>上記図を見ると、改ざんを検証していることがわかります。</p>
+
+<p>改ざんを検証しているところを、fridaを使ってhookingしてみました。</p>
+
+<p>fridaはPythonベースのライブラリの動的解析ツールです。</p>
+
+<p>このツールは、JavaScriptを用いてScriptingが可能であり、マルチプラットフォームで動作します。（インストール方法は pip install frida-tools）</p>
+
+<p>そして、hash値の検証を通し、アプリケーションの改ざん有無を確認していることがわかりました。</p>
+
+<p>下記のコードを使ってhookingしました。</p>
+
+<p><img src="/assets/2020-11-16/MCD.png" alt="MCD" style="zoom:50%;" /></p>
+
+<p>​[図5] コード</p>
+
+<p>hookingした後、アプリケーションを実行して見ると次の図のようにアプリが正常に起動していることが確認できました。</p>
+
+<p><img src="/assets/2020-11-16/16.png" alt="16" style="zoom:33%;" /></p>
+
+<p>​[図6] 通常に動作している画面</p>
+
+
+    <div class="page-profile-detail">
+        <div class="page-profile-detail-info">
+            <div>
+                <img class="page-profile_image-detail" src="/assets/stealien_inverse.png" />
+            </div>
+            <div style="position: relative; top: 12px;left: 10px;">
+                <div class="page-profile-author">양찬우</div>
+                <div class="page-profile-email">cyang@stealien.com</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="recent-post-area">
+    <div class="posts container">
+        <div class="h1-recent-post">RECENT POST</div>
+            <div class="row">
+    <div class="col-sm-2 col-md-2">
+        <div class="profile">
+            <img src="/assets/posts/thumbnails/20200619.jpg" class="profile_image" />
+            <div class="profile_author">김도현</div>
+        </div>
+    </div>
+    <div class="col">
+        <a href="/2021-10-13/MikroTik-PostAuth-RCE">
+            <div class="post-title">
+                MikroTik Post-Auth execve() call.
+            </div>
+        </a>
+        <div class="post-summary">MikroTik Post-Auth execve() call.</div>
+        <div class="post-info">
+            <span style="color: #545454" class="post-author-mobile">
+                김도현
+                <span style="color: #f5f5f5; margin: 2px">|</span>
+            </span>
+            Oct 13, 2021
+            <span style="color: #f5f5f5; margin: 2px">|</span>
+            <span>R&D</span>
+        </div>
+    </div>
+</div><div class="row">
+    <div class="col-sm-2 col-md-2">
+        <div class="profile">
+            <img src="/assets/2021-08-20-CVE-2020-26934/profile.png" class="profile_image" />
+            <div class="profile_author">고기완</div>
+        </div>
+    </div>
+    <div class="col">
+        <a href="/2021-09-02/CVE-2020-26934-phpMyAdmin-Reflected-Cross-site-scripting">
+            <div class="post-title">
+                CVE-2020-26934 - phpMyAdmin Reflected Cross-site scripting
+            </div>
+        </a>
+        <div class="post-summary">phpMyAdmin Reflected Cross-site scripting</div>
+        <div class="post-info">
+            <span style="color: #545454" class="post-author-mobile">
+                고기완
+                <span style="color: #f5f5f5; margin: 2px">|</span>
+            </span>
+            Sep 2, 2021
+            <span style="color: #f5f5f5; margin: 2px">|</span>
+            <span>R&D</span>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+</div>
