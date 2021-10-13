@@ -2,7 +2,7 @@
 layout		: post
 markdown	: kramdown
 highlighter	: rouge
-title		: MikroTik Post-Auth execve() call.
+title		: "MikroTik Post-Auth execve() call."
 date		: 2021-10-13 19:00:00 +0900
 category	: R&D
 author		: 김도현
@@ -11,6 +11,7 @@ background	: /assets/posts/thumbnails/20200619.jpg
 profile_image: /assets/posts/thumbnails/20200619.jpg
 summary		: MikroTik Post-Auth execve() call.
 thumbnail	:  /assets/posts/thumbnails/20200619.jpg
+lang        : ko
 ---
 
 # MikroTik arbitrary call `execve()` (Post Authentication)
