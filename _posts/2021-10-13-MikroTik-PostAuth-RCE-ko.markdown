@@ -12,6 +12,7 @@ profile_image: /assets/posts/thumbnails/20200619.jpg
 summary		: MikroTik Post-Auth execve() call.
 thumbnail	:  /assets/posts/thumbnails/20200619.jpg
 lang        : ko
+permalink   : /2021-10-13/MikroTik-PostAuth-RCE
 ---
 
 # MikroTik arbitrary call `execve()` (Post Authentication)
