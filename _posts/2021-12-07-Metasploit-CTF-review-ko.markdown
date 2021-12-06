@@ -443,7 +443,7 @@ Here is the URL you are looking for: /U,rhbjaaCeDseVRQzEO.YsgXXtoGKpvUEkZXaoxurh
 
 > Solved by **Donggyu Kim** from **STLCTF**
 
-20011/tcp로 접근하게 되면 네개의 사용자의 페이지를 볼 수 있는데, 이 중 Sarah의 페이지는 private 설정이 되어 있다. 하지만 밑의 url 검색 기능에서 SSRF가 발생하는데, 이를 이용하여 `/admin`에 접근하게 되면 Sarah의 페이지 권한 설정을 수정할 수 있다. 그리고 Sarah의 페이지로 접근하여 플래그를 획득할 수 있었다.
+20011/tcp로 접근하게 되면 네개의 사용자의 페이지를 볼 수 있는데, 이 중 John의 페이지는 private 설정이 되어 있다. 하지만 밑의 url 검색 기능에서 SSRF가 발생하는데, 이를 이용하여 `/admin`에 접근하게 되면 John의 페이지 권한 설정을 수정할 수 있다. 그리고 John의 페이지로 접근하여 플래그를 획득할 수 있었다.
 
 ----
 
