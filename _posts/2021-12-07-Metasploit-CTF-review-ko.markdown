@@ -9,7 +9,7 @@ author		: 김도현
 author_email: dhkim@stealien.com
 background	: /assets/bg.png
 profile_image: /assets/2021-01-28-metasploit-ctf-review/profile_image.jpg
-summary		: MikroTik Post-Auth execve() call.
+summary		: Metasploit CTF review
 thumbnail	: /assets/stealien.png
 lang        : ko
 permalink   : /2021-12-07/Metasploit-CTF-Review
