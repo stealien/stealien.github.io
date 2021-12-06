@@ -14,18 +14,18 @@
 <meta name="generator" content="Jekyll v4.2.0" />
 <meta property="og:title" content="MikroTik Post-Auth execve() call." />
 <meta name="author" content="김도현" />
-<meta property="og:locale" content="ko" />
-<meta name="description" content="MikroTik arbitrary call execve() (Post Authentication) Affect version : 6.48.3 to 6.48.? (not checked. sorry.) Impact : Low Difficulty : Low" />
-<meta property="og:description" content="MikroTik arbitrary call execve() (Post Authentication) Affect version : 6.48.3 to 6.48.? (not checked. sorry.) Impact : Low Difficulty : Low" />
-<link rel="canonical" href="http://0.0.0.0:4000/id/2021-10-13/MikroTik-PostAuth-RCE" />
-<meta property="og:url" content="http://0.0.0.0:4000/2021-10-13/MikroTik-PostAuth-RCE" />
+<meta property="og:locale" content="id" />
+<meta name="description" content="MikroTik panggilan sewenang-wenang execve() (Post Authentication) Mempengaruhi versi: 6.48.3 hingga 6.48.? (tidak diperiksa. maaf.) Dampak : Rendah Kesulitan: Rendah" />
+<meta property="og:description" content="MikroTik panggilan sewenang-wenang execve() (Post Authentication) Mempengaruhi versi: 6.48.3 hingga 6.48.? (tidak diperiksa. maaf.) Dampak : Rendah Kesulitan: Rendah" />
+<link rel="canonical" href="http://ufo.stealien.com/id/2021-10-13/MikroTik-PostAuth-RCE" />
+<meta property="og:url" content="http://ufo.stealien.com/2021-10-13/MikroTik-PostAuth-RCE" />
 <meta property="og:site_name" content="STEALIEN Technical Blog" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2021-10-13T19:00:00+09:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="MikroTik Post-Auth execve() call." />
 <script type="application/ld+json">
-{"@type":"BlogPosting","url":"http://0.0.0.0:4000/2021-10-13/MikroTik-PostAuth-RCE","datePublished":"2021-10-13T19:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://0.0.0.0:4000/2021-10-13/MikroTik-PostAuth-RCE"},"author":{"@type":"Person","name":"김도현"},"description":"MikroTik arbitrary call execve() (Post Authentication) Affect version : 6.48.3 to 6.48.? (not checked. sorry.) Impact : Low Difficulty : Low","headline":"MikroTik Post-Auth execve() call.","dateModified":"2021-10-13T19:00:00+09:00","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","headline":"MikroTik Post-Auth execve() call.","url":"http://ufo.stealien.com/2021-10-13/MikroTik-PostAuth-RCE","datePublished":"2021-10-13T19:00:00+09:00","dateModified":"2021-10-13T19:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://ufo.stealien.com/2021-10-13/MikroTik-PostAuth-RCE"},"author":{"@type":"Person","name":"김도현"},"description":"MikroTik panggilan sewenang-wenang execve() (Post Authentication) Mempengaruhi versi: 6.48.3 hingga 6.48.? (tidak diperiksa. maaf.) Dampak : Rendah Kesulitan: Rendah","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -76,25 +76,25 @@
     </div>
 </div>
 <div class="container page-content">
-    <h1 id="mikrotik-arbitrary-call-execve-post-authentication">MikroTik arbitrary call <code class="language-plaintext highlighter-rouge">execve()</code> (Post Authentication)</h1>
+    <h1 id="mikrotik-panggilan-sewenang-wenang-execve-post-authentication">MikroTik panggilan sewenang-wenang execve() (Post Authentication)</h1>
 <ul>
-  <li>Affect version : 6.48.3 to 6.48.? (not checked. sorry.)</li>
-  <li>Impact : <code class="language-plaintext highlighter-rouge">Low</code></li>
-  <li>Difficulty : <code class="language-plaintext highlighter-rouge">Low</code></li>
+  <li>Mempengaruhi versi: 6.48.3 hingga 6.48.? (tidak diperiksa. maaf.)</li>
+  <li>Dampak : Rendah</li>
+  <li>Kesulitan: Rendah</li>
 </ul>
 
-<h2 id="report">Report</h2>
+<h2 id="laporan">Laporan</h2>
+<p>Kerentanan ini…</p>
 
-<p>본 취약점은…</p>
 <ul>
-  <li>MikroTik RouterOS 6.48.3에서 발견되었습니다.</li>
-  <li>디바이스의 설정에 관계 없이 발생합니다.</li>
-  <li><code class="language-plaintext highlighter-rouge">/nova/bin/mepty</code> 컴포넌트에서 발생합니다.</li>
-  <li><code class="language-plaintext highlighter-rouge">sub_804B2BC()</code> 함수에서 취약점이 발생합니다.</li>
-  <li>최종적으로, 악의적인 사용자가 임의의 <code class="language-plaintext highlighter-rouge">execve()</code>를 통해 프로세스를 만들 수 있습니다.</li>
+  <li>Ditemukan di MikroTik RouterOS 6.48.3.</li>
+  <li>Terjadi terlepas dari pengaturan perangkat.</li>
+  <li>Terjadi di komponen /nova/bin/mepty.</li>
+  <li>Kerentanan ada di fungsi sub_804B2BC().</li>
+  <li>Terakhir, pengguna jahat dapat membuat proses melalui arbitrary execve().</li>
 </ul>
 
-<h3 id="코드-분석-root-cause-analysis">코드 분석 (Root cause analysis)</h3>
+<h3 id="analisis-root-cause">Analisis Root Cause</h3>
 <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">sub_804B2BC</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="p">...</span>
@@ -141,27 +141,28 @@
     <span class="p">...</span>
 <span class="p">}</span>
 </code></pre></div></div>
+
 <ol>
-  <li><code class="language-plaintext highlighter-rouge">v60</code>에 9번 인자의 문자열을 할당합니다. (익스플로잇 코드에서 <code class="language-plaintext highlighter-rouge">s9</code>)</li>
-  <li><code class="language-plaintext highlighter-rouge">v30</code>에 <code class="language-plaintext highlighter-rouge">s</code>를 대입합니다.</li>
-  <li><code class="language-plaintext highlighter-rouge">default</code>문에서, <strong>할당 된 변수들을 초기화 하거나, 함수를 끝내는 등 적절한 조치를 취하지 않습니다.</strong></li>
-  <li><code class="language-plaintext highlighter-rouge">*v30</code>에 <code class="language-plaintext highlighter-rouge">v60+4</code>(문자열의 실제 주소)를 대입합니다.</li>
-  <li><code class="language-plaintext highlighter-rouge">v56</code>에 <code class="language-plaintext highlighter-rouge">s</code>를 할당합니다. 여기서 <code class="language-plaintext highlighter-rouge">s</code>에는 4번 단계에서 넣은 값(<code class="language-plaintext highlighter-rouge">s9</code>)이 들어가 있습니다.</li>
-  <li><code class="language-plaintext highlighter-rouge">execve()</code>를 통해 원하는 프로세스를 생성할 수 있습니다.</li>
+  <li>Tetapkan string argumen 9 ke <code class="language-plaintext highlighter-rouge">v60</code>. (<code class="language-plaintext highlighter-rouge">s9</code> dalam kode eksploit)</li>
+  <li>Pengganti s untuk <code class="language-plaintext highlighter-rouge">v30</code>.</li>
+  <li>Dalam pernyataan <code class="language-plaintext highlighter-rouge">default</code>, <strong>tidak ada tindakan yang tepat yang diambil, seperti menginisialisasi variabel yang dialokasikan atau menghentikan fungsi.</strong></li>
+  <li>Ganti <code class="language-plaintext highlighter-rouge">v60+4</code> (alamat string yang sebenarnya) untuk *v30.</li>
+  <li>Tetapkan s ke <code class="language-plaintext highlighter-rouge">v56</code>. Di sini, <code class="language-plaintext highlighter-rouge">s</code> berisi nilai (<code class="language-plaintext highlighter-rouge">s9</code>) yang dimasukkan pada langkah 4.</li>
+  <li>Anda dapat menelurkan proses apa pun yang Anda inginkan melalui <code class="language-plaintext highlighter-rouge">execve()</code>.</li>
 </ol>
 
-<h3 id="악용">악용</h3>
+<h3 id="mengeksploitasi">Mengeksploitasi</h3>
 <ul>
-  <li>본 취약점을 활용하여 장비의 관리자 권한을 획득 할 수 있습니다.</li>
+  <li>Anda dapat memanfaatkan kerentanan ini untuk mendapatkan hak administrator di perangkat.</li>
 </ul>
 
-<h3 id="한계">한계</h3>
+<h3 id="membatasi">Membatasi</h3>
 <ul>
-  <li>업로드 한 임의의 바이너리에 <strong>실행 권한을 부여하여</strong> 실행해야만 최종적으로 권한을 획득할 수 있습니다.</li>
-  <li>인증(로그인) 후 사용 가능한 취약점입니다.</li>
+  <li>Anda akhirnya dapat memperoleh izin hanya dengan memberikan izin eksekusi ke biner yang diunggah secara sewenang-wenang dan menjalankannya.</li>
+  <li>Kerentanan tersedia setelah otentikasi (login).</li>
 </ul>
 
-<h2 id="공격-코드">공격 코드</h2>
+<h2 id="kode-serangan">Kode serangan</h2>
 <ul>
   <li>https://github.com/d0now/vulnerabilities/MikroTik_RouterOS/2021-10-13-post-auth-execve/exploit.py</li>
 </ul>
