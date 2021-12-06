@@ -2,14 +2,14 @@
 layout		: post
 markdown	: kramdown
 highlighter	: rouge
-title		: "Metasploit CTF review"
+title		: "2021 Metasploit Community CTF write-up, review"
 date		: 2021-12-07 01:30:00 +0900
 category	: R&D
 author		: 김도현
 author_email: dhkim@stealien.com
 background	: /assets/bg.png
 profile_image: /assets/2021-01-28-metasploit-ctf-review/profile_image.jpg
-summary		: Metasploit CTF review
+summary		: "2021 Metasploit Community CTF write-up, review"
 thumbnail	: /assets/stealien.png
 lang        : ko
 permalink   : /2021-12-07/Metasploit-CTF-Review

@@ -1,7 +1,12 @@
 #/bin/sh
 
 git checkout master
+
+# Remove the built file.
 rm -rf _site/
+rm -rf docs/
+
+# Run build
 bundle exec jekyll build
 
 if [ $? -eq 0 ]; then
