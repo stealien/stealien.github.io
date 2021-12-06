@@ -9,6 +9,7 @@ if [ $? -eq 0 ]; then
     mv _site docs
 else
     echo "[x] jekyll build failed .."
+    exit
 fi
 
 git add --all
