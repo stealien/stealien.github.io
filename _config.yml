@@ -45,6 +45,7 @@ exclude_from_localization: ["assets"]
 
 
 markdown: kramdown
+highlighter: rouge
 
 kramdown:
   input: GFM

