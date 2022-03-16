@@ -2,20 +2,22 @@
 layout		: post
 markdown	: kramdown
 highlighter	: rouge
-title		: DirtyPipe
+title		: DirtyPipe Review
 date		: 2022-03-15 00:00:00 +0900
 category	: R&D
 author		: seonungjang
 author_email: sujang@stealien.com
 background	: /assets/bg.png
 profile_image: /assets/stealien_inverse.png
-summary		: "DirtyPipe"
+summary		: "DirtyPipe review by seonungjang"
 thumbnail	: /assets/stealien.png
 lang        : ko
-permalink   : /2022-03-15/DirtyPipe
+permalink   : /2022-03-15/dirtypipe-review
 ---
 
-# DirtyPipe
+# DirtyPipe Review
+
+----
 
 read only 파일을 arbitrary하게 write 할 수 있는 취약점이 disclosure 됐다. 이 취약점을 dirty pipe라고 부르는데 익스플로잇 내용이 이름처럼 dirty cow 취약점과 유사해 보인다.
 
