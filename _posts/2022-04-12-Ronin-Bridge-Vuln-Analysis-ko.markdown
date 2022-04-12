@@ -9,7 +9,7 @@ author		: 한호정
 author_email: hjhan@stealien.com
 background	: /assets/bg.png
 profile_image: /assets/stealien_inverse.png
-summary		: "DirtyPipe review by seonungjang"
+summary		: "Ronin Bridge 취약점 분석"
 thumbnail	: /assets/stealien.png
 lang        : ko
 permalink   : /2022-04-12/ronin-bridge-vuln-analysis
