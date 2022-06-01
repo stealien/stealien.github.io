@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2022-06-02T01:39:29+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">How to root your RouterOS v7 Virtual Machine</title><link href="http://ufo.stealien.com/2022-06-01/how-to-root-your-routeros-v7-virtual-machine" rel="alternate" type="text/html" title="How to root your RouterOS v7 Virtual Machine" /><published>2022-06-01T00:00:00+09:00</published><updated>2022-06-01T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-06-01/how-to-root-routeros-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-01/how-to-root-your-routeros-v7-virtual-machine">&lt;h1 id=&quot;how-to-root-your-routeros-v7-virtual-machine&quot;&gt;How to root your RouterOS v7 Virtual Machine&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2022-06-02T02:08:13+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">How to root your RouterOS v7 Virtual Machine</title><link href="http://ufo.stealien.com/2022-06-01/how-to-root-your-routeros-v7-virtual-machine" rel="alternate" type="text/html" title="How to root your RouterOS v7 Virtual Machine" /><published>2022-06-01T00:00:00+09:00</published><updated>2022-06-01T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-06-01/how-to-root-routeros-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-01/how-to-root-your-routeros-v7-virtual-machine">&lt;h1 id=&quot;how-to-root-your-routeros-v7-virtual-machine&quot;&gt;How to root your RouterOS v7 Virtual Machine&lt;/h1&gt;
 
 &lt;p&gt;Finding vulnerabilities in RouterOS is tricky, and this is especially because it does not provide a shell environment like ash or bash.&lt;/p&gt;
 
@@ -63,42 +63,52 @@
   &lt;li&gt;
     &lt;p&gt;Attach RouterOS VM’s Disk to Ubuntu VM&lt;/p&gt;
   &lt;/li&gt;
-  &lt;li&gt;Boot the Ubuntu VM, and browse into RouterOS Disk’s volume called ‘RouterOS’. Go to /RW/disk/ and execute the following command to download the busybox binary. Exit the Ubuntu VM.
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo mkdir busybox &amp;amp;&amp;amp; cd busybox
-sudo wget -O ash https://www.busybox.net/downloads/binaries/1.31.0-i686-uclibc/busybox_ASH
-sudo wget https://www.busybox.net/downloads/binaries/1.31.0-i686-uclibc/busybox
-chmoad a+x ash busybox
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;li&gt;
+    &lt;p&gt;Boot the Ubuntu VM, and browse into RouterOS Disk’s volume called ‘RouterOS’. Go to /RW/disk/ and execute the following command to download the busybox binary. Exit the Ubuntu VM.&lt;/p&gt;
   &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo mkdir &lt;/span&gt;busybox &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;busybox
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;wget &lt;span class=&quot;nt&quot;&gt;-O&lt;/span&gt; ash https://www.busybox.net/downloads/binaries/1.31.0-i686-uclibc/busybox_ASH
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;wget https://www.busybox.net/downloads/binaries/1.31.0-i686-uclibc/busybox
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;chmod &lt;/span&gt;a+x ash busybox
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ol&gt;
   &lt;li&gt;
     &lt;p&gt;Boot RouterOS VM and make several login attempts with the invalid credential.&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
     &lt;p&gt;Suspend the RouterOS VM. Go to the RouterOS VM folder and open vmem file with hex editor.&lt;/p&gt;
   &lt;/li&gt;
-  &lt;li&gt;Find &amp;amp; Replace as follows
-````
-Original: 00 2F 62 6E 64 6C 2F 00 6F 70 74 69 6F 6E 00
-Replaced: 00 2F 62 6E 64 6C 2F 00 69 70 76 36 00 00 00&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Find &amp;amp; Replace as follows&lt;/p&gt;
+  &lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;Original: 00 2F 70 63 6B 67 2F 6F 70 74 69 6F 6E 2F 62 69 6E 2F 62 61 73 68 00
-Replaced: 00 2F 72 77 2F 64 69 73 6B 2F 62 75 73 79 62 6F 78 2F 61 73 68 00 00&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-7. Save the vmem file. Resume the RouterOS VM
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Original: 00 2F 62 6E 64 6C 2F 00 6F 70 74 69 6F 6E 00
+Replaced: 00 2F 62 6E 64 6C 2F 00 69 70 76 36 00 00 00
 
-8. Login with devel/(admin's password)
-
-9. You will get a shell. If not, repeat the process from stage 4.
-
-10. Execute the following commands to install the busybox.
+Original: 00 2F 70 63 6B 67 2F 6F 70 74 69 6F 6E 2F 62 69 6E 2F 62 61 73 68 00
+Replaced: 00 2F 72 77 2F 64 69 73 6B 2F 62 75 73 79 62 6F 78 2F 61 73 68 00 00
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;cd /rw/disk/busybox
-./busybox –install -s .
-PATH=$PATH:/rw/disk/busybox/
-````&lt;/p&gt;
 
 &lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Save the vmem file. Resume the RouterOS VM&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Login with devel/(admin’s password)&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;You will get a shell. If not, repeat the process from stage 4.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Execute the following commands to install the busybox.
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /rw/disk/busybox
+./busybox &lt;span class=&quot;nt&quot;&gt;--install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;:/rw/disk/busybox/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
   &lt;li&gt;If everything is done correctly, you should get an ash shell with busybox as the screenshot.
 &lt;img src=&quot;/assets/2022-06-01-how-to-root-routeros/6d99def97b5f4aa312ca4519056a67ffb624cd4059f38c21bd7f9a08b82c530b.png&quot; alt=&quot;picture 4&quot; /&gt;&lt;/li&gt;
 &lt;/ol&gt;

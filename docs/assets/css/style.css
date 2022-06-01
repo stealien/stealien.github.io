@@ -15,10 +15,6 @@ body {
     font-family: 'Noto Sans KR', sans-serif;
 }
 
-code.highlighter-rouge, code * {
-    font-family: 'Ubuntu', sans-serif;
-}
-
 #header {
 }
 
@@ -357,16 +353,24 @@ div.highlight {
     margin-bottom: 16px;
 }
 
-pre.highlight {
-    max-width: 730px;
-    padding-right: 0;
-    padding-left: 0;
-}
 
 div.posts.container {
     max-width: 860px;
     width: 88%;
 }
 
+div.highlight {
+    border-radius: 1em;
+    align-content: center;
+}
 
-
+pre.highlight {
+    font-family: 'Ubuntu', sans-serif;
+    max-width: 730px;
+    margin: 0 auto;
+    border-radius: 1em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+}

@@ -73,25 +73,27 @@ Step:
 2. Attach RouterOS VM's Disk to Ubuntu VM
 
 3. Boot the Ubuntu VM, and browse into RouterOS Disk's volume called 'RouterOS'. Go to /RW/disk/ and execute the following command to download the busybox binary. Exit the Ubuntu VM.
-````
-sudo mkdir busybox && cd busybox
-sudo wget -O ash https://www.busybox.net/downloads/binaries/1.31.0-i686-uclibc/busybox_ASH
-sudo wget https://www.busybox.net/downloads/binaries/1.31.0-i686-uclibc/busybox
-chmoad a+x ash busybox
-````
+
+```bash
+$ sudo mkdir busybox && cd busybox
+$ sudo wget -O ash https://www.busybox.net/downloads/binaries/1.31.0-i686-uclibc/busybox_ASH
+$ sudo wget https://www.busybox.net/downloads/binaries/1.31.0-i686-uclibc/busybox
+$ chmod a+x ash busybox
+```
 
 4. Boot RouterOS VM and make several login attempts with the invalid credential.
 
 5. Suspend the RouterOS VM. Go to the RouterOS VM folder and open vmem file with hex editor.
 
 6. Find & Replace as follows
-````
+
+```
 Original: 00 2F 62 6E 64 6C 2F 00 6F 70 74 69 6F 6E 00
 Replaced: 00 2F 62 6E 64 6C 2F 00 69 70 76 36 00 00 00
 
 Original: 00 2F 70 63 6B 67 2F 6F 70 74 69 6F 6E 2F 62 69 6E 2F 62 61 73 68 00
 Replaced: 00 2F 72 77 2F 64 69 73 6B 2F 62 75 73 79 62 6F 78 2F 61 73 68 00 00
-````
+```
 
 7. Save the vmem file. Resume the RouterOS VM
 
@@ -100,11 +102,11 @@ Replaced: 00 2F 72 77 2F 64 69 73 6B 2F 62 75 73 79 62 6F 78 2F 61 73 68 00 00
 9. You will get a shell. If not, repeat the process from stage 4.
 
 10. Execute the following commands to install the busybox.
-````
+```bash
 cd /rw/disk/busybox
 ./busybox --install -s .
 PATH=$PATH:/rw/disk/busybox/
-````
+```
 
 11. If everything is done correctly, you should get an ash shell with busybox as the screenshot.
 ![picture 4](/assets/2022-06-01-how-to-root-routeros/6d99def97b5f4aa312ca4519056a67ffb624cd4059f38c21bd7f9a08b82c530b.png)
