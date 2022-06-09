@@ -50,20 +50,14 @@ RSA 는 1978년에 최초로 이 암호시스템을 연구하여 체계화시킨
 
 1. 서로 다른 **소수 p, q** 를 랜덤하게 선택한다.
 2. **n = p * q** 를 계산한다.
-
 ![003_n=pq.png](/assets/2022-06-08-homomorphism-in-rsa/003_npq.png)
 
-1. n 에 대하여 **오일러 피 함수(Euler’s phi (totient) function)** 또는 **카마이클 함수(Carmichael function)** 중 하나를 선택하여 계산한다.
-- 오일러 피 함수 ([https://ko.wikipedia.org/wiki/오일러_피_함수](https://ko.wikipedia.org/wiki/%EC%98%A4%EC%9D%BC%EB%9F%AC_%ED%94%BC_%ED%95%A8%EC%88%98))
-
-![004_phi.png](/assets/2022-06-08-homomorphism-in-rsa/004_phi.png)
-
-- 카마이클 함수 ([https://en.wikipedia.org/wiki/Carmichael_function](https://en.wikipedia.org/wiki/Carmichael_function))
-
-![005_lambda.png](/assets/2022-06-08-homomorphism-in-rsa/005_lambda.png)
-
-1. 3번에서 선택한 수와 **서로소인 정수 e** 를 고른다.
-    
+3. n 에 대하여 **오일러 피 함수(Euler’s phi (totient) function)** 또는 **카마이클 함수(Carmichael function)** 중 하나를 선택하여 계산한다.
+    - 오일러 피 함수 ([https://ko.wikipedia.org/wiki/오일러_피_함수](https://ko.wikipedia.org/wiki/%EC%98%A4%EC%9D%BC%EB%9F%AC_%ED%94%BC_%ED%95%A8%EC%88%98))
+    ![004_phi.png](/assets/2022-06-08-homomorphism-in-rsa/004_phi.png)
+    - 카마이클 함수 ([https://en.wikipedia.org/wiki/Carmichael_function](https://en.wikipedia.org/wiki/Carmichael_function))
+    ![005_lambda.png](/assets/2022-06-08-homomorphism-in-rsa/005_lambda.png)
+4. 3번에서 선택한 수와 **서로소인 정수 e** 를 고른다.
     (두 정수 a, b 의 최대공약수(gcd)가 1 이면 둘은 서로소이다.)
     
     (두 수가 서로소가 아니면 모듈러 역원을 구할 수 없다 → 개인키를 구할 수 없다.)
@@ -76,11 +70,9 @@ RSA 는 1978년에 최초로 이 암호시스템을 연구하여 체계화시킨
 ![007_Fermat_numbers.png](/assets/2022-06-08-homomorphism-in-rsa/007_Fermat_numbers.png)
 
 1. 정수 e 에 대한 **모듈러 역원인 d** 를 계산한다.
-
 ![008_private_key_d.png](/assets/2022-06-08-homomorphism-in-rsa/008_private_key_d.png)
 
 1. 위에서 계산한 값들 중 **n, e 를 공개키**로써 배포하고, **d 를 개인키**로써 절대 노출되지 않게 한다.
-
 ![009_keys.png](/assets/2022-06-08-homomorphism-in-rsa/009_keys.png)
 
 이제 해당 공개키를 이용하여 누구든지 메시지를 암호화해서 보내면 개인키를 가지고 있는 소유자만 해당 메시지를 복호화할 수 있다. 그렇다면 암/복호화는 어떻게 수행될까? 한번 살펴보자.
@@ -120,31 +112,24 @@ RSA 는 1978년에 최초로 이 암호시스템을 연구하여 체계화시킨
 ## 예시
 
 1. 임의의 소수 p, q 선택
-
 ![014_pq.png](/assets/2022-06-08-homomorphism-in-rsa/014_pq.png)
 
-1. n = p * q 계산
-
+2. n = p * q 계산
 ![015_n=pq=3233.png](/assets/2022-06-08-homomorphism-in-rsa/015_npq3233.png)
 
-1. 오일러 피함수 계산
-
+3. 오일러 피함수 계산
 ![016_phi(n).png](/assets/2022-06-08-homomorphism-in-rsa/016_phi(n).png)
 
-1. 오일러 피함수와 서로소인 정수 e 선택
-
+4. 오일러 피함수와 서로소인 정수 e 선택
 ![017_e=17.png](/assets/2022-06-08-homomorphism-in-rsa/017_e17.png)
 
-1. 개인키 d 계산
-
+5. 개인키 d 계산
 ![018_private_key_d.png](/assets/2022-06-08-homomorphism-in-rsa/018_private_key_d.png)
 
-1. 평문 m = a * b 라고 할 때 암호화 과정 비교
-
+6. 평문 m = a * b 라고 할 때 암호화 과정 비교
 ![019_enc.png](/assets/2022-06-08-homomorphism-in-rsa/019_enc.png)
 
-1. 서명 과정 비교 (계산 편의를 위해 해시 함수는 미적용)
-
+7. 서명 과정 비교 (계산 편의를 위해 해시 함수는 미적용)
 ![020_sign.png](/assets/2022-06-08-homomorphism-in-rsa/020_sign.png)
 
 CTF 의 RSA 문제에서 위 속성을 이용한 문제가 꽤나 자주 출제되며 한번 실제로 출제된 문제를 풀어보며 어떤 식으로 응용되는지 살펴보자.
@@ -278,13 +263,13 @@ factor(pt7):  197 * 811 * 947
 ```
 pt2   : 2 * 61 * 197
 pt5   :     61 * 197^2 * 811
-pt7   :         197   * 811 * 947
-pt1   :             811 * 947^3 * 970111
-pt4   :                 947   * 970111 * 2098711
-pt3   :                     970111 * 2098711^2 * 2854343
-pt6   :                         2098711   * 2854343 * 9605087
+pt7   :          197   * 811 * 947
+pt1   :                  811 * 947^3 * 970111
+pt4   :                        947   * 970111 * 2098711
+pt3   :                                970111 * 2098711^2 * 2854343
+pt6   :                                         2098711   * 2854343 * 9605087
 -----------------------------------------------------------------------------
-target: 2       * 197   * 947   * 2098711           * 9605087
+target: 2      * 197         * 947            * 2098711             * 9605087
 ```
 
 이제 곱하기, 나누기를 이용하여 target 과 일치하는 수를 만들면 된다.

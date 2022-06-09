@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta property="og:type" content="article">
+<meta property="og:image" content="http://ufo.stealien.com/assets/og_image.png">
+<meta property="og:title" content="STEALIEN Technical Blog">
+<meta property="og:description" content="Homomorphism in RSA">
+<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700&display=swap" rel="stylesheet">
+<title>Homomorphism in RSA</title>
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Homomorphism in RSA | STEALIEN Technical Blog</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Homomorphism in RSA" />
+<meta name="author" content="박지원" />
+<meta property="og:locale" content="ko" />
+<meta name="description" content="Homomorphism in RSA" />
+<meta property="og:description" content="Homomorphism in RSA" />
+<link rel="canonical" href="http://ufo.stealien.com/id/2022-06-01/homomorphism-in-rsa" />
+<meta property="og:url" content="http://ufo.stealien.com/2022-06-01/homomorphism-in-rsa" />
+<meta property="og:site_name" content="STEALIEN Technical Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-06-01T00:00:00+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Homomorphism in RSA" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"Homomorphism in RSA","url":"http://ufo.stealien.com/2022-06-01/homomorphism-in-rsa","datePublished":"2022-06-01T00:00:00+09:00","dateModified":"2022-06-01T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://ufo.stealien.com/2022-06-01/homomorphism-in-rsa"},"author":{"@type":"Person","name":"박지원"},"description":"Homomorphism in RSA","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name=“naver-site-verification” content=“74a9ec74d48a1ffca92bf9ac4704ba73be9afd65" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"/>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/assets/css/style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/id//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
+
+<link href="/assets/css/syntax.css" rel="stylesheet" >
+</head>
+<body>
+	<header>
+		<div class="container"></div><div id="header">
+    <div class="container" style="display: flex;justify-content: space-between;">
+        <a href="/id/">
+            <img
+                class="header_image_logo"
+                src="/assets/logo.png"
+                style="width: 140px; margin: 20px 28px 0px;"
+            />
+        </a>
+        <a href="https://www.stealien.com/" target="_blank" style="font-family: 'NotoSansKR Medium', sans-serif;font-size: 14px;margin-right: 30px; color: #000; line-height: 70px;">스틸리언 홈페이지</a>
+    </div>
+</div>
+</header>
+	<section>
+		<div>
+			<div class="header_image_bg header_image_post" style="background-image: url('/assets/bg.png');">
+    <div class="header_image_post_body">
+        <div class="container">
+            <div class="page-category">R&D</div>
+            <div class="page-title">Homomorphism in RSA</div>
+            <div class="page-summary">
+                <div style="float:left;">
+                    <img class="page-profile_image" src="/assets/stealien_inverse.png" />
+                    <span>박지원</span>
+                </div>
+                <div style="float:right;" class="page-date">Jun 1, 2022</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container page-content">
+    <h1 id="homomorphism-in-rsa">Homomorphism in RSA</h1>
+
+<h1 id="서론">서론</h1>
+
+<p><img src="/assets/2022-06-08-homomorphism-in-rsa/001_markus-spiske-iar-afB0QQw-unsplash_edit.jpg" alt="001_markus-spiske-iar-afB0QQw-unsplash_edit.jpg" /></p>
+
+<p>해킹에 관심을 가지게 된 사람이라면 누구든지 그 실력을 기르기 위해 워게임(Wargame) 사이트에서 문제들을 풀거나 CTF(Capture The Flag) 대회에 출전해 본 적이 있을 것이다. 웹(Web), 리버싱(Reversing), 포너블(Pwnable) 등 여러 분야의 문제들을 만나볼 수 있는데, 특별한 경우를 제외하고 항상 등장하는 분야가 있다. 바로 <strong>암호학(Cryptography)</strong> 분야이다.</p>
+
+<p>자주 등장하는 만큼 패기 있게 문제를 풀어보려 하지만 암호학 분야의 문제를 처음 접해보는 사람이라면 누구든지 괴상하게 뒤죽박죽 섞여 있거나 숫자로만 되어 있는 암호문을 받아보며 이것을 풀어서 정답을 제출하라는 말에 어떻게 해야 할지 시작부터 <strong>막막했던 경험</strong>이 있을 것이다.</p>
+
+<p>이번 글에서는 암호학이라는 분야에 대해 막연히 어렵고 복잡하다고 생각하는 사람들을 위해 암호학 분야의 워게임 문제에서 가장 흔하게 나오고 실제 필드에서도 많이 쓰이는 공개키 암호화 기법의 기본 중의 기본, <strong>RSA</strong> 와 관련된 문제를 풀어보며 암호학이라는 게 그렇게 어렵고 막막하기만 한 것은 아니라는 점을 배워갈 수 있다면 좋겠다.</p>
+
+<hr />
+
+<h1 id="본론">본론</h1>
+
+<h2 id="그래서-rsa-가-뭔가요">그래서 RSA 가 뭔가요?</h2>
+
+<p><img src="/assets/2022-06-08-homomorphism-in-rsa/002_RSA_inventors.jpeg" alt="002_RSA_inventors.jpeg" /></p>
+
+<p>RSA 는 1978년에 최초로 이 암호시스템을 연구하여 체계화시킨 Ron <strong>R</strong>ivest, Adi <strong>S</strong>hamir, Leonard <strong>A</strong>dleman 의 이름 앞 글자를 따 만들어진 <strong>암호화</strong>뿐만 아니라 <strong>전자서명</strong>까지 가능한 최초의 알고리즘이다.</p>
+
+<p>이 RSA 의 강력함은 다음 두 가지에서 나온다.</p>
+
+<ol>
+  <li>암/복호화, 서명/검증에 필요한 수학적인 계산 과정이 굉장히 간단하고 빠르다는 것.</li>
+  <li>큰 숫자의 소인수분해의 어려움을 이용한 강력한 안전성을 제공하고 있다는 것.</li>
+</ol>
+
+<p>위 두 가지의 강점으로 인해 현재까지도 RSA 는 널리 쓰이고 있다.</p>
+
+<p>다음으로는 왜 RSA 의 강점을 위 두 가지로 꼽았는지 키 생성부터 암/복호화, 서명/검증 과정을 살펴보며 알아보도록 하겠다.</p>
+
+<h2 id="rsa-키-생성">RSA 키 생성</h2>
+
+<ol>
+  <li>서로 다른 <strong>소수 p, q</strong> 를 랜덤하게 선택한다.</li>
+  <li>
+    <p><strong>n = p * q</strong> 를 계산한다.
+<img src="/assets/2022-06-08-homomorphism-in-rsa/003_npq.png" alt="003_n=pq.png" /></p>
+  </li>
+  <li>n 에 대하여 <strong>오일러 피 함수(Euler’s phi (totient) function)</strong> 또는 <strong>카마이클 함수(Carmichael function)</strong> 중 하나를 선택하여 계산한다.
+    <ul>
+      <li>오일러 피 함수 (<a href="https://ko.wikipedia.org/wiki/%EC%98%A4%EC%9D%BC%EB%9F%AC_%ED%94%BC_%ED%95%A8%EC%88%98">https://ko.wikipedia.org/wiki/오일러_피_함수</a>)
+ <img src="/assets/2022-06-08-homomorphism-in-rsa/004_phi.png" alt="004_phi.png" /></li>
+      <li>카마이클 함수 (<a href="https://en.wikipedia.org/wiki/Carmichael_function">https://en.wikipedia.org/wiki/Carmichael_function</a>)
+ <img src="/assets/2022-06-08-homomorphism-in-rsa/005_lambda.png" alt="005_lambda.png" /></li>
+    </ul>
+  </li>
+  <li>
+    <p>3번에서 선택한 수와 <strong>서로소인 정수 e</strong> 를 고른다.
+ (두 정수 a, b 의 최대공약수(gcd)가 1 이면 둘은 서로소이다.)</p>
+
+    <p>(두 수가 서로소가 아니면 모듈러 역원을 구할 수 없다 → 개인키를 구할 수 없다.)</p>
+  </li>
+</ol>
+
+<p><img src="/assets/2022-06-08-homomorphism-in-rsa/006_gcd_coprime.png" alt="006_gcd_coprime.png" /></p>
+
+<p>(일반적으로 계산의 효율성을 위해 <a href="https://ko.wikipedia.org/wiki/%ED%8E%98%EB%A5%B4%EB%A7%88_%EC%88%98">페르마 수(Fermat Number)</a>가 선택된다.)</p>
+
+<p><img src="/assets/2022-06-08-homomorphism-in-rsa/007_Fermat_numbers.png" alt="007_Fermat_numbers.png" /></p>
+
+<ol>
+  <li>
+    <p>정수 e 에 대한 <strong>모듈러 역원인 d</strong> 를 계산한다.
+<img src="/assets/2022-06-08-homomorphism-in-rsa/008_private_key_d.png" alt="008_private_key_d.png" /></p>
+  </li>
+  <li>
+    <p>위에서 계산한 값들 중 <strong>n, e 를 공개키</strong>로써 배포하고, <strong>d 를 개인키</strong>로써 절대 노출되지 않게 한다.
+<img src="/assets/2022-06-08-homomorphism-in-rsa/009_keys.png" alt="009_keys.png" /></p>
+  </li>
+</ol>
+
+<p>이제 해당 공개키를 이용하여 누구든지 메시지를 암호화해서 보내면 개인키를 가지고 있는 소유자만 해당 메시지를 복호화할 수 있다. 그렇다면 암/복호화는 어떻게 수행될까? 한번 살펴보자.</p>
+
+<h2 id="rsa-암호화">RSA 암호화</h2>
+
+<p><img src="/assets/2022-06-08-homomorphism-in-rsa/010_enc.png" alt="010_enc.png" /></p>
+
+<h2 id="rsa-복호화">RSA 복호화</h2>
+
+<p><img src="/assets/2022-06-08-homomorphism-in-rsa/011_dec.png" alt="011_dec.png" /></p>
+
+<p>위와 같이 정말 간단하게 암/복호화가 수행되며 이에 대한 증명은 <a href="https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Proofs_of_correctness">RSA 위키</a>에 상세하게 나와있다.</p>
+
+<p>(페르마 소정리, 오일러 정리를 이용하여 증명함)</p>
+
+<p>이번에는 서명/검증이 어떻게 수행되는지 살펴보자.</p>
+
+<h2 id="rsa-서명">RSA 서명</h2>
+
+<p><img src="/assets/2022-06-08-homomorphism-in-rsa/012_sign.png" alt="012_sign.png" /></p>
+
+<h2 id="rsa-검증">RSA 검증</h2>
+
+<p><img src="/assets/2022-06-08-homomorphism-in-rsa/013_verify.png" alt="013_verify.png" /></p>
+
+<p>암/복호화 과정과 순서만 바뀌었을 뿐 거의 동일하게 서명/검증이 수행되며 서명 시 개인키 d 를 이용해 서명이 되기 때문에 누구에게나 공개되는 e 를 이용해 메시지 m 을 복원할 수 없도록 해시 함수를 이용하여 메시지 m 의 해시값인 h 에 서명을 진행하도록 한다.</p>
+
+<p>메시지에 대한 서명이 완료되었다면 암호화된 메시지와 서명을 함께 전송하고 이후 검증 단계에서는 복호화된 메시지의 해시값과 $s^e \pmod{n}$ 을 계산하여 나온 해시값 h 를 비교하여 일치하는지 확인하면 된다.</p>
+
+<p>이제 RSA 시스템에 대한 기본적인 개념을 배웠으니 흥미로운 속성 하나를 추가로 알려주려고 한다.</p>
+
+<h2 id="준동형-사상homomorphism">준동형 사상(Homomorphism)</h2>
+
+<p>준동형 사상이란 대수학에서 구조상 닮은 두 대수 구조의 모든 연산 및 관계를 보존하는 경우를 말한다. 쉽게 말하자면, 어떠한 함수 <code class="language-plaintext highlighter-rouge">f(x)</code> 가 있다고 할 때 <code class="language-plaintext highlighter-rouge">f(a * b)</code> 가 <code class="language-plaintext highlighter-rouge">f(a) * f(b)</code> 와 같다는 것이다 (나눗셈도 마찬가지). 이는 신기하게도 RSA 에도 그대로 적용이 되는데 평문 <code class="language-plaintext highlighter-rouge">m</code> 이 <code class="language-plaintext highlighter-rouge">a * b</code> 라고 할 때 $c \equiv m^e \pmod{n}$ 과 $c \equiv (a \times b)^e \equiv a^e \times b^e \pmod{n}$ 이 서로 일치한다. 이는 서명에서도 마찬가지이며 예시를 통해 확인해보자.</p>
+
+<h2 id="예시">예시</h2>
+
+<ol>
+  <li>
+    <p>임의의 소수 p, q 선택
+<img src="/assets/2022-06-08-homomorphism-in-rsa/014_pq.png" alt="014_pq.png" /></p>
+  </li>
+  <li>
+    <p>n = p * q 계산
+<img src="/assets/2022-06-08-homomorphism-in-rsa/015_npq3233.png" alt="015_n=pq=3233.png" /></p>
+  </li>
+  <li>
+    <p>오일러 피함수 계산
+<img src="/assets/2022-06-08-homomorphism-in-rsa/016_phi(n).png" alt="016_phi(n).png" /></p>
+  </li>
+  <li>
+    <p>오일러 피함수와 서로소인 정수 e 선택
+<img src="/assets/2022-06-08-homomorphism-in-rsa/017_e17.png" alt="017_e=17.png" /></p>
+  </li>
+  <li>
+    <p>개인키 d 계산
+<img src="/assets/2022-06-08-homomorphism-in-rsa/018_private_key_d.png" alt="018_private_key_d.png" /></p>
+  </li>
+  <li>
+    <p>평문 m = a * b 라고 할 때 암호화 과정 비교
+<img src="/assets/2022-06-08-homomorphism-in-rsa/019_enc.png" alt="019_enc.png" /></p>
+  </li>
+  <li>
+    <p>서명 과정 비교 (계산 편의를 위해 해시 함수는 미적용)
+<img src="/assets/2022-06-08-homomorphism-in-rsa/020_sign.png" alt="020_sign.png" /></p>
+  </li>
+</ol>
+
+<p>CTF 의 RSA 문제에서 위 속성을 이용한 문제가 꽤나 자주 출제되며 한번 실제로 출제된 문제를 풀어보며 어떤 식으로 응용되는지 살펴보자.</p>
+
+<h2 id="문제-풀이">문제 풀이</h2>
+
+<ul>
+  <li>LINECTF2022</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>문제명</th>
+      <th>X Factor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>난이도</td>
+      <td>Easy</td>
+    </tr>
+    <tr>
+      <td>설명</td>
+      <td>Decrypt it!</td>
+    </tr>
+    <tr>
+      <td>제공파일</td>
+      <td><a href="/assets/2022-06-08-homomorphism-in-rsa/x_factor.md">x_factor.md</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>먼저, 제공된 파일을 열어서 확인해보자.</p>
+
+<p><strong>» Part 1</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">I</span> <span class="n">have</span> <span class="n">generated</span> <span class="n">a</span> <span class="n">RSA</span><span class="o">-</span><span class="mi">1024</span> <span class="n">key</span> <span class="n">pair</span><span class="p">:</span>
+<span class="o">*</span> <span class="n">public</span> <span class="n">key</span> <span class="n">exponent</span><span class="p">:</span> <span class="mh">0x10001</span>
+<span class="o">*</span> <span class="n">public</span> <span class="n">key</span> <span class="n">modulus</span><span class="p">:</span> <span class="mh">0xa9e7da28ebecf1f88efe012b8502122d70b167bdcfa11fd24429c23f27f55ee2cc3dcd7f337d0e630985152e114830423bfaf83f4f15d2d05826bf511c343c1b13bef744ff2232fb91416484be4e130a007a9b432225c5ead5a1faf02fa1b1b53d1adc6e62236c798f76695bb59f737d2701fe42f1fbf57385c29de12e79c5b3</span>
+</code></pre></div></div>
+
+<p>첫번째로 <code class="language-plaintext highlighter-rouge">RSA 공개키 쌍(Public Exponent: e, Public Modulus: n)</code>을 16진수 형태로 제공해주고 있다.</p>
+
+<p><strong>» Part 2</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Here</span> <span class="n">are</span> <span class="n">some</span> <span class="n">known</span> <span class="n">plain</span> <span class="o">-&gt;</span> <span class="n">signature</span> <span class="n">pairs</span> <span class="n">I</span> <span class="n">generated</span> <span class="n">using</span> <span class="n">my</span> <span class="n">private</span> <span class="n">key</span><span class="p">:</span>
+<span class="o">*</span> <span class="mh">0x945d86b04b2e7c7</span> <span class="o">-&gt;</span> <span class="mh">0x17bb21949d5a0f590c6126e26dc830b51d52b8d0eb4f2b69494a9f9a637edb1061bec153f0c1d9dd55b1ad0fd4d58c46e2df51d293cdaaf1f74d5eb2f230568304eebb327e30879163790f3f860ca2da53ee0c60c5e1b2c3964dbcf194c27697a830a88d53b6e0ae29c616e4f9826ec91f7d390fb42409593e1815dbe48f7ed4</span>
+<span class="o">*</span> <span class="mh">0x5de2</span> <span class="o">-&gt;</span> <span class="mh">0x3ea73715787028b52796061fb887a7d36fb1ba1f9734e9fd6cb6188e087da5bfc26c4bfe1b4f0cbfa0d693d4ac0494efa58888e8415964c124f7ef293a8ee2bc403cad6e9a201cdd442c102b30009a3b63fa61cdd7b31ce9da03507901b49a654e4bb2b03979aea0fab3731d4e564c3c30c75aa1d079594723b60248d9bdde50</span>
+<span class="o">*</span> <span class="mh">0xa16b201cdd42ad70da249</span> <span class="o">-&gt;</span> <span class="mh">0x9444e3fc71056d25489e5ce78c6c986c029f12b61f4f4b5cbd4a0ce6b999919d12c8872b8f2a8a7e91bd0f263a4ead8f2aa4f7e9fdb9096c2ea11f693f6aa73d6b9d5e351617d6f95849f9c73edabd6a6fde6cc2e4559e67b0e4a2ea8d6897b32675be6fc72a6172fd42a8a8e96adfc2b899015b73ff80d09c35909be0a6e13a</span>
+<span class="o">*</span> <span class="mh">0x6d993121ed46b</span> <span class="o">-&gt;</span> <span class="mh">0x2b7a1c4a1a9e9f9179ab7b05dd9e0089695f895864b52c73bfbc37af3008e5c187518b56b9e819cc2f9dfdffdfb86b7cc44222b66d3ea49db72c72eb50377c8e6eb6f6cbf62efab760e4a697cbfdcdc47d1adc183cc790d2e86490da0705717e5908ad1af85c58c9429e15ea7c83ccf7d86048571d50bd721e5b3a0912bed7c</span>
+<span class="o">*</span> <span class="mh">0x726fa7a7</span> <span class="o">-&gt;</span> <span class="mh">0xa7d5548d5e4339176a54ae1b3832d328e7c512be5252dabd05afa28cd92c7932b7d1c582dc26a0ce4f06b1e96814ee362ed475ddaf30dd37af0022441b36f08ec8c7c4135d6174167a43fa34f587abf806a4820e4f74708624518044f272e3e1215404e65b0219d42a706e5c295b9bf0ee8b7b7f9b6a75d76be64cf7c27dfaeb</span>
+<span class="o">*</span> <span class="mh">0x31e828d97a0874cff</span> <span class="o">-&gt;</span> <span class="mh">0x67832c41a913bcc79631780088784e46402a0a0820826e648d84f9cc14ac99f7d8c10cf48a6774388daabcc0546d4e1e8e345ee7fc60b249d95d953ad4d923ca3ac96492ba71c9085d40753cab256948d61aeee96e0fe6c9a0134b807734a32f26430b325df7b6c9f8ba445e7152c2bf86b4dfd4293a53a8d6f003bf8cf5dffd</span>
+<span class="o">*</span> <span class="mh">0x904a515</span> <span class="o">-&gt;</span> <span class="mh">0x927a6ecd74bb7c7829741d290bc4a1fd844fa384ae3503b487ed51dbf9f79308bb11238f2ac389f8290e5bcebb0a4b9e09eda084f27add7b1995eeda57eb043deee72bfef97c3f90171b7b91785c2629ac9c31cbdcb25d081b8a1abc4d98c4a1fd9f074b583b5298b2b6cc38ca0832c2174c96f2c629afe74949d97918cbee4a</span>
+</code></pre></div></div>
+
+<p>두번째로 <code class="language-plaintext highlighter-rouge">(평문 - 서명)</code> 쌍 7 개를 16진수 형태로 제공해주고 있다.</p>
+
+<p><strong>» Part 3</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>**What is the signature of 0x686178656c696f6e?**
+
+Take the least significant 16 bytes of the signature, encode them in lowercase hexadecimal and format it as `LINECTF{sig_lowest_16_bytes_hex}` to obtain the flag.
+E.g. the last signature from the list above would become `LINECTF{174c96f2c629afe74949d97918cbee4a}`.
+</code></pre></div></div>
+
+<p>세번째로 평문 <code class="language-plaintext highlighter-rouge">0x686178656c696f6e</code> 의 <strong>서명이 무엇인지</strong> 맞춰보라며 서명의 16진수 형태의 마지막 16 바이트를 FLAG 형식에 맞춰 제출하면 된다고 한다.</p>
+
+<p>현재 우리가 알고 있는 정보는 <code class="language-plaintext highlighter-rouge">공개키(e, n)</code>와 <code class="language-plaintext highlighter-rouge">(평문 - 서명)</code> 쌍 7개, 그리고 FLAG 인 서명을 구하기 위해 필요한 평문 <code class="language-plaintext highlighter-rouge">0x686178656c696f6e</code> 뿐이다. 의미를 알 수 없는 16진수 형태의 숫자로만 가득한 텍스트로부터 <strong>어떻게 개인키 d 도 없이 서명을 구할 수 있을까?</strong></p>
+
+<p>바로 위에서 배운 준동형 사상(Homomorphism)을 이용하여 풀면 된다.</p>
+
+<p>먼저 평문 <code class="language-plaintext highlighter-rouge">0x686178656c696f6e</code> 을 소인수분해 해보면 다음과 같다 (SageMath 의 factor 함수):</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Implemented in SageMath
+</span><span class="n">target</span> <span class="o">=</span> <span class="mh">0x686178656c696f6e</span>   <span class="c1"># 7521425229691318126
+</span><span class="n">factor</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>   <span class="c1"># 2 * 197 * 947 * 2098711 * 9605087
+</span></code></pre></div></div>
+
+<p>위와 같이 5 개의 소인수의 곱으로 평문을 표현할 수 있다는 것을 알 수 있다. (m = a * b * c * d * e)</p>
+
+<p>이번에는 주어졌던 (평문 - 서명) 쌍에서 평문들만 소인수분해 해보면 다음과 같다:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pt1</span> <span class="o">=</span> <span class="mh">0x945d86b04b2e7c7</span>
+<span class="n">pt2</span> <span class="o">=</span> <span class="mh">0x5de2</span>
+<span class="n">pt3</span> <span class="o">=</span> <span class="mh">0xa16b201cdd42ad70da249</span>
+<span class="n">pt4</span> <span class="o">=</span> <span class="mh">0x6d993121ed46b</span>
+<span class="n">pt5</span> <span class="o">=</span> <span class="mh">0x726fa7a7</span>
+<span class="n">pt6</span> <span class="o">=</span> <span class="mh">0x31e828d97a0874cff</span>
+<span class="n">pt7</span> <span class="o">=</span> <span class="mh">0x904a515</span>
+<span class="n">pts</span> <span class="o">=</span> <span class="p">[</span><span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">,</span> <span class="n">pt3</span><span class="p">,</span> <span class="n">pt4</span><span class="p">,</span> <span class="n">pt5</span><span class="p">,</span> <span class="n">pt6</span><span class="p">,</span> <span class="n">pt7</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"pt</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s">: "</span><span class="p">,</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"factor(pt</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s">): "</span><span class="p">,</span> <span class="n">factor</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+    <span class="k">print</span><span class="p">()</span>
+
+<span class="s">'''
+[+] Output: 
+pt1:  668178073886320583
+factor(pt1):  811 * 947^3 * 970111
+
+pt2:  24034
+factor(pt2):  2 * 61 * 197
+
+pt3:  12196433909207788967273033
+factor(pt3):  970111 * 2098711^2 * 2854343
+
+pt4:  1928075547694187
+factor(pt4):  947 * 970111 * 2098711
+
+pt5:  1919920039
+factor(pt5):  61 * 197^2 * 811
+
+pt6:  57538707471611677951
+factor(pt6):  2098711 * 2854343 * 9605087
+
+pt7:  151299349
+factor(pt7):  197 * 811 * 947
+'''</span>
+</code></pre></div></div>
+
+<p>신기하게도 몇몇 소인수들이 평문 <code class="language-plaintext highlighter-rouge">0x686178656c696f6e</code> 의 <strong>소인수들과 겹친다</strong>는 것을 확인할 수 있다. 소인수가 겹치는게 뭐 어떻길래 그런걸까? 우리는 7 개의 <code class="language-plaintext highlighter-rouge">(평문 - 서명)</code> 쌍을 알고 있기 때문에 해당 평문을 <strong>잘 조합</strong>해서 평문 <code class="language-plaintext highlighter-rouge">0x686178656c696f6e</code> 과 일치하게 만든다면 RSA 에서의 <strong>준동형 사상</strong>으로 인해 평문 <code class="language-plaintext highlighter-rouge">0x686178656c696f6e</code> 에 개인키 d 를 이용하여 계산한 서명과 동일한 서명을 <strong>개인키 d 없이도 구할 수 있게 된다.</strong></p>
+
+<h2 id="이게-무슨-소리">이게 무슨 소리?</h2>
+
+<p>위에서 평문 <code class="language-plaintext highlighter-rouge">0x686178656c696f6e</code> 이 5 개의 소인수의 곱 형태로 표현이 가능하다는 것을 알았다.</p>
+
+<p><img src="/assets/2022-06-08-homomorphism-in-rsa/021_m_factor.png" alt="021_m_factor.png" /></p>
+
+<p>우리는 개인키 d 를 모르기 때문에 m 에 대한 서명을 구할 수 없지만, 7 개의 (평문 - 서명) 쌍을 알고 있고 각 평문의 소인수가 평문 <code class="language-plaintext highlighter-rouge">0x686178656c696f6e</code> 의 소인수와 겹치기 때문에 곱하기와 나누기를 적절히 이용하여 평문 <code class="language-plaintext highlighter-rouge">0x686178656c696f6e</code> 과 일치하는 수를 구할 수 있다면 해당 수를 구했을 때의 식과 동일하게 7 개의 서명에 적용하여 계산하면 평문 <code class="language-plaintext highlighter-rouge">0x686178656c696f6e</code> 에 개인키 d 를 이용하여 계산한 서명과 동일한 서명을 개인키 d 없이도 구할 수 있게 된다는 말이다.</p>
+
+<p><img src="/assets/2022-06-08-homomorphism-in-rsa/022_m_sign.png" alt="022_m_sign.png" /></p>
+
+<p><img src="/assets/2022-06-08-homomorphism-in-rsa/023_find_m.png" alt="023_find_m.png" /></p>
+
+<p><img src="/assets/2022-06-08-homomorphism-in-rsa/024_original_signature.png" alt="024_original_signature.png" /></p>
+
+<p>(현재로써는 곱하기, 나누기 중 어떤 연산자가 들어가야 하는지 모르기 때문에 물음표(’?’)로 두었다.)</p>
+
+<p>평문 <code class="language-plaintext highlighter-rouge">0x686178656c696f6e</code> (target)과 일치하는 수를 구하기 위해서는 약간의 머리를 써서 7 개의 평문을 곱하고 나누면 된다. 나의 경우에는 작은 소인수를 가진 평문부터 순서대로 나열해보았다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pt2   : 2 * 61 * 197
+pt5   :     61 * 197^2 * 811
+pt7   :          197   * 811 * 947
+pt1   :                  811 * 947^3 * 970111
+pt4   :                        947   * 970111 * 2098711
+pt3   :                                970111 * 2098711^2 * 2854343
+pt6   :                                         2098711   * 2854343 * 9605087
+-----------------------------------------------------------------------------
+target: 2      * 197         * 947            * 2098711             * 9605087
+</code></pre></div></div>
+
+<p>이제 곱하기, 나누기를 이용하여 target 과 일치하는 수를 만들면 된다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    pt2: 2 * 61 * 197
+(/) pt5:     61 * 197^2    * 811
+-----------------------------------------------------------------------------------------
+         2      * 197^(-1) * 811^(-1)
+(*) pt7:          197      * 811      * 947
+-----------------------------------------------------------------------------------------
+         2                            * 947
+(*) pt7:          197      * 811      * 947
+-----------------------------------------------------------------------------------------
+         2      * 197      * 811      * 947^2
+(/) pt1:                     811      * 947^3    * 970111
+-----------------------------------------------------------------------------------------
+         2      * 197                 * 947^(-1) * 970111^(-1)
+(*) pt4:                                947      * 970111 * 2098711
+-----------------------------------------------------------------------------------------
+         2      * 197                                     * 2098711
+(*) pt4:                                947      * 970111 * 2098711
+-----------------------------------------------------------------------------------------
+         2      * 197                 * 947      * 970111 * 2098711^2
+(/) pt3:                                           970111 * 2098711^2 * 2854343
+-----------------------------------------------------------------------------------------
+         2      * 197                 * 947                           * 2854343^(-1)
+(*) pt6:                                                    2098711   * 2854343 * 9605087
+-----------------------------------------------------------------------------------------
+ answer: 2      * 197                 * 947               * 2098711             * 9605087
+
+Therefore, answer = pt2 / pt5 * pt7^2 / pt1 * pt4^2 / pt3 * pt6.
+</code></pre></div></div>
+
+<p>7 개의 평문을 이용하여 평문 <code class="language-plaintext highlighter-rouge">0x686178656c696f6e</code> (target)과 일치하는 수(answer)를 구했기 때문에 이제 7 개의 서명을 이용하여 동일한 식으로 target 의 서명을 구할 수 있다.</p>
+
+<p>아래는 target 의 서명과 FLAG 를 구하기 위해 사용한 코드이다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Implemented in SageMath
+</span><span class="n">target</span> <span class="o">=</span> <span class="mh">0x686178656c696f6e</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"target: "</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>   <span class="c1"># 7521425229691318126
+</span><span class="k">print</span><span class="p">(</span><span class="s">"factor(target): "</span><span class="p">,</span> <span class="n">factor</span><span class="p">(</span><span class="n">target</span><span class="p">))</span>   <span class="c1"># 2 * 197 * 947 * 2098711 * 9605087
+</span><span class="k">print</span><span class="p">()</span>
+
+<span class="n">answer</span> <span class="o">=</span> <span class="n">pt2</span> <span class="o">/</span> <span class="n">pt5</span> <span class="o">*</span> <span class="n">pt7</span><span class="o">^</span><span class="mi">2</span> <span class="o">/</span> <span class="n">pt1</span> <span class="o">*</span> <span class="n">pt4</span><span class="o">^</span><span class="mi">2</span> <span class="o">/</span> <span class="n">pt3</span> <span class="o">*</span> <span class="n">pt6</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"answer: "</span><span class="p">,</span> <span class="n">answer</span><span class="p">)</span>   <span class="c1"># 7521425229691318126
+</span><span class="k">print</span><span class="p">(</span><span class="s">"factor(answer): "</span><span class="p">,</span> <span class="n">factor</span><span class="p">(</span><span class="n">answer</span><span class="p">))</span>   <span class="c1"># 2 * 197 * 947 * 2098711 * 9605087
+</span><span class="k">print</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">target</span> <span class="o">==</span> <span class="n">answer</span>
+
+<span class="c1"># Using the same formula as answer including modular n.
+# This is possible because of the homomorphism in unpadded RSA.
+</span><span class="n">newsig</span> <span class="o">=</span> <span class="p">(</span><span class="n">sig2</span> <span class="o">/</span> <span class="n">sig5</span> <span class="o">*</span> <span class="n">sig7</span><span class="o">^</span><span class="mi">2</span> <span class="o">/</span> <span class="n">sig1</span> <span class="o">*</span> <span class="n">sig4</span><span class="o">^</span><span class="mi">2</span> <span class="o">/</span> <span class="n">sig3</span> <span class="o">*</span> <span class="n">sig6</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"newsig (int): "</span><span class="p">,</span> <span class="n">newsig</span><span class="p">)</span>
+<span class="c1"># 111219533890621461179460792242241632450808153632799554790302537773885731996725665970159819970061237994467913213678895572474822930918390150774003109045699291202079975387595071497569834504251162974827309324614046581068300485342202365281472704413710935864495616184160512233863134373547246784976501532318112012352
+</span><span class="n">newsig</span> <span class="o">=</span> <span class="nb">hex</span><span class="p">(</span><span class="n">newsig</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"newsig (hex): "</span><span class="p">,</span> <span class="n">newsig</span><span class="p">)</span>
+<span class="c1"># 9e61c276f698ec48aab7dabfd663f3b2ee75d31c68bf16f6810a3bb9bb1c377e47b2ae8cd7055c7c5848bbedc94798d2965c38b317e42191df0e3f25ca2ee58c5f3e125745479b337516a13e420da29ba48a92ca2ee9720487cda6cdf070e83a4a251c52e331174a0ef642a97a251462a049347a7db8226d496eb55c15b1d840
+</span><span class="k">print</span><span class="p">()</span>
+
+<span class="s">'''
+Take the least significant 16 bytes of the signature, encode them in lowercase hexadecimal and format it as `LINECTF{sig_lowest_16_bytes_hex}` to obtain the flag.
+E.g. the last signature from the list above would become `LINECTF{174c96f2c629afe74949d97918cbee4a}`.
+'''</span>
+<span class="n">flag</span> <span class="o">=</span> <span class="s">'LINECTF{'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">newsig</span><span class="p">[</span><span class="o">-</span><span class="mi">32</span><span class="p">:])</span> <span class="o">+</span> <span class="s">'}'</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"flag: "</span><span class="p">,</span> <span class="n">flag</span><span class="p">)</span>
+<span class="c1"># flag:  LINECTF{a049347a7db8226d496eb55c15b1d840}
+</span></code></pre></div></div>
+
+<aside>
+🚩 FLAG : LINECTF{a049347a7db8226d496eb55c15b1d840}
+
+</aside>
+
+<hr />
+
+<h1 id="결론">결론</h1>
+
+<p><img src="/assets/2022-06-08-homomorphism-in-rsa/025_philip-estrada-vJr3t39a0xw-unsplash_edit.jpg" alt="025_philip-estrada-vJr3t39a0xw-unsplash_edit.jpg" /></p>
+
+<p>지금까지 <strong>RSA</strong> 란 무엇인지, <strong>키 생성</strong>, <strong>암/복호화</strong>, <strong>서명/검증</strong>은 어떻게 이루어지는지 알아보았고, 또 대수학에서의 <strong>준동형 사상(Homomorphism)</strong> 개념을 CTF 에서 자주 출제되는 유형의 RSA 문제에 적용하여 풀어보았다. 이외에도 수많은 방식의 RSA 공격 기법들이 존재하지만 대부분 위 문제 풀이에서 본 것과 같이 수학적인 개념을 가지고 사칙연산만 할 줄 안다면 금방 이해하고 그것을 문제에 적용할 수 있을 것이다.</p>
+
+<p><strong>암호</strong>를 푼다는 것은 <strong>얽히고설킨 실타래를 푸는 것</strong>과도 같다고 생각한다. 처음 문제를 접했을 때는 도무지 어떻게 이것을 풀어야 한다는 건지 감을 잡을 수조차 없지만 천천히 둘러보다 보면 문제를 해결할 수 있는 <strong>실마리</strong>를 잡을 수 있을 것이다. 이 글이 암호학 문제를 푸는 이들에게 좋은 시작점이 되기를 기원하며 글을 마무리하도록 하겠다.</p>
+
+    <div class="page-profile-detail">
+        <div class="page-profile-detail-info">
+            <div>
+                <img class="page-profile_image-detail" src="/assets/stealien_inverse.png" />
+            </div>
+            <div style="position: relative; top: 12px;left: 10px;">
+                <div class="page-profile-author">박지원</div>
+                <div class="page-profile-email">sjoh@stealien.com</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="recent-post-area">
+    <div class="posts container">
+        <div class="h1-recent-post">RECENT POST</div>
+            <div class="row">
+    <div class="col-sm-2 col-md-2">
+        <div class="profile">
+            <img src="/assets/stealien_inverse.png" class="profile_image" />
+            <div class="profile_author">박지원</div>
+        </div>
+    </div>
+    <div class="col">
+        <a href="/id/2022-06-01/homomorphism-in-rsa">
+            <div class="post-title">
+                Homomorphism in RSA
+            </div>
+        </a>
+        <div class="post-summary">Homomorphism in RSA</div>
+        <div class="post-info">
+            <span style="color: #545454" class="post-author-mobile">
+                박지원
+                <span style="color: #f5f5f5; margin: 2px">|</span>
+            </span>
+            Jun 1, 2022
+            <span style="color: #f5f5f5; margin: 2px">|</span>
+            <span>R&D</span>
+        </div>
+    </div>
+</div><div class="row">
+    <div class="col-sm-2 col-md-2">
+        <div class="profile">
+            <img src="/assets/stealien_inverse.png" class="profile_image" />
+            <div class="profile_author">오세준</div>
+        </div>
+    </div>
+    <div class="col">
+        <a href="/id/2022-06-01/how-to-root-your-routeros-v7-virtual-machine">
+            <div class="post-title">
+                How to root your RouterOS v7 Virtual Machine
+            </div>
+        </a>
+        <div class="post-summary">How to root your RouterOS v7 Virtual Machine</div>
+        <div class="post-info">
+            <span style="color: #545454" class="post-author-mobile">
+                오세준
+                <span style="color: #f5f5f5; margin: 2px">|</span>
+            </span>
+            Jun 1, 2022
+            <span style="color: #f5f5f5; margin: 2px">|</span>
+            <span>R&D</span>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+</div>
+		</div>
+	</section><footer>
+  <div class="container" style="display: flex; justify-content: space-between;">
+    <!-- <a href="#top">
+      <img src="/assets/white_logo.png" class="footer-logo" />
+    </a> -->
+    <div class="footer-copyright">Copyright &copy; Stealien Inc.</div>
+    <div class="footer-icons">
+      <a target="_blank" href="https://twitter.com/stealien"><img class="sns" src="/assets/icons/twitter_ic.png"/></a>
+      <a target="_blank" href="https://blog.naver.com/stealien_official"><img class="sns" src="/assets/icons/blog_ic.png"/></a>
+      <a target="_blank" href="https://www.facebook.com/stealien/"><img class="sns" src="/assets/icons/facebook_ic.png"/></a>
+      <a target="_blank" href="https://www.youtube.com/c/STEALIEN"><img class="sns" src="/assets/icons/youtube_ic.png"/></a>
+    </div>
+  </div>
+</footer></body>
+</html>

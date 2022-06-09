@@ -338,6 +338,7 @@ h3 {
 
 /* 글쓴이 프로필 빼고 적용 */
 img:not(.profile_image, .page-profile_image, .page-profile_image-detail, .sns), div.highlight{
+    display: block;
     margin-top: 28px;
     margin-bottom: 28px;
     max-width: 100%;
