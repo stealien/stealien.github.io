@@ -387,3 +387,11 @@ table {
   th, td {
     border: 1px solid #000000;
   }
+
+pre::-webkit-scrollbar{
+    height: 6px;
+}
+pre::-webkit-scrollbar-thumb{
+    background-color: #676c6b;
+    border-radius: 10px;
+}
