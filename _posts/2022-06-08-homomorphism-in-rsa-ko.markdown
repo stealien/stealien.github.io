@@ -58,21 +58,21 @@ RSA 는 1978년에 최초로 이 암호시스템을 연구하여 체계화시킨
     - 카마이클 함수 ([https://en.wikipedia.org/wiki/Carmichael_function](https://en.wikipedia.org/wiki/Carmichael_function))
     ![005_lambda.png](/assets/2022-06-08-homomorphism-in-rsa/005_lambda.png)
 4. 3번에서 선택한 수와 **서로소인 정수 e** 를 고른다.
+    
     (두 정수 a, b 의 최대공약수(gcd)가 1 이면 둘은 서로소이다.)
     
     (두 수가 서로소가 아니면 모듈러 역원을 구할 수 없다 → 개인키를 구할 수 없다.)
-    
 
-![006_gcd_coprime.png](/assets/2022-06-08-homomorphism-in-rsa/006_gcd_coprime.png)
+    ![006_gcd_coprime.png](/assets/2022-06-08-homomorphism-in-rsa/006_gcd_coprime.png)
 
-(일반적으로 계산의 효율성을 위해 [페르마 수(Fermat Number)](https://ko.wikipedia.org/wiki/%ED%8E%98%EB%A5%B4%EB%A7%88_%EC%88%98)가 선택된다.)
+    (일반적으로 계산의 효율성을 위해 [페르마 수(Fermat Number)](https://ko.wikipedia.org/wiki/%ED%8E%98%EB%A5%B4%EB%A7%88_%EC%88%98)가 선택된다.)
 
-![007_Fermat_numbers.png](/assets/2022-06-08-homomorphism-in-rsa/007_Fermat_numbers.png)
+    ![007_Fermat_numbers.png](/assets/2022-06-08-homomorphism-in-rsa/007_Fermat_numbers.png)
 
-1. 정수 e 에 대한 **모듈러 역원인 d** 를 계산한다.
+5. 정수 e 에 대한 **모듈러 역원인 d** 를 계산한다.
 ![008_private_key_d.png](/assets/2022-06-08-homomorphism-in-rsa/008_private_key_d.png)
 
-1. 위에서 계산한 값들 중 **n, e 를 공개키**로써 배포하고, **d 를 개인키**로써 절대 노출되지 않게 한다.
+6. 위에서 계산한 값들 중 **n, e 를 공개키**로써 배포하고, **d 를 개인키**로써 절대 노출되지 않게 한다.
 ![009_keys.png](/assets/2022-06-08-homomorphism-in-rsa/009_keys.png)
 
 이제 해당 공개키를 이용하여 누구든지 메시지를 암호화해서 보내면 개인키를 가지고 있는 소유자만 해당 메시지를 복호화할 수 있다. 그렇다면 암/복호화는 어떻게 수행될까? 한번 살펴보자.
@@ -101,13 +101,13 @@ RSA 는 1978년에 최초로 이 암호시스템을 연구하여 체계화시킨
 
 암/복호화 과정과 순서만 바뀌었을 뿐 거의 동일하게 서명/검증이 수행되며 서명 시 개인키 d 를 이용해 서명이 되기 때문에 누구에게나 공개되는 e 를 이용해 메시지 m 을 복원할 수 없도록 해시 함수를 이용하여 메시지 m 의 해시값인 h 에 서명을 진행하도록 한다.
 
-메시지에 대한 서명이 완료되었다면 암호화된 메시지와 서명을 함께 전송하고 이후 검증 단계에서는 복호화된 메시지의 해시값과 $s^e \pmod{n}$ 을 계산하여 나온 해시값 h 를 비교하여 일치하는지 확인하면 된다.
+메시지에 대한 서명이 완료되었다면 암호화된 메시지와 서명을 함께 전송하고 이후 검증 단계에서는 복호화된 메시지의 해시값과 s^e (mod n) 을 계산하여 나온 해시값 h 를 비교하여 일치하는지 확인하면 된다.
 
 이제 RSA 시스템에 대한 기본적인 개념을 배웠으니 흥미로운 속성 하나를 추가로 알려주려고 한다.
 
 ## 준동형 사상(Homomorphism)
 
-준동형 사상이란 대수학에서 구조상 닮은 두 대수 구조의 모든 연산 및 관계를 보존하는 경우를 말한다. 쉽게 말하자면, 어떠한 함수 `f(x)` 가 있다고 할 때 `f(a * b)` 가 `f(a) * f(b)` 와 같다는 것이다 (나눗셈도 마찬가지). 이는 신기하게도 RSA 에도 그대로 적용이 되는데 평문 `m` 이 `a * b` 라고 할 때 $c \equiv m^e \pmod{n}$ 과 $c \equiv (a \times b)^e \equiv a^e \times b^e \pmod{n}$ 이 서로 일치한다. 이는 서명에서도 마찬가지이며 예시를 통해 확인해보자.
+준동형 사상이란 대수학에서 구조상 닮은 두 대수 구조의 모든 연산 및 관계를 보존하는 경우를 말한다. 쉽게 말하자면, 어떠한 함수 `f(x)` 가 있다고 할 때 `f(a * b)` 가 `f(a) * f(b)` 와 같다는 것이다 (나눗셈도 마찬가지). 이는 신기하게도 RSA 에도 그대로 적용이 되는데 평문 `m` 이 `a * b` 라고 할 때 c ≡ m^e (mod n) 과 c ≡ (a * b)^e ≡ a^e * b^e (mod n) 이 서로 일치한다. 이는 서명에서도 마찬가지이며 예시를 통해 확인해보자.
 
 ## 예시
 

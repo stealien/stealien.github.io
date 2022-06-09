@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2022-06-09T13:43:03+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">How to root your RouterOS v7 Virtual Machine</title><link href="http://ufo.stealien.com/2022-06-01/how-to-root-your-routeros-v7-virtual-machine" rel="alternate" type="text/html" title="How to root your RouterOS v7 Virtual Machine" /><published>2022-06-01T00:00:00+09:00</published><updated>2022-06-01T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-06-01/how-to-root-routeros-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-01/how-to-root-your-routeros-v7-virtual-machine">&lt;h1 id=&quot;how-to-root-your-routeros-v7-virtual-machine&quot;&gt;How to root your RouterOS v7 Virtual Machine&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2022-06-09T13:50:00+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">How to root your RouterOS v7 Virtual Machine</title><link href="http://ufo.stealien.com/2022-06-01/how-to-root-your-routeros-v7-virtual-machine" rel="alternate" type="text/html" title="How to root your RouterOS v7 Virtual Machine" /><published>2022-06-01T00:00:00+09:00</published><updated>2022-06-01T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-06-01/how-to-root-routeros-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-01/how-to-root-your-routeros-v7-virtual-machine">&lt;h1 id=&quot;how-to-root-your-routeros-v7-virtual-machine&quot;&gt;How to root your RouterOS v7 Virtual Machine&lt;/h1&gt;
 
 &lt;p&gt;Finding vulnerabilities in RouterOS is tricky, and this is especially because it does not provide a shell environment like ash or bash.&lt;/p&gt;
 
@@ -165,28 +165,24 @@ Replaced: 00 2F 72 77 2F 64 69 73 6B 2F 62 75 73 79 62 6F 78 2F 61 73 68 00 00
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;3번에서 선택한 수와 &lt;strong&gt;서로소인 정수 e&lt;/strong&gt; 를 고른다.
- (두 정수 a, b 의 최대공약수(gcd)가 1 이면 둘은 서로소이다.)&lt;/p&gt;
+    &lt;p&gt;3번에서 선택한 수와 &lt;strong&gt;서로소인 정수 e&lt;/strong&gt; 를 고른다.&lt;/p&gt;
+
+    &lt;p&gt;(두 정수 a, b 의 최대공약수(gcd)가 1 이면 둘은 서로소이다.)&lt;/p&gt;
 
     &lt;p&gt;(두 수가 서로소가 아니면 모듈러 역원을 구할 수 없다 → 개인키를 구할 수 없다.)&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/006_gcd_coprime.png&quot; alt=&quot;006_gcd_coprime.png&quot; /&gt;&lt;/p&gt;
+
+    &lt;p&gt;(일반적으로 계산의 효율성을 위해 &lt;a href=&quot;https://ko.wikipedia.org/wiki/%ED%8E%98%EB%A5%B4%EB%A7%88_%EC%88%98&quot;&gt;페르마 수(Fermat Number)&lt;/a&gt;가 선택된다.)&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/007_Fermat_numbers.png&quot; alt=&quot;007_Fermat_numbers.png&quot; /&gt;&lt;/p&gt;
   &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/006_gcd_coprime.png&quot; alt=&quot;006_gcd_coprime.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;(일반적으로 계산의 효율성을 위해 &lt;a href=&quot;https://ko.wikipedia.org/wiki/%ED%8E%98%EB%A5%B4%EB%A7%88_%EC%88%98&quot;&gt;페르마 수(Fermat Number)&lt;/a&gt;가 선택된다.)&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/007_Fermat_numbers.png&quot; alt=&quot;007_Fermat_numbers.png&quot; /&gt;&lt;/p&gt;
-
-&lt;ol&gt;
   &lt;li&gt;
     &lt;p&gt;정수 e 에 대한 &lt;strong&gt;모듈러 역원인 d&lt;/strong&gt; 를 계산한다.
 &lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/008_private_key_d.png&quot; alt=&quot;008_private_key_d.png&quot; /&gt;&lt;/p&gt;
   &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;위에서 계산한 값들 중 &lt;strong&gt;n, e 를 공개키&lt;/strong&gt;로써 배포하고, &lt;strong&gt;d 를 개인키&lt;/strong&gt;로써 절대 노출되지 않게 한다.
-&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/009_keys.png&quot; alt=&quot;009_keys.png&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
+  &lt;li&gt;위에서 계산한 값들 중 &lt;strong&gt;n, e 를 공개키&lt;/strong&gt;로써 배포하고, &lt;strong&gt;d 를 개인키&lt;/strong&gt;로써 절대 노출되지 않게 한다.
+&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/009_keys.png&quot; alt=&quot;009_keys.png&quot; /&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;p&gt;이제 해당 공개키를 이용하여 누구든지 메시지를 암호화해서 보내면 개인키를 가지고 있는 소유자만 해당 메시지를 복호화할 수 있다. 그렇다면 암/복호화는 어떻게 수행될까? 한번 살펴보자.&lt;/p&gt;
@@ -215,13 +211,13 @@ Replaced: 00 2F 72 77 2F 64 69 73 6B 2F 62 75 73 79 62 6F 78 2F 61 73 68 00 00
 
 &lt;p&gt;암/복호화 과정과 순서만 바뀌었을 뿐 거의 동일하게 서명/검증이 수행되며 서명 시 개인키 d 를 이용해 서명이 되기 때문에 누구에게나 공개되는 e 를 이용해 메시지 m 을 복원할 수 없도록 해시 함수를 이용하여 메시지 m 의 해시값인 h 에 서명을 진행하도록 한다.&lt;/p&gt;
 
-&lt;p&gt;메시지에 대한 서명이 완료되었다면 암호화된 메시지와 서명을 함께 전송하고 이후 검증 단계에서는 복호화된 메시지의 해시값과 $s^e \pmod{n}$ 을 계산하여 나온 해시값 h 를 비교하여 일치하는지 확인하면 된다.&lt;/p&gt;
+&lt;p&gt;메시지에 대한 서명이 완료되었다면 암호화된 메시지와 서명을 함께 전송하고 이후 검증 단계에서는 복호화된 메시지의 해시값과 s^e (mod n) 을 계산하여 나온 해시값 h 를 비교하여 일치하는지 확인하면 된다.&lt;/p&gt;
 
 &lt;p&gt;이제 RSA 시스템에 대한 기본적인 개념을 배웠으니 흥미로운 속성 하나를 추가로 알려주려고 한다.&lt;/p&gt;
 
 &lt;h2 id=&quot;준동형-사상homomorphism&quot;&gt;준동형 사상(Homomorphism)&lt;/h2&gt;
 
-&lt;p&gt;준동형 사상이란 대수학에서 구조상 닮은 두 대수 구조의 모든 연산 및 관계를 보존하는 경우를 말한다. 쉽게 말하자면, 어떠한 함수 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;f(x)&lt;/code&gt; 가 있다고 할 때 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;f(a * b)&lt;/code&gt; 가 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;f(a) * f(b)&lt;/code&gt; 와 같다는 것이다 (나눗셈도 마찬가지). 이는 신기하게도 RSA 에도 그대로 적용이 되는데 평문 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;m&lt;/code&gt; 이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;a * b&lt;/code&gt; 라고 할 때 $c \equiv m^e \pmod{n}$ 과 $c \equiv (a \times b)^e \equiv a^e \times b^e \pmod{n}$ 이 서로 일치한다. 이는 서명에서도 마찬가지이며 예시를 통해 확인해보자.&lt;/p&gt;
+&lt;p&gt;준동형 사상이란 대수학에서 구조상 닮은 두 대수 구조의 모든 연산 및 관계를 보존하는 경우를 말한다. 쉽게 말하자면, 어떠한 함수 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;f(x)&lt;/code&gt; 가 있다고 할 때 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;f(a * b)&lt;/code&gt; 가 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;f(a) * f(b)&lt;/code&gt; 와 같다는 것이다 (나눗셈도 마찬가지). 이는 신기하게도 RSA 에도 그대로 적용이 되는데 평문 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;m&lt;/code&gt; 이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;a * b&lt;/code&gt; 라고 할 때 c ≡ m^e (mod n) 과 c ≡ (a * b)^e ≡ a^e * b^e (mod n) 이 서로 일치한다. 이는 서명에서도 마찬가지이며 예시를 통해 확인해보자.&lt;/p&gt;
 
 &lt;h2 id=&quot;예시&quot;&gt;예시&lt;/h2&gt;
 
