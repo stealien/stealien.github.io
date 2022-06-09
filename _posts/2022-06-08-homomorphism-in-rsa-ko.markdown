@@ -3,16 +3,16 @@ layout		: post
 markdown	: kramdown
 highlighter	: rouge
 title		: Homomorphism in RSA
-date		: 2022-06-01 00:00:00 +0900
+date		: 2022-06-08 00:00:00 +0900
 category	: R&D
 author		: 박지원
-author_email: sjoh@stealien.com
+author_email: jwpark@stealien.com
 background	: /assets/bg.png
 profile_image: /assets/stealien_inverse.png
 summary		: "Homomorphism in RSA"
 thumbnail	: /assets/stealien.png
 lang        : ko
-permalink   : /2022-06-01/homomorphism-in-rsa
+permalink   : /2022-06-08/homomorphism-in-rsa
 ---
 
 # Homomorphism in RSA

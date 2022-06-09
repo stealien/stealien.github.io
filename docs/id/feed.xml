@@ -1,121 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://0.0.0.0:4000/id/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/id/" rel="alternate" type="text/html" /><updated>2022-06-09T13:50:00+09:00</updated><id>http://0.0.0.0:4000/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">How to root your RouterOS v7 Virtual Machine</title><link href="http://0.0.0.0:4000/id/2022-06-01/how-to-root-your-routeros-v7-virtual-machine" rel="alternate" type="text/html" title="How to root your RouterOS v7 Virtual Machine" /><published>2022-06-01T00:00:00+09:00</published><updated>2022-06-01T00:00:00+09:00</updated><id>http://0.0.0.0:4000/2022-06-01/how-to-root-routeros-ko</id><content type="html" xml:base="http://0.0.0.0:4000/2022-06-01/how-to-root-your-routeros-v7-virtual-machine">&lt;h1 id=&quot;how-to-root-your-routeros-v7-virtual-machine&quot;&gt;How to root your RouterOS v7 Virtual Machine&lt;/h1&gt;
-
-&lt;p&gt;Finding vulnerabilities in RouterOS is tricky, and this is especially because it does not provide a shell environment like ash or bash.&lt;/p&gt;
-
-&lt;p&gt;Many vulnerability researchers working on RouterOS felt the same and found various ways to enable the root shell on RouterOS. Unfortunately, most of the methods are no longer available on the latest RouterOS version.&lt;/p&gt;
-
-&lt;p&gt;Thankfully, there is a way to jailbreak RouterOS v7 using netboot functionality. &lt;a href=&quot;https://github.com/adron-s/mtik_initrd_hacks/issues&quot;&gt;This method&lt;/a&gt; achieves a root shell by booting through a modified kernel image. However, You need an actual RouterBOARD to use this method, and it is a bit complicated process to generate a modified kernel image and network boot through it.&lt;/p&gt;
-
-&lt;p&gt;While researching RouterOS, we eventually wanted to use virtual machines as a testing environment for various reasons. The netboot jailbreak method doesn’t work on virtual machines. So we had to find another way to acheive the root shell, and we did.&lt;/p&gt;
-
-&lt;p&gt;This article suggests a simple trick to get a temporary root shell on RouterOS which can only be used on virtual machines and is easy to use.&lt;/p&gt;
-
-&lt;h2 id=&quot;previously-on-routeros&quot;&gt;Previously on RouterOS…&lt;/h2&gt;
-
-&lt;p&gt;RouterOS has a hidden “devel” login which is only enabled when specific conditions are met. When enabled, RouterOS gives you an ash shell if you login with id “devel” via telnet. Most of the RouterOS jailbreaking methods focus on enabling the “devel” login.&lt;/p&gt;
-
-&lt;p&gt;Before RouterOS version 6.41, There were two options to enable the “devel” login feature.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;‘option’ package is installed.&lt;/li&gt;
-  &lt;li&gt;/nova/etc/devel-login file exists.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;/nova/etc/devel-login was removed in version 6.41. So the only option left is the ‘option’ package.&lt;/p&gt;
-
-&lt;h2 id=&quot;devel-login-on-routeros-v7&quot;&gt;‘devel’ login on RouterOS v7&lt;/h2&gt;
-
-&lt;p&gt;When the telnet connection is made, RouterOS uses /nova/bin/login binary for login authentication. This binary contains the code that checks whether the “devel” login option is enabled or not by checking the ‘option’ package.&lt;/p&gt;
-
-&lt;p&gt;/nova/bin/login checks if the ‘option’ package is installed by executing nv::hasOptionPackage function. By analyzing /lib/libumsg.so library, you can see that nv::hasOptionPackage is equaviliant to nv::hasPackage(“option”).&lt;/p&gt;
-
-&lt;p&gt;In RouterOS v7, nv::hasPackage returns true only when the following conditions are met&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;If the target is a symbolic link, it should point to “/bndl/(package_name)” which is located in the read-only file system.&lt;/li&gt;
-  &lt;li&gt;If the target is not a symbolic link, it should be stored in the read-only(squashfs) file system.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;It is hard to bypass the nv::hasPackage function unless we have an arbitrary code execution vulnerability. Even if we somehow managed to pass the nv::hasPackage(“option”) check, the login binary explicitly executes “/pckg/option/bin/bash” as shell which does not exist by default. we still need to somehow write the shell binary on the location.&lt;/p&gt;
-
-&lt;h2 id=&quot;simple-trick&quot;&gt;Simple trick&lt;/h2&gt;
-
-&lt;p&gt;So, bypassing the “option” package verifying code is not easy, Unless we can change the program code itself. But that would require you to modify the code running on the live memory. That… is impossible. Isn’t it?&lt;/p&gt;
-
-&lt;p&gt;Wait, actually it is possible! Of course, it is. It’s a ‘virtual’ machine after all.&lt;/p&gt;
-
-&lt;p&gt;What if the login binary checks for an “ipv6” package instead of the “option” package? What if the login binary executes “/rw/disk/bash” as shell instead of “/pckg/option/bin/bash”?&lt;/p&gt;
-
-&lt;p&gt;We can make that happen.&lt;/p&gt;
-
-&lt;h2 id=&quot;how-to-root-your-routeros-vm&quot;&gt;How to root your RouterOS VM&lt;/h2&gt;
-
-&lt;p&gt;What you need:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Ubuntu VM&lt;/li&gt;
-  &lt;li&gt;RouterOS x86 ISO Image&lt;/li&gt;
-  &lt;li&gt;VMWare Workstation&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Step:&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;First, install RotuerOS on your VM. After the installation, turn the VM off.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Attach RouterOS VM’s Disk to Ubuntu VM&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Boot the Ubuntu VM, and browse into RouterOS Disk’s volume called ‘RouterOS’. Go to /RW/disk/ and execute the following command to download the busybox binary. Exit the Ubuntu VM.&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo mkdir &lt;/span&gt;busybox &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;busybox
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;wget &lt;span class=&quot;nt&quot;&gt;-O&lt;/span&gt; ash https://www.busybox.net/downloads/binaries/1.31.0-i686-uclibc/busybox_ASH
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;wget https://www.busybox.net/downloads/binaries/1.31.0-i686-uclibc/busybox
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;chmod &lt;/span&gt;a+x ash busybox
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;Boot RouterOS VM and make several login attempts with the invalid credential.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Suspend the RouterOS VM. Go to the RouterOS VM folder and open vmem file with hex editor.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Find &amp;amp; Replace as follows&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Original: 00 2F 62 6E 64 6C 2F 00 6F 70 74 69 6F 6E 00
-Replaced: 00 2F 62 6E 64 6C 2F 00 69 70 76 36 00 00 00
-
-Original: 00 2F 70 63 6B 67 2F 6F 70 74 69 6F 6E 2F 62 69 6E 2F 62 61 73 68 00
-Replaced: 00 2F 72 77 2F 64 69 73 6B 2F 62 75 73 79 62 6F 78 2F 61 73 68 00 00
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;Save the vmem file. Resume the RouterOS VM&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Login with devel/(admin’s password)&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;You will get a shell. If not, repeat the process from stage 4.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Execute the following commands to install the busybox.
-    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /rw/disk/busybox
-./busybox &lt;span class=&quot;nt&quot;&gt;--install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;:/rw/disk/busybox/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;If everything is done correctly, you should get an ash shell with busybox as the screenshot.
-&lt;img src=&quot;/assets/2022-06-01-how-to-root-routeros/6d99def97b5f4aa312ca4519056a67ffb624cd4059f38c21bd7f9a08b82c530b.png&quot; alt=&quot;picture 4&quot; /&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;limitation&quot;&gt;Limitation&lt;/h2&gt;
-
-&lt;p&gt;This is a ‘simple trick’ method and the shell is not persistent. If you reboot the RouterOS VM, you will have to repeat the process from stage 4.&lt;/p&gt;</content><author><name>오세준</name></author><category term="R&amp;D" /><summary type="html">How to root your RouterOS v7 Virtual Machine</summary></entry><entry xml:lang="ko"><title type="html">Homomorphism in RSA</title><link href="http://0.0.0.0:4000/id/2022-06-01/homomorphism-in-rsa" rel="alternate" type="text/html" title="Homomorphism in RSA" /><published>2022-06-01T00:00:00+09:00</published><updated>2022-06-01T00:00:00+09:00</updated><id>http://0.0.0.0:4000/2022-06-01/homomorphism-in-rsa-ko</id><content type="html" xml:base="http://0.0.0.0:4000/2022-06-01/homomorphism-in-rsa">&lt;h1 id=&quot;homomorphism-in-rsa&quot;&gt;Homomorphism in RSA&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/id/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/id/" rel="alternate" type="text/html" /><updated>2022-06-09T13:58:05+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">Homomorphism in RSA</title><link href="http://ufo.stealien.com/id/2022-06-08/homomorphism-in-rsa" rel="alternate" type="text/html" title="Homomorphism in RSA" /><published>2022-06-08T00:00:00+09:00</published><updated>2022-06-08T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-06-08/homomorphism-in-rsa-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-08/homomorphism-in-rsa">&lt;h1 id=&quot;homomorphism-in-rsa&quot;&gt;Homomorphism in RSA&lt;/h1&gt;
 
 &lt;h1 id=&quot;서론&quot;&gt;서론&lt;/h1&gt;
 
@@ -482,7 +365,124 @@ E.g. the last signature from the list above would become `LINECTF{174c96f2c629af
 
 &lt;p&gt;지금까지 &lt;strong&gt;RSA&lt;/strong&gt; 란 무엇인지, &lt;strong&gt;키 생성&lt;/strong&gt;, &lt;strong&gt;암/복호화&lt;/strong&gt;, &lt;strong&gt;서명/검증&lt;/strong&gt;은 어떻게 이루어지는지 알아보았고, 또 대수학에서의 &lt;strong&gt;준동형 사상(Homomorphism)&lt;/strong&gt; 개념을 CTF 에서 자주 출제되는 유형의 RSA 문제에 적용하여 풀어보았다. 이외에도 수많은 방식의 RSA 공격 기법들이 존재하지만 대부분 위 문제 풀이에서 본 것과 같이 수학적인 개념을 가지고 사칙연산만 할 줄 안다면 금방 이해하고 그것을 문제에 적용할 수 있을 것이다.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;암호&lt;/strong&gt;를 푼다는 것은 &lt;strong&gt;얽히고설킨 실타래를 푸는 것&lt;/strong&gt;과도 같다고 생각한다. 처음 문제를 접했을 때는 도무지 어떻게 이것을 풀어야 한다는 건지 감을 잡을 수조차 없지만 천천히 둘러보다 보면 문제를 해결할 수 있는 &lt;strong&gt;실마리&lt;/strong&gt;를 잡을 수 있을 것이다. 이 글이 암호학 문제를 푸는 이들에게 좋은 시작점이 되기를 기원하며 글을 마무리하도록 하겠다.&lt;/p&gt;</content><author><name>박지원</name></author><category term="R&amp;D" /><summary type="html">Homomorphism in RSA</summary></entry><entry xml:lang="ko"><title type="html">Ronin Bridge Vulnerability Analysis</title><link href="http://0.0.0.0:4000/id/2022-04-12/ronin-bridge-vuln-analysis" rel="alternate" type="text/html" title="Ronin Bridge Vulnerability Analysis" /><published>2022-04-12T00:00:00+09:00</published><updated>2022-04-12T00:00:00+09:00</updated><id>http://0.0.0.0:4000/2022-04-12/Ronin-Bridge-Vuln-Analysis-ko</id><content type="html" xml:base="http://0.0.0.0:4000/2022-04-12/ronin-bridge-vuln-analysis">&lt;h1 id=&quot;ronin-bridge-취약점-분석&quot;&gt;Ronin Bridge 취약점 분석&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;암호&lt;/strong&gt;를 푼다는 것은 &lt;strong&gt;얽히고설킨 실타래를 푸는 것&lt;/strong&gt;과도 같다고 생각한다. 처음 문제를 접했을 때는 도무지 어떻게 이것을 풀어야 한다는 건지 감을 잡을 수조차 없지만 천천히 둘러보다 보면 문제를 해결할 수 있는 &lt;strong&gt;실마리&lt;/strong&gt;를 잡을 수 있을 것이다. 이 글이 암호학 문제를 푸는 이들에게 좋은 시작점이 되기를 기원하며 글을 마무리하도록 하겠다.&lt;/p&gt;</content><author><name>박지원</name></author><category term="R&amp;D" /><summary type="html">Homomorphism in RSA</summary></entry><entry xml:lang="ko"><title type="html">How to root your RouterOS v7 Virtual Machine</title><link href="http://ufo.stealien.com/id/2022-06-01/how-to-root-your-routeros-v7-virtual-machine" rel="alternate" type="text/html" title="How to root your RouterOS v7 Virtual Machine" /><published>2022-06-01T00:00:00+09:00</published><updated>2022-06-01T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-06-01/how-to-root-routeros-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-01/how-to-root-your-routeros-v7-virtual-machine">&lt;h1 id=&quot;how-to-root-your-routeros-v7-virtual-machine&quot;&gt;How to root your RouterOS v7 Virtual Machine&lt;/h1&gt;
+
+&lt;p&gt;Finding vulnerabilities in RouterOS is tricky, and this is especially because it does not provide a shell environment like ash or bash.&lt;/p&gt;
+
+&lt;p&gt;Many vulnerability researchers working on RouterOS felt the same and found various ways to enable the root shell on RouterOS. Unfortunately, most of the methods are no longer available on the latest RouterOS version.&lt;/p&gt;
+
+&lt;p&gt;Thankfully, there is a way to jailbreak RouterOS v7 using netboot functionality. &lt;a href=&quot;https://github.com/adron-s/mtik_initrd_hacks/issues&quot;&gt;This method&lt;/a&gt; achieves a root shell by booting through a modified kernel image. However, You need an actual RouterBOARD to use this method, and it is a bit complicated process to generate a modified kernel image and network boot through it.&lt;/p&gt;
+
+&lt;p&gt;While researching RouterOS, we eventually wanted to use virtual machines as a testing environment for various reasons. The netboot jailbreak method doesn’t work on virtual machines. So we had to find another way to acheive the root shell, and we did.&lt;/p&gt;
+
+&lt;p&gt;This article suggests a simple trick to get a temporary root shell on RouterOS which can only be used on virtual machines and is easy to use.&lt;/p&gt;
+
+&lt;h2 id=&quot;previously-on-routeros&quot;&gt;Previously on RouterOS…&lt;/h2&gt;
+
+&lt;p&gt;RouterOS has a hidden “devel” login which is only enabled when specific conditions are met. When enabled, RouterOS gives you an ash shell if you login with id “devel” via telnet. Most of the RouterOS jailbreaking methods focus on enabling the “devel” login.&lt;/p&gt;
+
+&lt;p&gt;Before RouterOS version 6.41, There were two options to enable the “devel” login feature.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;‘option’ package is installed.&lt;/li&gt;
+  &lt;li&gt;/nova/etc/devel-login file exists.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;/nova/etc/devel-login was removed in version 6.41. So the only option left is the ‘option’ package.&lt;/p&gt;
+
+&lt;h2 id=&quot;devel-login-on-routeros-v7&quot;&gt;‘devel’ login on RouterOS v7&lt;/h2&gt;
+
+&lt;p&gt;When the telnet connection is made, RouterOS uses /nova/bin/login binary for login authentication. This binary contains the code that checks whether the “devel” login option is enabled or not by checking the ‘option’ package.&lt;/p&gt;
+
+&lt;p&gt;/nova/bin/login checks if the ‘option’ package is installed by executing nv::hasOptionPackage function. By analyzing /lib/libumsg.so library, you can see that nv::hasOptionPackage is equaviliant to nv::hasPackage(“option”).&lt;/p&gt;
+
+&lt;p&gt;In RouterOS v7, nv::hasPackage returns true only when the following conditions are met&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;If the target is a symbolic link, it should point to “/bndl/(package_name)” which is located in the read-only file system.&lt;/li&gt;
+  &lt;li&gt;If the target is not a symbolic link, it should be stored in the read-only(squashfs) file system.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;It is hard to bypass the nv::hasPackage function unless we have an arbitrary code execution vulnerability. Even if we somehow managed to pass the nv::hasPackage(“option”) check, the login binary explicitly executes “/pckg/option/bin/bash” as shell which does not exist by default. we still need to somehow write the shell binary on the location.&lt;/p&gt;
+
+&lt;h2 id=&quot;simple-trick&quot;&gt;Simple trick&lt;/h2&gt;
+
+&lt;p&gt;So, bypassing the “option” package verifying code is not easy, Unless we can change the program code itself. But that would require you to modify the code running on the live memory. That… is impossible. Isn’t it?&lt;/p&gt;
+
+&lt;p&gt;Wait, actually it is possible! Of course, it is. It’s a ‘virtual’ machine after all.&lt;/p&gt;
+
+&lt;p&gt;What if the login binary checks for an “ipv6” package instead of the “option” package? What if the login binary executes “/rw/disk/bash” as shell instead of “/pckg/option/bin/bash”?&lt;/p&gt;
+
+&lt;p&gt;We can make that happen.&lt;/p&gt;
+
+&lt;h2 id=&quot;how-to-root-your-routeros-vm&quot;&gt;How to root your RouterOS VM&lt;/h2&gt;
+
+&lt;p&gt;What you need:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Ubuntu VM&lt;/li&gt;
+  &lt;li&gt;RouterOS x86 ISO Image&lt;/li&gt;
+  &lt;li&gt;VMWare Workstation&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Step:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;First, install RotuerOS on your VM. After the installation, turn the VM off.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Attach RouterOS VM’s Disk to Ubuntu VM&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Boot the Ubuntu VM, and browse into RouterOS Disk’s volume called ‘RouterOS’. Go to /RW/disk/ and execute the following command to download the busybox binary. Exit the Ubuntu VM.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo mkdir &lt;/span&gt;busybox &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;busybox
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;wget &lt;span class=&quot;nt&quot;&gt;-O&lt;/span&gt; ash https://www.busybox.net/downloads/binaries/1.31.0-i686-uclibc/busybox_ASH
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;wget https://www.busybox.net/downloads/binaries/1.31.0-i686-uclibc/busybox
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;chmod &lt;/span&gt;a+x ash busybox
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Boot RouterOS VM and make several login attempts with the invalid credential.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Suspend the RouterOS VM. Go to the RouterOS VM folder and open vmem file with hex editor.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Find &amp;amp; Replace as follows&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Original: 00 2F 62 6E 64 6C 2F 00 6F 70 74 69 6F 6E 00
+Replaced: 00 2F 62 6E 64 6C 2F 00 69 70 76 36 00 00 00
+
+Original: 00 2F 70 63 6B 67 2F 6F 70 74 69 6F 6E 2F 62 69 6E 2F 62 61 73 68 00
+Replaced: 00 2F 72 77 2F 64 69 73 6B 2F 62 75 73 79 62 6F 78 2F 61 73 68 00 00
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Save the vmem file. Resume the RouterOS VM&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Login with devel/(admin’s password)&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;You will get a shell. If not, repeat the process from stage 4.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Execute the following commands to install the busybox.
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /rw/disk/busybox
+./busybox &lt;span class=&quot;nt&quot;&gt;--install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;:/rw/disk/busybox/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;If everything is done correctly, you should get an ash shell with busybox as the screenshot.
+&lt;img src=&quot;/assets/2022-06-01-how-to-root-routeros/6d99def97b5f4aa312ca4519056a67ffb624cd4059f38c21bd7f9a08b82c530b.png&quot; alt=&quot;picture 4&quot; /&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;limitation&quot;&gt;Limitation&lt;/h2&gt;
+
+&lt;p&gt;This is a ‘simple trick’ method and the shell is not persistent. If you reboot the RouterOS VM, you will have to repeat the process from stage 4.&lt;/p&gt;</content><author><name>오세준</name></author><category term="R&amp;D" /><summary type="html">How to root your RouterOS v7 Virtual Machine</summary></entry><entry xml:lang="ko"><title type="html">Ronin Bridge Vulnerability Analysis</title><link href="http://ufo.stealien.com/id/2022-04-12/ronin-bridge-vuln-analysis" rel="alternate" type="text/html" title="Ronin Bridge Vulnerability Analysis" /><published>2022-04-12T00:00:00+09:00</published><updated>2022-04-12T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-04-12/Ronin-Bridge-Vuln-Analysis-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-04-12/ronin-bridge-vuln-analysis">&lt;h1 id=&quot;ronin-bridge-취약점-분석&quot;&gt;Ronin Bridge 취약점 분석&lt;/h1&gt;
 
 &lt;h2 id=&quot;요약&quot;&gt;요약&lt;/h2&gt;
 &lt;p&gt;Ethereum의 side-chain인 ‘Ronin Network’가 해킹을 당해 6억1500만달러(약 7400억원) 규모의 Ethereum이 탈취된 사건이 최근 알려졌다. 이 글에서는 Ronin Network가 무엇인지 알아보고 어떤 요소때문에 자금이 유출된건지, 대응은 어떻게 하고있는지에 대해서 알아본다&lt;/p&gt;
@@ -576,7 +576,7 @@ E.g. the last signature from the list above would become `LINECTF{174c96f2c629af
 &lt;h2 id=&quot;정리하며&quot;&gt;정리하며&lt;/h2&gt;
 &lt;p&gt;기존에 본인이 분석해왔던 블록체인 쪽의 보안사고와는 다소 다른 유형의 사고였다.
 지금까지 Smart contract의 Code level상의 취약점만 보다가 Architecture 상 중요한 역할을 하는 EOA의 private key가 유출되어서 그것이 플랫폼 자금의 유출로 이어지는 사건은 처음 분석해보았다.
-이로 인해 느낀점은 Smart Contract상에서 Code 뿐만 아니라 구성하고있는 EOA에 대한 보안도 신경써서 관리해야함을 다시한번 깨달았다.&lt;/p&gt;</content><author><name>한호정</name></author><category term="R&amp;D" /><summary type="html">Ronin Bridge 취약점 분석</summary></entry><entry xml:lang="ko"><title type="html">DirtyPipe Review</title><link href="http://0.0.0.0:4000/id/2022-03-15/dirtypipe-review" rel="alternate" type="text/html" title="DirtyPipe Review" /><published>2022-03-15T00:00:00+09:00</published><updated>2022-03-15T00:00:00+09:00</updated><id>http://0.0.0.0:4000/2022-03-15/DirtyPipe-ko</id><content type="html" xml:base="http://0.0.0.0:4000/2022-03-15/dirtypipe-review">&lt;h1 id=&quot;dirtypipe-review&quot;&gt;DirtyPipe Review&lt;/h1&gt;
+이로 인해 느낀점은 Smart Contract상에서 Code 뿐만 아니라 구성하고있는 EOA에 대한 보안도 신경써서 관리해야함을 다시한번 깨달았다.&lt;/p&gt;</content><author><name>한호정</name></author><category term="R&amp;D" /><summary type="html">Ronin Bridge 취약점 분석</summary></entry><entry xml:lang="ko"><title type="html">DirtyPipe Review</title><link href="http://ufo.stealien.com/id/2022-03-15/dirtypipe-review" rel="alternate" type="text/html" title="DirtyPipe Review" /><published>2022-03-15T00:00:00+09:00</published><updated>2022-03-15T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-03-15/DirtyPipe-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-03-15/dirtypipe-review">&lt;h1 id=&quot;dirtypipe-review&quot;&gt;DirtyPipe Review&lt;/h1&gt;
 
 &lt;hr /&gt;
 
@@ -1470,7 +1470,7 @@ diff --git a/lib/iov_iter.c b/lib/iov_iter.c
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;최종적으로 pipe_write 함수를 호출하면, buf-&amp;gt;flags &amp;amp; PIPE_BUF_FLAG_CAN_MERGE를 통과하고 copy_page_from_iter 함수 호출과 함께 buf→page에 있는 page cache가 우리의 데이터로 덮히게 된다. 다시 똑같은 파일을 읽게 된다면, 우리가 수정한 내용이 담겨있는 page cache를 읽게된다.&lt;/p&gt;</content><author><name>seonungjang</name></author><category term="R&amp;D" /><summary type="html">DirtyPipe Review</summary></entry><entry xml:lang="ko"><title type="html">2021 Metasploit Community CTF write-up, review</title><link href="http://0.0.0.0:4000/id/2021-12-07/Metasploit-CTF-Review" rel="alternate" type="text/html" title="2021 Metasploit Community CTF write-up, review" /><published>2021-12-07T01:30:00+09:00</published><updated>2021-12-07T01:30:00+09:00</updated><id>http://0.0.0.0:4000/2021-12-07/Metasploit-CTF-review-ko</id><content type="html" xml:base="http://0.0.0.0:4000/2021-12-07/Metasploit-CTF-Review">&lt;h1 id=&quot;2021-metasploit-community-ctf-write-up-review&quot;&gt;2021 Metasploit Community CTF write-up, review&lt;/h1&gt;
+&lt;p&gt;최종적으로 pipe_write 함수를 호출하면, buf-&amp;gt;flags &amp;amp; PIPE_BUF_FLAG_CAN_MERGE를 통과하고 copy_page_from_iter 함수 호출과 함께 buf→page에 있는 page cache가 우리의 데이터로 덮히게 된다. 다시 똑같은 파일을 읽게 된다면, 우리가 수정한 내용이 담겨있는 page cache를 읽게된다.&lt;/p&gt;</content><author><name>seonungjang</name></author><category term="R&amp;D" /><summary type="html">DirtyPipe Review</summary></entry><entry xml:lang="ko"><title type="html">2021 Metasploit Community CTF write-up, review</title><link href="http://ufo.stealien.com/id/2021-12-07/Metasploit-CTF-Review" rel="alternate" type="text/html" title="2021 Metasploit Community CTF write-up, review" /><published>2021-12-07T01:30:00+09:00</published><updated>2021-12-07T01:30:00+09:00</updated><id>http://ufo.stealien.com/2021-12-07/Metasploit-CTF-review-ko</id><content type="html" xml:base="http://ufo.stealien.com/2021-12-07/Metasploit-CTF-Review">&lt;h1 id=&quot;2021-metasploit-community-ctf-write-up-review&quot;&gt;2021 Metasploit Community CTF write-up, review&lt;/h1&gt;
 
 &lt;p&gt;PoSTLTimes(PostalTimes + STLCTF)이라는 팀명으로 진행했다.&lt;/p&gt;
 
@@ -1935,7 +1935,7 @@ O:4:&lt;span class=&quot;s2&quot;&gt;&quot;user&quot;&lt;/span&gt;:3:&lt;span cl
 
 &lt;blockquote&gt;
   &lt;p&gt;&lt;strong&gt;총평&lt;/strong&gt; : 역시 ctf는 가끔 하는게 정신 건강에 이로운 것 같다.&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>김도현</name></author><category term="R&amp;D" /><summary type="html">2021 Metasploit Community CTF write-up, review</summary></entry><entry xml:lang="id"><title type="html">MikroTik Post-Auth execve() call.</title><link href="http://0.0.0.0:4000/id/2021-10-13/MikroTik-PostAuth-RCE" rel="alternate" type="text/html" title="MikroTik Post-Auth execve() call." /><published>2021-10-13T19:00:00+09:00</published><updated>2021-10-13T19:00:00+09:00</updated><id>http://0.0.0.0:4000/2021-10-13/MikroTik-PostAuth-RCE-id</id><content type="html" xml:base="http://0.0.0.0:4000/2021-10-13/MikroTik-PostAuth-RCE">&lt;h1 id=&quot;mikrotik-panggilan-sewenang-wenang-execve-post-authentication&quot;&gt;MikroTik panggilan sewenang-wenang execve() (Post Authentication)&lt;/h1&gt;
+&lt;/blockquote&gt;</content><author><name>김도현</name></author><category term="R&amp;D" /><summary type="html">2021 Metasploit Community CTF write-up, review</summary></entry><entry xml:lang="id"><title type="html">MikroTik Post-Auth execve() call.</title><link href="http://ufo.stealien.com/id/2021-10-13/MikroTik-PostAuth-RCE" rel="alternate" type="text/html" title="MikroTik Post-Auth execve() call." /><published>2021-10-13T19:00:00+09:00</published><updated>2021-10-13T19:00:00+09:00</updated><id>http://ufo.stealien.com/2021-10-13/MikroTik-PostAuth-RCE-id</id><content type="html" xml:base="http://ufo.stealien.com/2021-10-13/MikroTik-PostAuth-RCE">&lt;h1 id=&quot;mikrotik-panggilan-sewenang-wenang-execve-post-authentication&quot;&gt;MikroTik panggilan sewenang-wenang execve() (Post Authentication)&lt;/h1&gt;
 &lt;ul&gt;
   &lt;li&gt;Mempengaruhi versi: 6.48.3 hingga 6.48.? (tidak diperiksa. maaf.)&lt;/li&gt;
   &lt;li&gt;Dampak : Rendah&lt;/li&gt;
@@ -2024,7 +2024,7 @@ O:4:&lt;span class=&quot;s2&quot;&gt;&quot;user&quot;&lt;/span&gt;:3:&lt;span cl
 &lt;h2 id=&quot;kode-serangan&quot;&gt;Kode serangan&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;https://github.com/d0now/vulnerabilities/MikroTik_RouterOS/2021-10-13-post-auth-execve/exploit.py&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>김도현</name></author><category term="R&amp;D" /><summary type="html">MikroTik panggilan sewenang-wenang execve() (Post Authentication) Mempengaruhi versi: 6.48.3 hingga 6.48.? (tidak diperiksa. maaf.) Dampak : Rendah Kesulitan: Rendah</summary></entry><entry xml:lang="id"><title type="html">CVE-2020-26934 - phpMyAdmin Reflected Cross-site scripting</title><link href="http://0.0.0.0:4000/id/2021-09-02/CVE-2020-26934-phpMyAdmin-Reflected-Cross-site-scripting" rel="alternate" type="text/html" title="CVE-2020-26934 - phpMyAdmin Reflected Cross-site scripting" /><published>2021-09-02T15:55:50+09:00</published><updated>2021-09-02T15:55:50+09:00</updated><id>http://0.0.0.0:4000/2021-09-02/CVE-2020-26934%20-%20phpMyAdmin%20Reflected%20Cross-site%20scripting-id</id><content type="html" xml:base="http://0.0.0.0:4000/2021-09-02/CVE-2020-26934-phpMyAdmin-Reflected-Cross-site-scripting">&lt;h1 id=&quot;ringkasan&quot;&gt;Ringkasan&lt;/h1&gt;
+&lt;/ul&gt;</content><author><name>김도현</name></author><category term="R&amp;D" /><summary type="html">MikroTik panggilan sewenang-wenang execve() (Post Authentication) Mempengaruhi versi: 6.48.3 hingga 6.48.? (tidak diperiksa. maaf.) Dampak : Rendah Kesulitan: Rendah</summary></entry><entry xml:lang="id"><title type="html">CVE-2020-26934 - phpMyAdmin Reflected Cross-site scripting</title><link href="http://ufo.stealien.com/id/2021-09-02/CVE-2020-26934-phpMyAdmin-Reflected-Cross-site-scripting" rel="alternate" type="text/html" title="CVE-2020-26934 - phpMyAdmin Reflected Cross-site scripting" /><published>2021-09-02T15:55:50+09:00</published><updated>2021-09-02T15:55:50+09:00</updated><id>http://ufo.stealien.com/2021-09-02/CVE-2020-26934%20-%20phpMyAdmin%20Reflected%20Cross-site%20scripting-id</id><content type="html" xml:base="http://ufo.stealien.com/2021-09-02/CVE-2020-26934-phpMyAdmin-Reflected-Cross-site-scripting">&lt;h1 id=&quot;ringkasan&quot;&gt;Ringkasan&lt;/h1&gt;
 &lt;p&gt;phpMyAdmin adalah layanan antarmuka web untuk mengelola database MySQL/MariaDB. Ini diimplementasikan dalam bahasa PHP dan diinstal dan digunakan di server web. Setelah masuk ke halaman web phpMyAdmin melalui browser web, pengguna dapat melihat dan mengedit database.&lt;/p&gt;
 
 &lt;h1 id=&quot;fungsi-transformasi&quot;&gt;Fungsi transformasi&lt;/h1&gt;
@@ -2086,7 +2086,7 @@ Terima kasih kepada Giwan Go, Yelang Lee dari STEALIEN karena telah melaporkan k
 
 &lt;p&gt;Memverifikasi nilai tanda tangan parameter &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;where_clause&lt;/code&gt; untuk mencegah penyerang meneruskan parameter melalui metode permintaan GET.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/2021-08-20-CVE-2020-26934/cve202026934_7.png&quot; style=&quot;max-width:800px; height:auto;&quot; /&gt;&lt;/p&gt;</content><author><name>고기완</name></author><category term="R&amp;D" /><summary type="html">Ringkasan phpMyAdmin adalah layanan antarmuka web untuk mengelola database MySQL/MariaDB. Ini diimplementasikan dalam bahasa PHP dan diinstal dan digunakan di server web. Setelah masuk ke halaman web phpMyAdmin melalui browser web, pengguna dapat melihat dan mengedit database.</summary></entry><entry xml:lang="id"><title type="html">Tinjauan analisis APK berbahaya serba guna</title><link href="http://0.0.0.0:4000/id/2021-07-29/malwareAPK" rel="alternate" type="text/html" title="Tinjauan analisis APK berbahaya serba guna" /><published>2021-07-29T13:00:52+09:00</published><updated>2021-07-29T13:00:52+09:00</updated><id>http://0.0.0.0:4000/2021-07-29/malwareAPK-id</id><content type="html" xml:base="http://0.0.0.0:4000/2021-07-29/malwareAPK">&lt;h1 id=&quot;-tinjauan-analisis-apk-berbahaya-serba-guna-&quot;&gt;&lt;center&gt;[ Tinjauan analisis APK berbahaya serba guna ]&lt;/center&gt;&lt;/h1&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/2021-08-20-CVE-2020-26934/cve202026934_7.png&quot; style=&quot;max-width:800px; height:auto;&quot; /&gt;&lt;/p&gt;</content><author><name>고기완</name></author><category term="R&amp;D" /><summary type="html">Ringkasan phpMyAdmin adalah layanan antarmuka web untuk mengelola database MySQL/MariaDB. Ini diimplementasikan dalam bahasa PHP dan diinstal dan digunakan di server web. Setelah masuk ke halaman web phpMyAdmin melalui browser web, pengguna dapat melihat dan mengedit database.</summary></entry><entry xml:lang="id"><title type="html">Tinjauan analisis APK berbahaya serba guna</title><link href="http://ufo.stealien.com/id/2021-07-29/malwareAPK" rel="alternate" type="text/html" title="Tinjauan analisis APK berbahaya serba guna" /><published>2021-07-29T13:00:52+09:00</published><updated>2021-07-29T13:00:52+09:00</updated><id>http://ufo.stealien.com/2021-07-29/malwareAPK-id</id><content type="html" xml:base="http://ufo.stealien.com/2021-07-29/malwareAPK">&lt;h1 id=&quot;-tinjauan-analisis-apk-berbahaya-serba-guna-&quot;&gt;&lt;center&gt;[ Tinjauan analisis APK berbahaya serba guna ]&lt;/center&gt;&lt;/h1&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;div style=&quot;text-align: right&quot;&gt;Isi&lt;/div&gt;
@@ -2379,7 +2379,7 @@ Terima kasih kepada Giwan Go, Yelang Lee dari STEALIEN karena telah melaporkan k
 &lt;hr /&gt;
 &lt;p&gt;Kim Ji-hyun, Hong Soon-bin, Oh Jin-young, “Phishing suara ditujukan untuk [The W] 2030… Memancing dengan ‘Part-timer’, ‘Body Cam’”, &lt;Money Today=&quot;&quot;&gt;, 2021.05.02, [https://news.mt.co.kr/mtview.php?no=2021050209122253595](https://news .mt .co.kr/mtview.php?no=2021050209122253595)*
 Shin Jeong-eun, “Peringatan 'body cam phishing' yang menargetkan ziplock… 2,2 miliar kerusakan saja”,, 2021.02.18, https://news.sbs.co.kr/news/endPage.do?news_id=N1006212770&amp;amp;plink=SEARCH&amp;amp;cooper=SBSNEWSSEARCH&amp;amp;plink=COPYPASTE&amp;amp;cooper=SBSNEWSEND
-Choi Seon-eul, “Siswa sekolah menengah diancam dengan 'body cam phishing' dan jatuh dari atap gedung apartemen dan meninggal”, &lt;Seoul Shimbun=&quot;&quot;&gt;, 2021.05.31, [https://www.seoul.co.kr/news/newsView.php?id=20210531500185 ](https://www.seoul.co.kr/news/newsView.php?id=20210531500185)&lt;/Seoul&gt;&lt;/Money&gt;&lt;/p&gt;</content><author><name>함세련</name></author><category term="R&amp;D" /><summary type="html">[ Tinjauan analisis APK berbahaya serba guna ]</summary></entry><entry xml:lang="id"><title type="html">Membangun sistem ERP menggunakan Slackbot</title><link href="http://0.0.0.0:4000/id/dev/2021/07/13/Slackbot%EC%9D%84-%ED%99%9C%EC%9A%A9%ED%95%9C-ERP-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EA%B5%AC%EC%B6%95.html" rel="alternate" type="text/html" title="Membangun sistem ERP menggunakan Slackbot" /><published>2021-07-13T13:13:02+09:00</published><updated>2021-07-13T13:13:02+09:00</updated><id>http://0.0.0.0:4000/dev/2021/07/13/Slackbot%EC%9D%84%20%ED%99%9C%EC%9A%A9%ED%95%9C%20ERP%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EA%B5%AC%EC%B6%95-id</id><content type="html" xml:base="http://0.0.0.0:4000/dev/2021/07/13/Slackbot%EC%9D%84-%ED%99%9C%EC%9A%A9%ED%95%9C-ERP-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EA%B5%AC%EC%B6%95.html">&lt;h1 id=&quot;membangun-sistem-erp-menggunakan-slackbot&quot;&gt;Membangun sistem ERP menggunakan Slackbot&lt;/h1&gt;
+Choi Seon-eul, “Siswa sekolah menengah diancam dengan 'body cam phishing' dan jatuh dari atap gedung apartemen dan meninggal”, &lt;Seoul Shimbun=&quot;&quot;&gt;, 2021.05.31, [https://www.seoul.co.kr/news/newsView.php?id=20210531500185 ](https://www.seoul.co.kr/news/newsView.php?id=20210531500185)&lt;/Seoul&gt;&lt;/Money&gt;&lt;/p&gt;</content><author><name>함세련</name></author><category term="R&amp;D" /><summary type="html">[ Tinjauan analisis APK berbahaya serba guna ]</summary></entry><entry xml:lang="id"><title type="html">Membangun sistem ERP menggunakan Slackbot</title><link href="http://ufo.stealien.com/id/dev/2021/07/13/Slackbot%EC%9D%84-%ED%99%9C%EC%9A%A9%ED%95%9C-ERP-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EA%B5%AC%EC%B6%95.html" rel="alternate" type="text/html" title="Membangun sistem ERP menggunakan Slackbot" /><published>2021-07-13T13:13:02+09:00</published><updated>2021-07-13T13:13:02+09:00</updated><id>http://ufo.stealien.com/dev/2021/07/13/Slackbot%EC%9D%84%20%ED%99%9C%EC%9A%A9%ED%95%9C%20ERP%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EA%B5%AC%EC%B6%95-id</id><content type="html" xml:base="http://ufo.stealien.com/dev/2021/07/13/Slackbot%EC%9D%84-%ED%99%9C%EC%9A%A9%ED%95%9C-ERP-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EA%B5%AC%EC%B6%95.html">&lt;h1 id=&quot;membangun-sistem-erp-menggunakan-slackbot&quot;&gt;Membangun sistem ERP menggunakan Slackbot&lt;/h1&gt;
 
 &lt;h2 id=&quot;ringkasan&quot;&gt;Ringkasan&lt;/h2&gt;
 &lt;p&gt;Sebelumnya, tidak ada sistem manajemen yang terpisah karena tidak banyak orang di perusahaan, tetapi dengan bertambahnya jumlah anggota perusahaan, diperlukan sesuatu yang dapat mengatur proses secara sistematis seperti permintaan/persetujuan/pengelolaan pembayaran.&lt;/p&gt;
@@ -2681,7 +2681,7 @@ Alasan: alasan pribadi
   &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;p&gt;위 기능은 slackbot의 app_home을 활용해 만들었으며, 관련된 내용은 다음에 기회가 된다면 포스팅  할 예정이다.&lt;/p&gt;</content><author><name>이창호</name></author><category term="Dev" /><summary type="html">Membangun sistem ERP menggunakan Slackbot</summary></entry><entry><title type="html">Gnuboard &amp;lt;= 5.4.1.1 RCE</title><link href="http://0.0.0.0:4000/id/2021-02-08/Gnuboard-RCE" rel="alternate" type="text/html" title="Gnuboard &amp;lt;= 5.4.1.1 RCE" /><published>2021-02-08T16:00:00+09:00</published><updated>2021-02-08T16:00:00+09:00</updated><id>http://0.0.0.0:4000/2021-02-08/Gnuboard-RCE</id><content type="html" xml:base="http://0.0.0.0:4000/2021-02-08/Gnuboard-RCE">&lt;h1 id=&quot;gnuboard--5411-rce&quot;&gt;Gnuboard &amp;lt;= 5.4.1.1 RCE&lt;/h1&gt;
+&lt;p&gt;위 기능은 slackbot의 app_home을 활용해 만들었으며, 관련된 내용은 다음에 기회가 된다면 포스팅  할 예정이다.&lt;/p&gt;</content><author><name>이창호</name></author><category term="Dev" /><summary type="html">Membangun sistem ERP menggunakan Slackbot</summary></entry><entry><title type="html">Gnuboard &amp;lt;= 5.4.1.1 RCE</title><link href="http://ufo.stealien.com/id/2021-02-08/Gnuboard-RCE" rel="alternate" type="text/html" title="Gnuboard &amp;lt;= 5.4.1.1 RCE" /><published>2021-02-08T16:00:00+09:00</published><updated>2021-02-08T16:00:00+09:00</updated><id>http://ufo.stealien.com/2021-02-08/Gnuboard-RCE</id><content type="html" xml:base="http://ufo.stealien.com/2021-02-08/Gnuboard-RCE">&lt;h1 id=&quot;gnuboard--5411-rce&quot;&gt;Gnuboard &amp;lt;= 5.4.1.1 RCE&lt;/h1&gt;
 &lt;p&gt;스틸리언 선임연구원 이예랑(yelang123)&lt;/p&gt;
 
 &lt;h2 id=&quot;개요&quot;&gt;개요&lt;/h2&gt;
