@@ -2,7 +2,7 @@
 layout   : post
 markdown  : kramdown
 highlighter : rouge
-title    : CAN BUS [1]
+title    : CAN BUS
 date    : 2020-10-29 16:00:00 +0900
 category  : R&D
 author   : 서영일
