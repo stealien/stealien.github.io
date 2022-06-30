@@ -6,13 +6,13 @@
 <meta property="og:type" content="article">
 <meta property="og:image" content="http://ufo.stealien.com/assets/og_image.png">
 <meta property="og:title" content="STEALIEN Technical Blog">
-<meta property="og:description" content="CAN BUS [1]">
+<meta property="og:description" content="CAN BUS">
 <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700&display=swap" rel="stylesheet">
-<title>CAN BUS [1]</title>
+<title>CAN BUS</title>
 <!-- Begin Jekyll SEO tag v2.7.1 -->
-<title>CAN BUS [1] | STEALIEN Technical Blog</title>
+<title>CAN BUS | STEALIEN Technical Blog</title>
 <meta name="generator" content="Jekyll v4.2.0" />
-<meta property="og:title" content="CAN BUS [1]" />
+<meta property="og:title" content="CAN BUS" />
 <meta name="author" content="서영일" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Prologue 최근 자동차 해킹에 대해 관심을 가지는 사람들이 늘고 있다. 워낙 차를 좋아해서 기회가 생기면 자동차 해킹을 해봐야겠다고 생각했었는데 마침 기술 블로그에 기고할 차례가 되어 글을 쓰게 되었다." />
@@ -23,9 +23,9 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-10-29T16:00:00+09:00" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="CAN BUS [1]" />
+<meta property="twitter:title" content="CAN BUS" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"http://ufo.stealien.com/2020-10-29/can_bus_1"},"@type":"BlogPosting","url":"http://ufo.stealien.com/2020-10-29/can_bus_1","author":{"@type":"Person","name":"서영일"},"headline":"CAN BUS [1]","dateModified":"2020-10-29T16:00:00+09:00","datePublished":"2020-10-29T16:00:00+09:00","description":"Prologue 최근 자동차 해킹에 대해 관심을 가지는 사람들이 늘고 있다. 워낙 차를 좋아해서 기회가 생기면 자동차 해킹을 해봐야겠다고 생각했었는데 마침 기술 블로그에 기고할 차례가 되어 글을 쓰게 되었다.","@context":"https://schema.org"}</script>
+{"mainEntityOfPage":{"@type":"WebPage","@id":"http://ufo.stealien.com/2020-10-29/can_bus_1"},"@type":"BlogPosting","url":"http://ufo.stealien.com/2020-10-29/can_bus_1","author":{"@type":"Person","name":"서영일"},"headline":"CAN BUS","dateModified":"2020-10-29T16:00:00+09:00","datePublished":"2020-10-29T16:00:00+09:00","description":"Prologue 최근 자동차 해킹에 대해 관심을 가지는 사람들이 늘고 있다. 워낙 차를 좋아해서 기회가 생기면 자동차 해킹을 해봐야겠다고 생각했었는데 마침 기술 블로그에 기고할 차례가 되어 글을 쓰게 되었다.","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -64,7 +64,7 @@
     <div class="header_image_post_body">
         <div class="container">
             <div class="page-category">R&D</div>
-            <div class="page-title">CAN BUS [1]</div>
+            <div class="page-title">CAN BUS</div>
             <div class="page-summary">
                 <div style="float:left;">
                     <img class="page-profile_image" src="/assets/2020-10-29-can_bus_1/profile.jpg" />
@@ -477,54 +477,11 @@
   </tbody>
 </table>
 
-<p>이번 게시글에서는 ECU와 PC용 파워서플라이, 아두이노 그리고 간단한 배선작업을 통해 자동차 해킹을 위한 테스트 환경을 구성해보았다. 다음편부터는 본격적으로 CAN통신 분석을 시작하겠다.</p>
+<p>이번 게시글에서는 ECU와 PC용 파워서플라이, 아두이노 그리고 간단한 배선작업을 통해 자동차 해킹을 위한 테스트 환경을 구성해보았다.</p>
 
 <ul>
   <li>[질문/수정 제안을 위한 연락처] yiseo@stealien.com</li>
 </ul>
-
-<h1 id="다음편에서는">다음편에서는</h1>
-<h2 id="can-패킷-내용-분석">CAN 패킷 내용 분석</h2>
-<p>이번 게시글에서는 ECU에 회로를 구성하여 CAN 패킷을 추출해보았다. ID와 데이터를 파싱하여 출력했지만 어떤 내용을 담은 패킷인지 분석해보지는 않았다. 다음 편에서는 내부 구성과 의미를 분석해볼 예정이다.</p>
-
-<h2 id="입력---악셀-페달-포지션-센서aps">입력 - 악셀 페달 포지션 센서(APS)</h2>
-<p>자동차 게임에 쓰이는 레이싱 휠/페달은 내부 구조가 복잡할 것 같지만 사실은 간단한 가변저항들로 구성되어 있다.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th><img src="https://assets.bigcartel.com/product_images/97527598/GTEYE-G25-G27-Spring-Installation-Web.jpg?auto=format&amp;fit=max&amp;h=1000&amp;w=1000" alt="GTEYE Progressive Brake Spring for Logitech G25 / G27 / G29 / G920 / GTEYE" style="max-width:800px; height:auto;" /></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>출처 : https://images.app.goo.gl/FmNJ5N9BgUVdgd9T6</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>실제 자동차도 상당히 비슷한 구조로 센서들을 통해 악셀 페달의 위치를 감지한다. 이에 사용되는 악셀 페달 포지션 센서(APS)는 현재 가속페달이 어떤 위치에 있는지 감지하는 센서로, 사용자가 어느정도의 가속을 의도하고 있는지 파악할 수 있는 중요한 센서이다.</p>
-
-<p>원리는 비슷하지만 게임에 사용되는 레이싱 휠/페달처럼 단순한 구조는 아니고, 오작동을 방지하기 위해 2개의 전압 값을 통해 입력 교차검증을 수행한다. GSW에서는 APS에 대하여 다음과 같이 설명하고 있다.</p>
-
-<blockquote>
-  <p>페달 위치 센서는 신뢰도가 중요한 센서로, 주 신호인 센서 1과 센서 1을 감지하는 센서 2로 구성되어있다. 센서 1과 2는 서로 독립된 전원과 접지로 구성되어 있으며, 센서2는 센서 1의 출력의 1/2 출력을 발생하여, 센서 1과 2의 전압 비율이 일정 이상 벗어날 경우 에러로 판정된다.</p>
-</blockquote>
-
-<table>
-  <thead>
-    <tr>
-      <th><img src="/assets/2020-10-29-can_bus_1/image-20201028165107310.png" alt="image-20201028165107310" style="max-width:800px; height:auto;" /></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>악셀 페달 포지션 센서 출력 전압 그래프</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>C.T(스로틀 전폐), W.O.T(스로틀 전개) 상태에 따라 요구되는 출력 전압이 다르다. 이에 따라 악셀러레이터 페달의 저항값, 그리고 센서 2의 입력에 해당되는 곳의 저항값을 조절하는 회로를 구성하여 ECU가 요구하는 전압 값을 만족시킬 수 있다. 차후 연구에서는 악셀러레이터 페달 값을 임의로 주고 그에 따른 ECU의 반응을 살펴볼 계획이다.</p>
 
 
     <div class="page-profile-detail">
