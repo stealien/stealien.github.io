@@ -124,4 +124,4 @@ Blockchain에 대한 Security Audit 산업이 MEV에 대한 research로도 발�
 ## Footnotes
 
 [^1]: Stealien Security Leader, 스틸리언 주관 멘토링 프로그램
-[^2]: [Paper: 권한 상승 취약점 점검 가이드 및 탐지 방법 제안](/assets/2022-06-30-2022_3s_review/file1.pdf), [Doc: 권한 상승 취약점 점검 가이드](/assets/2022-06-30-2022_3s_review/file2.pdf)
+[^2]: [Paper: 권한 상승 취약점 점검 가이드 및 탐지 방법 제안](https://drive.google.com/file/d/1Mk46m5tFapZZ0y4upKxD3R6YsXb4EVZ1/view?usp=sharing), [Doc: 권한 상승 취약점 점검 가이드](https://drive.google.com/file/d/1LscZyKqve60LQsPU98-RgONbP43Mivy1/view?usp=sharing)
