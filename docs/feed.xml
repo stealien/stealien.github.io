@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2022-07-01T16:05:47+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">Stealien Security Seminar 1회 리뷰</title><link href="http://ufo.stealien.com/2022-06-30/stealien-security-seminar" rel="alternate" type="text/html" title="Stealien Security Seminar 1회 리뷰" /><published>2022-06-30T00:00:00+09:00</published><updated>2022-06-30T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-06-30/2022_3s_review-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-30/stealien-security-seminar">&lt;h1 id=&quot;stealien-security-seminar-1회-리뷰&quot;&gt;Stealien Security Seminar 1회 리뷰&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2022-07-01T16:36:58+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">Stealien Security Seminar 1회 리뷰</title><link href="http://ufo.stealien.com/2022-06-30/stealien-security-seminar" rel="alternate" type="text/html" title="Stealien Security Seminar 1회 리뷰" /><published>2022-06-30T00:00:00+09:00</published><updated>2022-06-30T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-06-30/2022_3s_review-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-30/stealien-security-seminar">&lt;h1 id=&quot;stealien-security-seminar-1회-리뷰&quot;&gt;Stealien Security Seminar 1회 리뷰&lt;/h1&gt;
 
 &lt;p align=&quot;center&quot;&gt;
     &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/banner.png&quot; /&gt;&lt;br /&gt;
@@ -163,31 +163,25 @@ Blockchain에 대한 Security Audit 산업이 MEV에 대한 research로도 발�
 하지만, 사용하다보니 생각하지 못한 몇 가지 문제점들을 마주하게 되었습니다.&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;Vite 환경에서 react-pdf가 잘 작동하지 않았습니다.&lt;/li&gt;
+  &lt;li&gt;Vite 환경에서 react-pdf가 잘 작동하지 않았습니다.
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;https://github.com/vitejs/vite/issues/3405&quot;&gt;issue&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;Vite에서 사용하기 위해서는 추가적으로 브라우저용 라이브러리를 추가해주어야 합니다.&lt;/li&gt;
+      &lt;li&gt;이 &lt;a href=&quot;https://github.com/exogee-technology/vite-plugin-shim-react-pdf&quot;&gt;라이브러리&lt;/a&gt; 로 해결했습니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;프론트엔드에서 pdf를 생성하다보니, 브라우저 콘솔에서 많은 에러가 발생했습니다.
+    &lt;ul&gt;
+      &lt;li&gt;클라이언트쪽에서 렌더링을 하는 과정에서 이슈가 있는 것 같았습니다.&lt;/li&gt;
+      &lt;li&gt;다행히, 작동에는 이상이 없어서 우선 넘어가게 되었습니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;차트를 그리기가 조금 까다로웠습니다.
+    &lt;ul&gt;
+      &lt;li&gt;svg를 지원한다고 해서 &lt;a href=&quot;https://nivo.rocks/&quot;&gt;nivo&lt;/a&gt;를 사용하려고 했는데, 구조상 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;차트컴포넌트 -&amp;gt; svg -&amp;gt; react-pdf&lt;/code&gt; 의 형식으로 쓰면 오류가 발생하는 바람에 결국 스스로 만들어서 썼습니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
 &lt;/ol&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/vitejs/vite/issues/3405&quot;&gt;issue&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;Vite에서 사용하기 위해서는 추가적으로 브라우저용 라이브러리를 추가해주어야 합니다.&lt;/li&gt;
-  &lt;li&gt;이 &lt;a href=&quot;https://github.com/exogee-technology/vite-plugin-shim-react-pdf&quot;&gt;라이브러리&lt;/a&gt; 로 해결했습니다.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;프론트엔드에서 pdf를 생성하다보니, 브라우저 콘솔에서 많은 에러가 발생했습니다.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;클라이언트쪽에서 렌더링을 하는 과정에서 이슈가 있는 것 같았습니다.&lt;/li&gt;
-  &lt;li&gt;다행히, 작동에는 이상이 없어서 우선 넘어가게 되었습니다.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;차트를 그리기가 조금 까다로웠습니다.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;svg를 지원한다고 해서 &lt;a href=&quot;https://nivo.rocks/&quot;&gt;nivo&lt;/a&gt;를 사용하려고 했는데, 구조상 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;차트컴포넌트 -&amp;gt; svg -&amp;gt; react-pdf&lt;/code&gt; 의 형식으로 쓰면 오류가 발생하는 바람에 결국 스스로 만들어서 썼습니다.&lt;/li&gt;
-&lt;/ul&gt;
 
 &lt;p&gt;특히, 마지막 3번이 저를 굉장히 괴롭히게 되었습니다.&lt;/p&gt;
 

@@ -124,31 +124,25 @@
 하지만, 사용하다보니 생각하지 못한 몇 가지 문제점들을 마주하게 되었습니다.</p>
 
 <ol>
-  <li>Vite 환경에서 react-pdf가 잘 작동하지 않았습니다.</li>
+  <li>Vite 환경에서 react-pdf가 잘 작동하지 않았습니다.
+    <ul>
+      <li><a href="https://github.com/vitejs/vite/issues/3405">issue</a></li>
+      <li>Vite에서 사용하기 위해서는 추가적으로 브라우저용 라이브러리를 추가해주어야 합니다.</li>
+      <li>이 <a href="https://github.com/exogee-technology/vite-plugin-shim-react-pdf">라이브러리</a> 로 해결했습니다.</li>
+    </ul>
+  </li>
+  <li>프론트엔드에서 pdf를 생성하다보니, 브라우저 콘솔에서 많은 에러가 발생했습니다.
+    <ul>
+      <li>클라이언트쪽에서 렌더링을 하는 과정에서 이슈가 있는 것 같았습니다.</li>
+      <li>다행히, 작동에는 이상이 없어서 우선 넘어가게 되었습니다.</li>
+    </ul>
+  </li>
+  <li>차트를 그리기가 조금 까다로웠습니다.
+    <ul>
+      <li>svg를 지원한다고 해서 <a href="https://nivo.rocks/">nivo</a>를 사용하려고 했는데, 구조상 <code class="language-plaintext highlighter-rouge">차트컴포넌트 -&gt; svg -&gt; react-pdf</code> 의 형식으로 쓰면 오류가 발생하는 바람에 결국 스스로 만들어서 썼습니다.</li>
+    </ul>
+  </li>
 </ol>
-
-<ul>
-  <li><a href="https://github.com/vitejs/vite/issues/3405">issue</a></li>
-  <li>Vite에서 사용하기 위해서는 추가적으로 브라우저용 라이브러리를 추가해주어야 합니다.</li>
-  <li>이 <a href="https://github.com/exogee-technology/vite-plugin-shim-react-pdf">라이브러리</a> 로 해결했습니다.</li>
-</ul>
-
-<ol>
-  <li>프론트엔드에서 pdf를 생성하다보니, 브라우저 콘솔에서 많은 에러가 발생했습니다.</li>
-</ol>
-
-<ul>
-  <li>클라이언트쪽에서 렌더링을 하는 과정에서 이슈가 있는 것 같았습니다.</li>
-  <li>다행히, 작동에는 이상이 없어서 우선 넘어가게 되었습니다.</li>
-</ul>
-
-<ol>
-  <li>차트를 그리기가 조금 까다로웠습니다.</li>
-</ol>
-
-<ul>
-  <li>svg를 지원한다고 해서 <a href="https://nivo.rocks/">nivo</a>를 사용하려고 했는데, 구조상 <code class="language-plaintext highlighter-rouge">차트컴포넌트 -&gt; svg -&gt; react-pdf</code> 의 형식으로 쓰면 오류가 발생하는 바람에 결국 스스로 만들어서 썼습니다.</li>
-</ul>
 
 <p>특히, 마지막 3번이 저를 굉장히 괴롭히게 되었습니다.</p>
 

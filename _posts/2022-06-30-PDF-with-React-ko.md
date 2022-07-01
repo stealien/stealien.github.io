@@ -55,19 +55,16 @@ permalink   : /2022-06-30/pdf-with-react
 하지만, 사용하다보니 생각하지 못한 몇 가지 문제점들을 마주하게 되었습니다.
 
 1. Vite 환경에서 react-pdf가 잘 작동하지 않았습니다.
-
-- [issue](https://github.com/vitejs/vite/issues/3405)
-- Vite에서 사용하기 위해서는 추가적으로 브라우저용 라이브러리를 추가해주어야 합니다.
-- 이 [라이브러리](https://github.com/exogee-technology/vite-plugin-shim-react-pdf) 로 해결했습니다.
+  - [issue](https://github.com/vitejs/vite/issues/3405)
+  - Vite에서 사용하기 위해서는 추가적으로 브라우저용 라이브러리를 추가해주어야 합니다.
+  - 이 [라이브러리](https://github.com/exogee-technology/vite-plugin-shim-react-pdf) 로 해결했습니다.
 
 2. 프론트엔드에서 pdf를 생성하다보니, 브라우저 콘솔에서 많은 에러가 발생했습니다.
-
-- 클라이언트쪽에서 렌더링을 하는 과정에서 이슈가 있는 것 같았습니다.
-- 다행히, 작동에는 이상이 없어서 우선 넘어가게 되었습니다.
+  - 클라이언트쪽에서 렌더링을 하는 과정에서 이슈가 있는 것 같았습니다.
+  - 다행히, 작동에는 이상이 없어서 우선 넘어가게 되었습니다.
 
 3. 차트를 그리기가 조금 까다로웠습니다.
-
-- svg를 지원한다고 해서 [nivo](https://nivo.rocks/)를 사용하려고 했는데, 구조상 `차트컴포넌트 -> svg -> react-pdf` 의 형식으로 쓰면 오류가 발생하는 바람에 결국 스스로 만들어서 썼습니다.
+  - svg를 지원한다고 해서 [nivo](https://nivo.rocks/)를 사용하려고 했는데, 구조상 `차트컴포넌트 -> svg -> react-pdf` 의 형식으로 쓰면 오류가 발생하는 바람에 결국 스스로 만들어서 썼습니다.
 
 특히, 마지막 3번이 저를 굉장히 괴롭히게 되었습니다.
 
