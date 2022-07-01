@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta property="og:type" content="article">
+<meta property="og:image" content="http://ufo.stealien.com/assets/og_image.png">
+<meta property="og:title" content="STEALIEN Technical Blog">
+<meta property="og:description" content="React로 pdf 다루기">
+<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700&display=swap" rel="stylesheet">
+<title>React로 pdf 다루기</title>
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>React로 pdf 다루기 | STEALIEN Technical Blog</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="React로 pdf 다루기" />
+<meta name="author" content="하준혁" />
+<meta property="og:locale" content="ko" />
+<meta name="description" content="React로 pdf 다루기" />
+<meta property="og:description" content="React로 pdf 다루기" />
+<link rel="canonical" href="http://ufo.stealien.com/id/2022-06-30/pdf-with-react" />
+<meta property="og:url" content="http://ufo.stealien.com/2022-06-30/pdf-with-react" />
+<meta property="og:site_name" content="STEALIEN Technical Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-06-30T00:00:00+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="React로 pdf 다루기" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"React로 pdf 다루기","url":"http://ufo.stealien.com/2022-06-30/pdf-with-react","datePublished":"2022-06-30T00:00:00+09:00","dateModified":"2022-06-30T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://ufo.stealien.com/2022-06-30/pdf-with-react"},"author":{"@type":"Person","name":"하준혁"},"description":"React로 pdf 다루기","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name=“naver-site-verification” content=“74a9ec74d48a1ffca92bf9ac4704ba73be9afd65" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"/>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/assets/css/style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/id//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
+
+<link href="/assets/css/syntax.css" rel="stylesheet" >
+</head>
+<body>
+	<header>
+		<div class="container"></div><div id="header">
+    <div class="container" style="display: flex;justify-content: space-between;">
+        <a href="/id/">
+            <img
+                class="header_image_logo"
+                src="/assets/logo.png"
+                style="width: 140px; margin: 20px 28px 0px;"
+            />
+        </a>
+        <a href="https://www.stealien.com/" target="_blank" style="font-family: 'NotoSansKR Medium', sans-serif;font-size: 14px;margin-right: 30px; color: #000; line-height: 70px;">스틸리언 홈페이지</a>
+    </div>
+</div>
+</header>
+	<section>
+		<div>
+			<div class="header_image_bg header_image_post" style="background-image: url('/assets/bg.png');">
+    <div class="header_image_post_body">
+        <div class="container">
+            <div class="page-category">Dev</div>
+            <div class="page-title">React로 pdf 다루기</div>
+            <div class="page-summary">
+                <div style="float:left;">
+                    <img class="page-profile_image" src="/assets/stealien_inverse.png" />
+                    <span>하준혁</span>
+                </div>
+                <div style="float:right;" class="page-date">Jun 30, 2022</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container page-content">
+    <h1 id="react로-pdf-다루기">React로 pdf 다루기</h1>
+
+<p>올해 초, <strong>월간 레포트 리뉴얼</strong> 이라는 업무를 새롭게 배정받게 되었습니다.
+디자인은 회사 대표 디자이너이신 재성님이 아주 아름답게 만들어주셨지만, 코드로 PDF를 만들거나 다뤄본 적이 없는 저는 막연한 두려움을 갖게 되었습니다.</p>
+
+<h2 id="왜-리뉴얼을-진행했나">왜 리뉴얼을 진행했나?</h2>
+
+<p>기존에 사용하던 코드로도 월말마다 회사 Jira에 저장되는 이슈들을 정리하여 메일로 보내기에는 충분했습니다.
+하지만 프로젝트 코드가 관리가 잘 되지 않아서 새로운 디자인을 적용하고, 새로운 데이터를 뽑아내기 위해 이 코드를 처음부터 리딩하기는 조금 힘든 상황이였습니다.
+특히, 주로 사용하는 언어도 다르기도 했구요.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th><img src="/assets/2022-06-30-PDF-with-React/code-manage-not-good.png" alt="codemanage" style="max-width:800px; height:auto;" /></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>코드 관리 절망편</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>따라서 저는 제가 주로 사용하는 Typescript와 React 기반으로 월간 레포트 시스템을 새로 만들기로 했습니다. 기존처럼 스크립트 형태로도 작성할 수 있지만, 예전에 보낸 레포트 조회나 이미지 변경 등을 개발자인 저 뿐만 아니라, 다른 분들도 플랫폼을 통해 확인할 수 있으면 더 좋을 것 같아서 웹 시스템으로 개발하기 위한 계획을 세웠습니다.</p>
+
+<h2 id="react-pdf">React-PDF</h2>
+
+<p>월간 레포트에서 사용하는 데이터는 저희 Jira와 Confluence에서 가져오게 됩니다.
+사실 Jira나 Confluence에서 데이터를 불러오거나 페이지를 생성하는 <a href="https://github.com/mrrefactoring/jira.js/">API</a>는 너무나도 잘 되어있어서 큰 무리 없이 사용할 수 있었습니다.</p>
+
+<p>하지만, 가장 큰 문제는 역시 가져온 데이터를 기반으로 새로운 PDF 를 생성하는 과정이였습니다.</p>
+
+<p><img src="/assets/2022-06-30-PDF-with-React/react-pdf.png" alt="react-pdf" /></p>
+
+<p><a href="https://react-pdf.org/">react-pdf</a>는 React를 기반으로 PDF를 렌더링하거나 생성할 수 있는 라이브러리 입니다.
+라이브러리에서 제공하는 <code class="language-plaintext highlighter-rouge">Document</code> 컴포넌트를 기반으로 PDF 파일을 렌더링하며, <code class="language-plaintext highlighter-rouge">StyleSheet</code>를 통해서 기존 jsx 처럼 글자나 뷰 자체에 스타일링을 할 수 있도록하는 다양하고 필수적인 기능을 포함하고 있습니다.</p>
+
+<p>또한 <code class="language-plaintext highlighter-rouge">svg</code>도 지원하기 때문에, 이미지나 차트 등도 쉽게 표현할 수 있습니다.</p>
+
+<p>그래서 저는 <code class="language-plaintext highlighter-rouge">react-pdf</code>를 기반으로 디자인된 PDF를 만들기 시작했습니다.</p>
+
+<h2 id="위기">위기</h2>
+
+<p>사실 <code class="language-plaintext highlighter-rouge">react-pdf</code>라는 라이브러리를 발견했을 때, 작업이 금방 끝날 줄 알았습니다.
+하지만, 사용하다보니 생각하지 못한 몇 가지 문제점들을 마주하게 되었습니다.</p>
+
+<ol>
+  <li>Vite 환경에서 react-pdf가 잘 작동하지 않았습니다.</li>
+</ol>
+
+<ul>
+  <li><a href="https://github.com/vitejs/vite/issues/3405">issue</a></li>
+  <li>Vite에서 사용하기 위해서는 추가적으로 브라우저용 라이브러리를 추가해주어야 합니다.</li>
+  <li>이 <a href="https://github.com/exogee-technology/vite-plugin-shim-react-pdf">라이브러리</a> 로 해결했습니다.</li>
+</ul>
+
+<ol>
+  <li>프론트엔드에서 pdf를 생성하다보니, 브라우저 콘솔에서 많은 에러가 발생했습니다.</li>
+</ol>
+
+<ul>
+  <li>클라이언트쪽에서 렌더링을 하는 과정에서 이슈가 있는 것 같았습니다.</li>
+  <li>다행히, 작동에는 이상이 없어서 우선 넘어가게 되었습니다.</li>
+</ul>
+
+<ol>
+  <li>차트를 그리기가 조금 까다로웠습니다.</li>
+</ol>
+
+<ul>
+  <li>svg를 지원한다고 해서 <a href="https://nivo.rocks/">nivo</a>를 사용하려고 했는데, 구조상 <code class="language-plaintext highlighter-rouge">차트컴포넌트 -&gt; svg -&gt; react-pdf</code> 의 형식으로 쓰면 오류가 발생하는 바람에 결국 스스로 만들어서 썼습니다.</li>
+</ul>
+
+<p>특히, 마지막 3번이 저를 굉장히 괴롭히게 되었습니다.</p>
+
+<p>월간 레포트의 특성 상, 차트나 표가 대부분의 데이터를 이루고 있었습니다.
+특히, 차트는 원형, 막대형 그래프 등 다양한 그래프를 사용할 예정이였기 때문에 작업에 지장이 있을 수 밖에 없었습니다.</p>
+
+<p>다행히, <code class="language-plaintext highlighter-rouge">react-pdf</code> 에서는 svg를 다루기 위한 여러 컴포넌트가 존재하고 있었습니다.
+그 중에서 사용한 것은 <code class="language-plaintext highlighter-rouge">Path</code> 이였습니다.</p>
+
+<p>PieGraph를 만들 때, 전체 데이터 중에서 차지하는 부분의 각도와 반지름을 통해 각각의 좌표를 구했습니다.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">_toXY</span><span class="p">(</span><span class="nx">cX</span><span class="p">:</span> <span class="nx">number</span><span class="p">,</span> <span class="nx">cY</span><span class="p">:</span> <span class="nx">number</span><span class="p">,</span> <span class="nx">r</span><span class="p">:</span> <span class="nx">number</span><span class="p">,</span> <span class="nx">degrees</span><span class="p">:</span> <span class="nx">number</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">rad</span> <span class="o">=</span> <span class="p">(</span><span class="nx">degrees</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">)</span> <span class="o">/</span> <span class="mf">180.0</span><span class="p">;</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">x</span><span class="p">:</span> <span class="nx">cX</span> <span class="o">+</span> <span class="nx">r</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="nx">rad</span><span class="p">),</span>
+    <span class="na">y</span><span class="p">:</span> <span class="nx">cY</span> <span class="o">+</span> <span class="nx">r</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sin</span><span class="p">(</span><span class="nx">rad</span><span class="p">),</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">toPieChartItemPath</span><span class="p">(</span>
+  <span class="nx">x</span><span class="p">:</span> <span class="nx">number</span><span class="p">,</span>
+  <span class="nx">y</span><span class="p">:</span> <span class="nx">number</span><span class="p">,</span>
+  <span class="nx">radiusIn</span><span class="p">:</span> <span class="nx">number</span><span class="p">,</span>
+  <span class="nx">radiusOut</span><span class="p">:</span> <span class="nx">number</span><span class="p">,</span>
+  <span class="nx">startAngle</span><span class="p">:</span> <span class="nx">number</span><span class="p">,</span>
+  <span class="nx">endAngle</span><span class="p">:</span> <span class="nx">number</span>
+<span class="p">)</span> <span class="p">{</span>
+  <span class="nx">startAngle</span> <span class="o">+=</span> <span class="mi">270</span><span class="p">;</span>
+  <span class="nx">endAngle</span> <span class="o">+=</span> <span class="mi">270</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">startIn</span> <span class="o">=</span> <span class="nx">_toXY</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">radiusIn</span><span class="p">,</span> <span class="nx">endAngle</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">endIn</span> <span class="o">=</span> <span class="nx">_toXY</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">radiusIn</span><span class="p">,</span> <span class="nx">startAngle</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">startOut</span> <span class="o">=</span> <span class="nx">_toXY</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">radiusOut</span><span class="p">,</span> <span class="nx">endAngle</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">endOut</span> <span class="o">=</span> <span class="nx">_toXY</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">radiusOut</span><span class="p">,</span> <span class="nx">startAngle</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">arcSweep</span> <span class="o">=</span> <span class="nx">endAngle</span> <span class="o">-</span> <span class="nx">startAngle</span> <span class="o">&lt;=</span> <span class="mi">180</span> <span class="p">?</span> <span class="dl">"</span><span class="s2">0</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">1</span><span class="dl">"</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">d</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="dl">"</span><span class="s2">M</span><span class="dl">"</span><span class="p">,</span>
+    <span class="nx">startIn</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span>
+    <span class="nx">startIn</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">L</span><span class="dl">"</span><span class="p">,</span>
+    <span class="nx">startOut</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span>
+    <span class="nx">startOut</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">A</span><span class="dl">"</span><span class="p">,</span>
+    <span class="nx">radiusOut</span><span class="p">,</span>
+    <span class="nx">radiusOut</span><span class="p">,</span>
+    <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">arcSweep</span><span class="p">,</span>
+    <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">endOut</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span>
+    <span class="nx">endOut</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">L</span><span class="dl">"</span><span class="p">,</span>
+    <span class="nx">endIn</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span>
+    <span class="nx">endIn</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">A</span><span class="dl">"</span><span class="p">,</span>
+    <span class="nx">radiusIn</span><span class="p">,</span>
+    <span class="nx">radiusIn</span><span class="p">,</span>
+    <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">arcSweep</span><span class="p">,</span>
+    <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">startIn</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span>
+    <span class="nx">startIn</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">z</span><span class="dl">"</span><span class="p">,</span>
+  <span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="dl">"</span><span class="s2"> </span><span class="dl">"</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>이를 Svg 안의 Path 객체로 선을 그리고, 그 안을 색으로 채워 그래프를 그릴 수 있게 했습니다. 코드는 다음과 같습니다.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">PieGraph</span><span class="p">:</span><span class="nx">React</span><span class="p">.</span><span class="nx">FC</span><span class="o">&lt;</span><span class="p">{</span><span class="na">datas</span><span class="p">:</span> <span class="nx">Data</span><span class="p">[]}</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">({</span><span class="nx">datas</span><span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="o">&lt;</span><span class="nx">Svg</span> <span class="nx">width</span><span class="o">=</span><span class="dl">"</span><span class="s2">256</span><span class="dl">"</span> <span class="nx">height</span><span class="o">=</span><span class="dl">"</span><span class="s2">172</span><span class="dl">"</span><span class="o">&gt;</span>
+      <span class="p">{</span><span class="nx">data</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">item</span><span class="p">,</span> <span class="nx">idx</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">(</span>
+        <span class="o">&lt;</span><span class="nx">Path</span>
+          <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">item</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span>
+          <span class="nx">d</span><span class="o">=</span><span class="p">{</span><span class="nx">toPieChartItemPath</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">86</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="nx">range</span><span class="p">[</span><span class="nx">idx</span><span class="p">],</span> <span class="nx">range</span><span class="p">[</span><span class="nx">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])}</span>
+          <span class="nx">fill</span><span class="o">=</span><span class="p">{</span><span class="nx">colors</span><span class="p">[</span><span class="nx">item</span><span class="p">.</span><span class="nx">id</span><span class="p">]}</span>
+        <span class="sr">/</span><span class="err">&gt;
+</span>      <span class="p">))}</span>
+      <span class="o">&lt;</span><span class="sr">/Svg</span><span class="err">&gt;
+</span><span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>예시</strong></p>
+
+<p><img src="/assets/2022-06-30-PDF-with-React/chart.png" alt="chart" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">PolyLine</code> 컴포넌트를 통해 외부에 퍼센트를 나타낼 수 있게도 구현하였습니다.</p>
+
+<p>이런 방식으로 PieGraph와 LineGraph도 그릴 수 있었습니다.</p>
+
+<p>아마도 <code class="language-plaintext highlighter-rouge">react-pdf</code>에서 일반적인 태그를 사용하지 않아서 nivo와 같은 차트 라이브러리들이 작동하지 않았을 것 같습니다.</p>
+
+<h2 id="결론">결론</h2>
+
+<p>이제는 제가 만든 새로운 코드를 기반으로 많은 고객사에 앱슈트 월간 레포트가 전달되고 있습니다.</p>
+
+<p>처음에 기획했던 기능들을 전부 넣지는 못했지만, 계속 업데이트를 해서 사내에서 가장 유용하게 사용하는 프로젝트가 되기를 바랍니다.</p>
+
+    <div class="page-profile-detail">
+        <div class="page-profile-detail-info">
+            <div>
+                <img class="page-profile_image-detail" src="/assets/stealien_inverse.png" />
+            </div>
+            <div style="position: relative; top: 12px;left: 10px;">
+                <div class="page-profile-author">하준혁</div>
+                <div class="page-profile-email">jhha@stealien.com</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="recent-post-area">
+    <div class="posts container">
+        <div class="h1-recent-post">RECENT POST</div>
+            <div class="row">
+    <div class="col-sm-2 col-md-2">
+        <div class="profile">
+            <img src="/assets/stealien_inverse.png" class="profile_image" />
+            <div class="profile_author">하준혁</div>
+        </div>
+    </div>
+    <div class="col">
+        <a href="/id/2022-06-30/pdf-with-react">
+            <div class="post-title">
+                React로 pdf 다루기
+            </div>
+        </a>
+        <div class="post-summary">React로 pdf 다루기</div>
+        <div class="post-info">
+            <span style="color: #545454" class="post-author-mobile">
+                하준혁
+                <span style="color: #f5f5f5; margin: 2px">|</span>
+            </span>
+            Jun 30, 2022
+            <span style="color: #f5f5f5; margin: 2px">|</span>
+            <span>Dev</span>
+        </div>
+    </div>
+</div><div class="row">
+    <div class="col-sm-2 col-md-2">
+        <div class="profile">
+            <img src="/assets/stealien_inverse.png" class="profile_image" />
+            <div class="profile_author">김도현</div>
+        </div>
+    </div>
+    <div class="col">
+        <a href="/id/2022-06-30/stealien-security-seminar">
+            <div class="post-title">
+                Stealien Security Seminar 1회 리뷰
+            </div>
+        </a>
+        <div class="post-summary">Stealien Security Seminar 1회 리뷰</div>
+        <div class="post-info">
+            <span style="color: #545454" class="post-author-mobile">
+                김도현
+                <span style="color: #f5f5f5; margin: 2px">|</span>
+            </span>
+            Jun 30, 2022
+            <span style="color: #f5f5f5; margin: 2px">|</span>
+            <span>R&D</span>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+</div>
+		</div>
+	</section><footer>
+  <div class="container" style="display: flex; justify-content: space-between;">
+    <!-- <a href="#top">
+      <img src="/assets/white_logo.png" class="footer-logo" />
+    </a> -->
+    <div class="footer-copyright">Copyright &copy; Stealien Inc.</div>
+    <div class="footer-icons">
+      <a target="_blank" href="https://twitter.com/stealien"><img class="sns" src="/assets/icons/twitter_ic.png"/></a>
+      <a target="_blank" href="https://blog.naver.com/stealien_official"><img class="sns" src="/assets/icons/blog_ic.png"/></a>
+      <a target="_blank" href="https://www.facebook.com/stealien/"><img class="sns" src="/assets/icons/facebook_ic.png"/></a>
+      <a target="_blank" href="https://www.youtube.com/c/STEALIEN"><img class="sns" src="/assets/icons/youtube_ic.png"/></a>
+    </div>
+  </div>
+</footer></body>
+</html>
