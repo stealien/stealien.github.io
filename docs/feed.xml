@@ -1,4 +1,184 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2022-07-13T13:45:00+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">Stealien Security Seminar 1회 리뷰</title><link href="http://ufo.stealien.com/2022-06-30/stealien-security-seminar" rel="alternate" type="text/html" title="Stealien Security Seminar 1회 리뷰" /><published>2022-06-30T00:00:00+09:00</published><updated>2022-06-30T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-06-30/2022_3s_review-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-30/stealien-security-seminar">&lt;h1 id=&quot;stealien-security-seminar-1회-리뷰&quot;&gt;Stealien Security Seminar 1회 리뷰&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2022-07-13T17:34:22+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">LLVM을 사용한 Control Flow Flattening 패스 개발</title><link href="http://ufo.stealien.com/2022-07-13/llvm-flow-flatten" rel="alternate" type="text/html" title="LLVM을 사용한 Control Flow Flattening 패스 개발" /><published>2022-07-13T00:00:00+09:00</published><updated>2022-07-13T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-07-13/LLVM-flow-flatten-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-07-13/llvm-flow-flatten">&lt;h1 id=&quot;llvm을-사용한-control-flow-flattening-패스-개발&quot;&gt;LLVM을 사용한 Control Flow Flattening 패스 개발&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/llvm/llvm-project&quot;&gt;LLVM&lt;/a&gt;을 이용하여 난독화를 할 수 있으면 이를 기반으로 다양한 플랫폼에서 LLVM을 사용하여 빌드되는 코드들에 대한 공통 난독화 툴을 만들 수 있을 것이라고 생각하였습니다.&lt;/p&gt;
+
+&lt;p&gt;이를 위해 여러가지 난독화 및 암호화 패스를 개발하였고 이 글에서는 그 중 한 가지인 흐름 평면화 패스의 개발 과정에 대해 소개하겠습니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;llvm이란&quot;&gt;LLVM이란&lt;/h2&gt;
+
+&lt;p&gt;LLVM의 정식 명칭은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Low Level Virtual Machine&lt;/code&gt;입니다.&lt;/p&gt;
+
+&lt;p&gt;하지만 이 프로젝트의 핵심은 기존의 virtual machine 개념보다는 모듈화 되고 재사용 가능한 컴파일러 기술을 의미합니다. 그리고 이것은 target independent한 &lt;a href=&quot;https://llvm.org/docs/CommandGuide/opt.html&quot;&gt;optimizer&lt;/a&gt;, target specific 한 어셈블리 코드를 생성하는 code generator 같은 컴파일러 도구들과 프로그래밍 언어와 어셈블리 코드 사이에 LLVM intermediate representation으로 알려진 LLVM IR이라는 중간 단계의 언어로 이루어져 있습니다.&lt;/p&gt;
+
+&lt;p&gt;이 글에서는 LLVM에서 모듈화된 컴파일러를 제작할 수 있는 구조인 패스를 통해 흐름 난독화를 하였습니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;control-flow-flattening란&quot;&gt;Control Flow Flattening란&lt;/h2&gt;
+
+&lt;p&gt;흐름 평면화, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;control flow flattening&lt;/code&gt;은 코드의 흐름을 평면화 시키는 난독화 기술입니다. Loop, conditional branch 같은 코드의 흐름을 전부 하나의 거대한 switch 문에 집어넣어서 모든 다른 블록으로의 이동이 단 하나의 블록으로부터 이루어지도록 만들어 코드를 분석하기 어렵게 만듭니다. 흐름 그래프가 마지막 사진과 같은 구조로 변경됩니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;환경-구성&quot;&gt;환경 구성&lt;/h2&gt;
+
+&lt;p&gt;이 글에서는 llvm 13 버전을 바탕으로 LLVM을 빌드 하였습니다.&lt;/p&gt;
+
+&lt;p&gt;아래 &lt;a href=&quot;https://llvm.org/docs/CMake.html#usage&quot;&gt;cmake&lt;/a&gt; 명령이 정상적으로 실행된 후 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ninja&lt;/code&gt;를 통해 빌드할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;LLVM 개발은 샘플 패스인 llvm/lib/Transforms/Hello를 덮어씌워 흐름 평면화를 위한 커스텀 패스를 개발하였습니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cmake &lt;span class=&quot;nt&quot;&gt;-G&lt;/span&gt; Ninja &lt;span class=&quot;nt&quot;&gt;-DLLVM_PARALLEL_LINK_JOBS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 &lt;span class=&quot;nt&quot;&gt;-DCMAKE_BUILD_TYPE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;Debug &lt;span class=&quot;nt&quot;&gt;-DLLVM_ENABLE_PROJECTS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;clang ../llvm-project/llvm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;흐름-평면화-적용-시-발생하는-오류&quot;&gt;흐름 평면화 적용 시 발생하는 오류&lt;/h2&gt;
+
+&lt;p&gt;LLVM에서 &lt;a href=&quot;https://llvm.org/doxygen/classllvm_1_1Function.html&quot;&gt;Function&lt;/a&gt; 클래스 아래에 존재하는 &lt;a href=&quot;https://llvm.org/doxygen/classllvm_1_1BasicBlock.html&quot;&gt;Basic Block&lt;/a&gt;들을 흐름 평면화의 개념에 따라 하나의 거대한 &lt;a href=&quot;https://llvm.org/doxygen/classllvm_1_1SwitchInst.html&quot;&gt;Switch Instruction&lt;/a&gt; 아래에 집어넣음으로써 구현해 낼 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;이처럼 수정을 시도할 경우 &lt;a href=&quot;https://github.com/llvm/llvm-project/blob/main/llvm/lib/IR/Verifier.cpp&quot;&gt;LLVM Verifier&lt;/a&gt;에서 수정된 내용이 유효한지 검증합니다. 흐름 그래프와 관련된 검증에는 preds라는 어떤 블록에서 이 블록으로 이동할 수 있는지에 대한 정보가 주로 사용되는데, 이와 관련된 아래 3가지 검증에서 오류가 자주 발생합니다.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://llvm.org/doxygen/classllvm_1_1PHINode.html&quot;&gt;phi node&lt;/a&gt;의 경우 모든 케이스와 preds가 일치해야 한다.&lt;/p&gt;
+
+    &lt;div class=&quot;language-cmake highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; PHINode should have one entry for each predecessor of its parent basic block!
+ %62 = phi i32 [ %30, %23 ], [ %35, %32 ], [ %40, %37 ], [ %60, %54 ], !dbg !1211
+ LLVM ERROR: Broken module found, compilation aborted!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;블록 A에서 호출하는 변수는 entry block에서 블록 A에 도달하기 전에 정의되어야 한다.&lt;/p&gt;
+
+    &lt;div class=&quot;language-cmake highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; Instruction does not dominate all uses!
+ %alloc = alloca i64, align 8
+ %load = load i64, i64* %alloc, align 8
+ LLVM ERROR: Broken module found, compilation aborted!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://llvm.org/doxygen/classllvm_1_1LandingPadInst.html&quot;&gt;Landingpad&lt;/a&gt;를 가진 블록은 반드시 &lt;a href=&quot;https://llvm.org/doxygen/classllvm_1_1InvokeInst.html&quot;&gt;invoke&lt;/a&gt;에 의해서 호출되어야 한다.&lt;/p&gt;
+
+    &lt;div class=&quot;language-cmake highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; Block containing LandingPadInst must be jumped to only by the unwind edge of an invoke.
+ LLVM ERROR: Broken module found, compilation aborted!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;p&gt;이 문제들 중 1번과 2번은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;opt&lt;/code&gt;에 기본으로 내장되어 있는 &lt;a href=&quot;https://llvm.org/docs/Passes.html#reg2mem-demote-all-values-to-stack-slots&quot;&gt;–reg2mem&lt;/a&gt; 옵션을 사용함으로써 대부분 해결할 수 있습니다. 이 옵션은 phi 노드들을 제거하고 모든 allocation을 entry block에서 하도록 수정해줍니다. 이를 적용함으로써 흐름 평면화를 진행하기 쉬워집니다. 다만 이 옵션을 적용하여도 남아있는 phi node가 있는 경우가 있어 이에 대한 예외처리를 해야 합니다.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;3번의 경우 switch-case 블록에서 호출할 수 없기 때문에 예외처리를 해야 합니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;평면화-코드-구현&quot;&gt;평면화 코드 구현&lt;/h2&gt;
+
+&lt;p&gt;우선 switch-case 문에서 호출할 수 있는 블록들을 확인해야합니다. Function 클래스에 iterator를 돌면서 위의 3번, LandingPad를 가졌는지 확인하고 아닌 것들을 벡터 형태로 수집합니다. Allocation이 이루어지는 블록은 따로 분리해 두어야 하기 때문에 entry block을 제거해주어야 합니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;vector&amp;lt;BasicBlock *&amp;gt; origBB;
+for (Function::iterator i = F.begin(); i != F.end(); ++i)
+{
+    BasicBlock *block = &amp;amp;*i;
+    if (!block-&amp;gt;isLandingPad())
+    {
+        origBB.push_back(block);
+    }
+}
+origBB.erase(origBB.begin());
+return origBB;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;그 다음 IRBuilder를 사용하여 Switch Instruction을 가지게 될 Basic Block을 만들어야 합니다. Switch 블록에는 default로 어떤 블록으로 점프할 것인지를 지정해 주어야 하는데 이것 역시 새로운 빈 블록, swDefault를 생성하여 지정해 주었습니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;BasicBlock *swDefault = BasicBlock::Create(Context, &quot;StealienCFGSwitchDefault&quot;, &amp;amp;F, *origBB.begin());
+IRBuilder&amp;lt;&amp;gt; IRBswDefault(swDefault);
+IRBswDefault.CreateBr(*origBB.begin());
+
+BasicBlock *startSwitch = BasicBlock::Create(Context, &quot;StealienCFGswitch&quot;, &amp;amp;F, swDefault);
+IRBuilder&amp;lt;&amp;gt; IRBswitch(startSwitch);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;그 다음 Switch에서 사용할 변수를 Entry Block에서 allocation을 해 준 뒤, Switch 블록에서 이 값을 Value add로 가져오도록 설정합니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;AllocaInst *switchVar = new AllocaInst(llvm::Type::getInt64Ty(Context), AddrSpace, nullptr, AllocaAlign, &quot;&quot;, entryBlock-&amp;gt;getTerminator());
+LoadInst *load = IRBswitch.CreateAlignedLoad(llvm::Type::getInt64Ty(Context), switchVar, MaybeAlign(8));
+Value *add = IRBswitch.CreateAdd(load, ConstantInt::get(llvm::Type::getInt64Ty(Context), 762167));
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;그 후 IRBSwitch에 Switch Instruction을 생성합니다. randomArr은 특정 범위의 수를 랜덤한 순서로 섞은 리스트이며, 이 값들을 사용해서 아래와 같이 case들을 추가해줍니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;switchI = IRBswitch.CreateSwitch(add, swDefault, randomArr[origBB.size()]);
+for (BasicBlock *setSwitchBlocks : origBB)
+{
+    BasicBlock *selectedBlock = setSwitchBlocks;
+    if(!this-&amp;gt;hasPHI(selectedBlock)) {
+        ConstantInt *constCase = llvm::ConstantInt::get(llvm::Type::getInt64Ty(Context), randomArr[index]);
+        switchI-&amp;gt;addCase(constCase, selectedBlock);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;마지막으로 origBB에 있는 BasicBlock 들의 Terminator를 BranchInst인지 그리고 Successor 개수에 따라 분류할 수 있습니다. BranchInst는 1개 혹은 2개의 Successor를 가지며, 이것들이 수정 대상입니다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Branch Instruction이 아닌 경우 : return 혹은 unreachable 같은 종류되는 경우 혹은 invoke와 같이 수정이 불가능한 Terminating Instruction인 경우&lt;/li&gt;
+  &lt;li&gt;Branch Instruction의 Successor가 1인 경우 : branch BlockA 같이 다른 블록으로 이동하는 경우&lt;/li&gt;
+  &lt;li&gt;Branch Instruction의 Successor가 2인 경우 : branch condition BlockA BlockB 처럼 condition 값에 따라 이동하는 블록이 이동되는 경우&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;따라서 &lt;a href=&quot;https://llvm.org/doxygen/classllvm_1_1BranchInst.html&quot;&gt;Branch Instruction&lt;/a&gt;에서 이동할 블록에 지정된 값을 Switch Instruction에서 찾아서 위에서 생성해둔 switchVar에 저장해주고 Switch Block으로 돌아가면 자동으로 이걸 로드해서 원하는 블록으로 이동하게 될 것입니다. Successor의 개수가 1인 경우에 대한 코드는 아래와 같습니다. 2인 경우에도 둘 다에 대해 동일하게 처리해주면 됩니다.&lt;/p&gt;
+
+&lt;p&gt;아래 코드에서는 Switch Instruction에서 가져온 intCase 값이 직접 드러나는 것을 숨기기 위해 추가적인 덧셈과 곱셈을 수행하도록 하였습니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;if(!isa&amp;lt;BranchInst&amp;gt;(selectedBlock-&amp;gt;getTerminator())){
+    continue;
+}
+uint64_t successors = selectedBlock-&amp;gt;getTerminator()-&amp;gt;getNumSuccessors();
+if (successors == 1)
+{
+    BasicBlock *follow = selectedBlock-&amp;gt;getTerminator()-&amp;gt;getSuccessor(0);
+    ConstantInt *intCase = switchI-&amp;gt;findCaseDest(follow);
+    if (intCase == NULL)
+    {
+        continue;
+    }
+    selectedBlock-&amp;gt;getTerminator()-&amp;gt;eraseFromParent();
+    IRBuilder&amp;lt;NoFolder&amp;gt; tempBuilder(selectedBlock);
+    uint64_t origCase = intCase-&amp;gt;getSExtValue() - addVal;
+    uint64_t randVal = 17+rand()%10000;
+    Value * mul = tempBuilder.CreateMul(ConstantInt::get(llvm::Type::getInt64Ty(Context), origCase/randVal), ConstantInt::get(llvm::Type::getInt64Ty(Context), randVal));
+    Value * add = tempBuilder.CreateAdd(mul, ConstantInt::get(llvm::Type::getInt64Ty(Context), origCase%randVal));
+    tempBuilder.CreateAlignedStore(add, switchVar, MaybeAlign(8));
+    tempBuilder.CreateBr(startSwitch);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;전후비교&quot;&gt;전후비교&lt;/h2&gt;
+
+&lt;p&gt;위와 같은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Control Flow Flattening&lt;/code&gt; 작업을 수행하면 아래와 같은 코드를 얻을 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;Opt의 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-dot-cfg&lt;/code&gt; 옵션을 사용하여 흐름 평면화 전용 전과 후를 비교하면 StealienCFGswitch 라는 Switch 블록이 추가된 것과 모든 블록이 다시 이 블록으로 돌아가는 난독화 기능이 적용된 것을 확인할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;이러한 난독화 기능은 다른 난독화 기능들과 함께 적용하면 훨씬 더 분석하기 어려운 코드를 만들어 낼 수 있습니다.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;&lt;img src=&quot;/assets/2022-07-14-LLVM-flow-flatten/original-flow-graph.png&quot; alt=&quot;Original Flow Graph&quot; style=&quot;max-width:800px; height:auto;&quot; /&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;기존 흐름 그래프&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;&lt;img src=&quot;/assets/2022-07-14-LLVM-flow-flatten/flattened-flow-graph.png&quot; alt=&quot;Flattened Flow Graph&quot; style=&quot;max-width:800px; height:auto;&quot; /&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;평면화 모듈 적용 후 흐름 그래프&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</content><author><name>조장현</name></author><category term="Dev" /><summary type="html">LLVM을 사용한 Control Flow Flattening 패스 개발 LLVM을 이용하여 난독화를 할 수 있으면 이를 기반으로 다양한 플랫폼에서 LLVM을 사용하여 빌드되는 코드들에 대한 공통 난독화 툴을 만들 수 있을 것이라고 생각하였습니다. 이를 위해 여러가지 난독화 및 암호화 패스를 개발하였고 이 글에서는 그 중 한 가지인 흐름 평면화 패스의 개발 과정에 대해 소개하겠습니다. LLVM이란 LLVM의 정식 명칭은 Low Level Virtual Machine입니다. 하지만 이 프로젝트의 핵심은 기존의 virtual machine 개념보다는 모듈화 되고 재사용 가능한 컴파일러 기술을 의미합니다. 그리고 이것은 target independent한 optimizer, target specific 한 어셈블리 코드를 생성하는 code generator 같은 컴파일러 도구들과 프로그래밍 언어와 어셈블리 코드 사이에 LLVM intermediate representation으로 알려진 LLVM IR이라는 중간 단계의 언어로 이루어져 있습니다. 이 글에서는 LLVM에서 모듈화된 컴파일러를 제작할 수 있는 구조인 패스를 통해 흐름 난독화를 하였습니다. Control Flow Flattening란 흐름 평면화, control flow flattening은 코드의 흐름을 평면화 시키는 난독화 기술입니다. Loop, conditional branch 같은 코드의 흐름을 전부 하나의 거대한 switch 문에 집어넣어서 모든 다른 블록으로의 이동이 단 하나의 블록으로부터 이루어지도록 만들어 코드를 분석하기 어렵게 만듭니다. 흐름 그래프가 마지막 사진과 같은 구조로 변경됩니다. 환경 구성 이 글에서는 llvm 13 버전을 바탕으로 LLVM을 빌드 하였습니다. 아래 cmake 명령이 정상적으로 실행된 후 ninja를 통해 빌드할 수 있습니다. LLVM 개발은 샘플 패스인 llvm/lib/Transforms/Hello를 덮어씌워 흐름 평면화를 위한 커스텀 패스를 개발하였습니다. cmake -G Ninja -DLLVM_PARALLEL_LINK_JOBS=1 -DCMAKE_BUILD_TYPE=Debug -DLLVM_ENABLE_PROJECTS=clang ../llvm-project/llvm 흐름 평면화 적용 시 발생하는 오류 LLVM에서 Function 클래스 아래에 존재하는 Basic Block들을 흐름 평면화의 개념에 따라 하나의 거대한 Switch Instruction 아래에 집어넣음으로써 구현해 낼 수 있습니다. 이처럼 수정을 시도할 경우 LLVM Verifier에서 수정된 내용이 유효한지 검증합니다. 흐름 그래프와 관련된 검증에는 preds라는 어떤 블록에서 이 블록으로 이동할 수 있는지에 대한 정보가 주로 사용되는데, 이와 관련된 아래 3가지 검증에서 오류가 자주 발생합니다. phi node의 경우 모든 케이스와 preds가 일치해야 한다. PHINode should have one entry for each predecessor of its parent basic block! %62 = phi i32 [ %30, %23 ], [ %35, %32 ], [ %40, %37 ], [ %60, %54 ], !dbg !1211 LLVM ERROR: Broken module found, compilation aborted! 블록 A에서 호출하는 변수는 entry block에서 블록 A에 도달하기 전에 정의되어야 한다. Instruction does not dominate all uses! %alloc = alloca i64, align 8 %load = load i64, i64* %alloc, align 8 LLVM ERROR: Broken module found, compilation aborted! Landingpad를 가진 블록은 반드시 invoke에 의해서 호출되어야 한다. Block containing LandingPadInst must be jumped to only by the unwind edge of an invoke. LLVM ERROR: Broken module found, compilation aborted! 이 문제들 중 1번과 2번은 opt에 기본으로 내장되어 있는 –reg2mem 옵션을 사용함으로써 대부분 해결할 수 있습니다. 이 옵션은 phi 노드들을 제거하고 모든 allocation을 entry block에서 하도록 수정해줍니다. 이를 적용함으로써 흐름 평면화를 진행하기 쉬워집니다. 다만 이 옵션을 적용하여도 남아있는 phi node가 있는 경우가 있어 이에 대한 예외처리를 해야 합니다. 3번의 경우 switch-case 블록에서 호출할 수 없기 때문에 예외처리를 해야 합니다. 평면화 코드 구현 우선 switch-case 문에서 호출할 수 있는 블록들을 확인해야합니다. Function 클래스에 iterator를 돌면서 위의 3번, LandingPad를 가졌는지 확인하고 아닌 것들을 벡터 형태로 수집합니다. Allocation이 이루어지는 블록은 따로 분리해 두어야 하기 때문에 entry block을 제거해주어야 합니다. vector&amp;lt;BasicBlock *&amp;gt; origBB; for (Function::iterator i = F.begin(); i != F.end(); ++i) { BasicBlock *block = &amp;amp;*i; if (!block-&amp;gt;isLandingPad()) { origBB.push_back(block); } } origBB.erase(origBB.begin()); return origBB; 그 다음 IRBuilder를 사용하여 Switch Instruction을 가지게 될 Basic Block을 만들어야 합니다. Switch 블록에는 default로 어떤 블록으로 점프할 것인지를 지정해 주어야 하는데 이것 역시 새로운 빈 블록, swDefault를 생성하여 지정해 주었습니다. BasicBlock *swDefault = BasicBlock::Create(Context, &quot;StealienCFGSwitchDefault&quot;, &amp;amp;F, *origBB.begin()); IRBuilder&amp;lt;&amp;gt; IRBswDefault(swDefault); IRBswDefault.CreateBr(*origBB.begin()); BasicBlock *startSwitch = BasicBlock::Create(Context, &quot;StealienCFGswitch&quot;, &amp;amp;F, swDefault); IRBuilder&amp;lt;&amp;gt; IRBswitch(startSwitch); 그 다음 Switch에서 사용할 변수를 Entry Block에서 allocation을 해 준 뒤, Switch 블록에서 이 값을 Value add로 가져오도록 설정합니다. AllocaInst *switchVar = new AllocaInst(llvm::Type::getInt64Ty(Context), AddrSpace, nullptr, AllocaAlign, &quot;&quot;, entryBlock-&amp;gt;getTerminator()); LoadInst *load = IRBswitch.CreateAlignedLoad(llvm::Type::getInt64Ty(Context), switchVar, MaybeAlign(8)); Value *add = IRBswitch.CreateAdd(load, ConstantInt::get(llvm::Type::getInt64Ty(Context), 762167)); 그 후 IRBSwitch에 Switch Instruction을 생성합니다. randomArr은 특정 범위의 수를 랜덤한 순서로 섞은 리스트이며, 이 값들을 사용해서 아래와 같이 case들을 추가해줍니다. switchI = IRBswitch.CreateSwitch(add, swDefault, randomArr[origBB.size()]); for (BasicBlock *setSwitchBlocks : origBB) { BasicBlock *selectedBlock = setSwitchBlocks; if(!this-&amp;gt;hasPHI(selectedBlock)) { ConstantInt *constCase = llvm::ConstantInt::get(llvm::Type::getInt64Ty(Context), randomArr[index]); switchI-&amp;gt;addCase(constCase, selectedBlock); } } 마지막으로 origBB에 있는 BasicBlock 들의 Terminator를 BranchInst인지 그리고 Successor 개수에 따라 분류할 수 있습니다. BranchInst는 1개 혹은 2개의 Successor를 가지며, 이것들이 수정 대상입니다. Branch Instruction이 아닌 경우 : return 혹은 unreachable 같은 종류되는 경우 혹은 invoke와 같이 수정이 불가능한 Terminating Instruction인 경우 Branch Instruction의 Successor가 1인 경우 : branch BlockA 같이 다른 블록으로 이동하는 경우 Branch Instruction의 Successor가 2인 경우 : branch condition BlockA BlockB 처럼 condition 값에 따라 이동하는 블록이 이동되는 경우 따라서 Branch Instruction에서 이동할 블록에 지정된 값을 Switch Instruction에서 찾아서 위에서 생성해둔 switchVar에 저장해주고 Switch Block으로 돌아가면 자동으로 이걸 로드해서 원하는 블록으로 이동하게 될 것입니다. Successor의 개수가 1인 경우에 대한 코드는 아래와 같습니다. 2인 경우에도 둘 다에 대해 동일하게 처리해주면 됩니다. 아래 코드에서는 Switch Instruction에서 가져온 intCase 값이 직접 드러나는 것을 숨기기 위해 추가적인 덧셈과 곱셈을 수행하도록 하였습니다. if(!isa&amp;lt;BranchInst&amp;gt;(selectedBlock-&amp;gt;getTerminator())){ continue; } uint64_t successors = selectedBlock-&amp;gt;getTerminator()-&amp;gt;getNumSuccessors(); if (successors == 1) { BasicBlock *follow = selectedBlock-&amp;gt;getTerminator()-&amp;gt;getSuccessor(0); ConstantInt *intCase = switchI-&amp;gt;findCaseDest(follow); if (intCase == NULL) { continue; } selectedBlock-&amp;gt;getTerminator()-&amp;gt;eraseFromParent(); IRBuilder&amp;lt;NoFolder&amp;gt; tempBuilder(selectedBlock); uint64_t origCase = intCase-&amp;gt;getSExtValue() - addVal; uint64_t randVal = 17+rand()%10000; Value * mul = tempBuilder.CreateMul(ConstantInt::get(llvm::Type::getInt64Ty(Context), origCase/randVal), ConstantInt::get(llvm::Type::getInt64Ty(Context), randVal)); Value * add = tempBuilder.CreateAdd(mul, ConstantInt::get(llvm::Type::getInt64Ty(Context), origCase%randVal)); tempBuilder.CreateAlignedStore(add, switchVar, MaybeAlign(8)); tempBuilder.CreateBr(startSwitch); } 전후비교 위와 같은 Control Flow Flattening 작업을 수행하면 아래와 같은 코드를 얻을 수 있습니다. Opt의 -dot-cfg 옵션을 사용하여 흐름 평면화 전용 전과 후를 비교하면 StealienCFGswitch 라는 Switch 블록이 추가된 것과 모든 블록이 다시 이 블록으로 돌아가는 난독화 기능이 적용된 것을 확인할 수 있습니다. 이러한 난독화 기능은 다른 난독화 기능들과 함께 적용하면 훨씬 더 분석하기 어려운 코드를 만들어 낼 수 있습니다. 기존 흐름 그래프 평면화 모듈 적용 후 흐름 그래프</summary></entry><entry xml:lang="ko"><title type="html">Stealien Security Seminar 1회 리뷰</title><link href="http://ufo.stealien.com/2022-06-30/stealien-security-seminar" rel="alternate" type="text/html" title="Stealien Security Seminar 1회 리뷰" /><published>2022-06-30T00:00:00+09:00</published><updated>2022-06-30T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-06-30/2022_3s_review-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-30/stealien-security-seminar">&lt;h1 id=&quot;stealien-security-seminar-1회-리뷰&quot;&gt;Stealien Security Seminar 1회 리뷰&lt;/h1&gt;
 
 &lt;p align=&quot;center&quot;&gt;
     &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/banner.png&quot; /&gt;&lt;br /&gt;
@@ -2364,299 +2544,4 @@ Content-Type이 text/xml이므로 쿼리 실행으로 출력 되는 내용을 XM
 
 &lt;p&gt;공격자가 GET 요청 방식으로 파라미터 전달을 하지 못하도록 where_clause 파라미터의 서명값을 검증한다.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/2021-08-20-CVE-2020-26934/cve202026934_7.png&quot; style=&quot;max-width:800px; height:auto;&quot; /&gt;&lt;/p&gt;</content><author><name>고기완</name></author><category term="R&amp;D" /><summary type="html">개요 phpMyAdmin은 MySQL/MariaDB 데이터베이스를 관리하기 위한 웹 인터페이스 서비스다. PHP 언어로 구현되어 있으며 웹서버에 설치하여 사용한다. 사용자는 웹 브라우저를 통해 phpMyAdmin 웹페이지에 로그인한 후, 데이터베이스 열람 및 수정이 가능하다.</summary></entry><entry xml:lang="ko"><title type="html">만능 악성 APK 분석 후기</title><link href="http://ufo.stealien.com/2021-07-29/malwareAPK" rel="alternate" type="text/html" title="만능 악성 APK 분석 후기" /><published>2021-07-29T13:00:52+09:00</published><updated>2021-07-29T13:00:52+09:00</updated><id>http://ufo.stealien.com/2021-07-29/malwareAPK-ko</id><content type="html" xml:base="http://ufo.stealien.com/2021-07-29/malwareAPK">&lt;h1 id=&quot;-만능-악성-apk-분석-후기-&quot;&gt;&lt;center&gt;[ 만능 악성 APK 분석 후기 ]&lt;/center&gt;&lt;/h1&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;div style=&quot;text-align: right&quot;&gt;
-목차&lt;/div&gt;
-&lt;div style=&quot;text-align: right&quot;&gt;
-1. 현황 &lt;/div&gt;
-&lt;div style=&quot;text-align: right&quot;&gt;2. 분석 기법&lt;/div&gt;
-&lt;div style=&quot;text-align: right&quot;&gt;3. 분석 결과&lt;/div&gt;
-&lt;div style=&quot;text-align: right&quot;&gt;4. 결론&lt;/div&gt;
-
-&lt;h1 id=&quot;1-현황&quot;&gt;1. 현황&lt;/h1&gt;
-
-&lt;p&gt;최근 보이스피싱을 통한 피해가 나날이 증가하고 있다. 경찰청 통계자료에 의하면 2020년까지의 보이스피싱 범죄 피해액이 2조 1376만 원이다. 또한 최근 뉴스 기사를 통해 몸캠 피싱 피해를 확인할 수 있다. 몸캠 피싱을 통해 피해자 511명에게서 22억 원을 갈취한 범죄 사건, 자살한 소녀의 핸드폰에 몸캠 피싱을 통한 피해 흔적 등 다수 “몸캠피싱”을 통한 기사들이 보도되고 있다.&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/Untitled.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;블로그를 통해 악성 APK 분석 기법과 위험성, 예방 안을 전달함으로써 피해자 발생률을 줄이는 데 도움이 되고자 글을 남긴다.&lt;/p&gt;
-
-&lt;h1 id=&quot;2-분석-기법&quot;&gt;2. 분석 기법&lt;/h1&gt;
-
-&lt;h5 id=&quot;1-악성-앱-검증-서비스&quot;&gt;1) 악성 앱 검증 서비스&lt;/h5&gt;
-
-&lt;p&gt;다수 회사에서 APK 시그니처와 패턴 분석을 기반으로 악성 앱 검증을 수행한다. Virustotal 악성 앱 검증 사이트 등을 이용하여 각 회사의 악성 앱 판별 결과를 확인할 수 있다.&lt;/p&gt;
-
-&lt;h5 id=&quot;2-정적-분석&quot;&gt;2) 정적 분석&lt;/h5&gt;
-
-&lt;p&gt;APK 파일은 압축파일 형태로 Java 코드가 컴파일된 파일인 DEX, C, C++ 코드가 컴파일된 so 라이브러리, 리소스, APK 서명 관련 파일로 구성된다. 컴파일된 파일을 이용자가 알아보기 쉬운 코드로 변환해주는 디컴파일 도구들(Androguard, Apktool, jadx-gui, JEB, IDA 등)을 이용하여 로직 분석을 진행할 수 있다.&lt;/p&gt;
-
-&lt;h5 id=&quot;3-동적-분석&quot;&gt;3) 동적 분석&lt;/h5&gt;
-
-&lt;p&gt;공격자는 네트워크 프로토콜, 배포한 APK를 통해 악성 행위를 한다. Packet Capture, Proxy 도구를 이용해 공격자와 피해 자간 송수신 내용을 확인할 수 있고 Hooking, Debugging, Smali Code Inejction을 통해 실시간 앱 동작 확인, 변조가 가능하다.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;Packet Capture&lt;/p&gt;
-
-    &lt;p&gt;Packet Capture Tool인 tcpdump를 이용해 스마트폰에서 이용하는 OSI 2계층부터 7계층까지의 프로토콜 패킷을 확인할 수 있다. tcpdump는 libpcap 라이브러리를 통해 통신 담당 드라이버(Network Interface Controller Driver)에 Packet이 전달되기 전 복사하여 이용자에게 나타내므로 기기간 전 통신 데이터 확인이 가능하다.&lt;/p&gt;
-
-    &lt;p&gt;Proxy Tool인 Fiddler, Burp suite를 이용해 스마트폰에서 이용되는 HTTP/HTTPS/WebSocket 프로토콜에 대한 패킷 확인이 가능하다. 윈도우 환경에서는 Windows 인터넷 API를 이용해 HTTP 프로토콜 통신내용을 캡처한다. 안드로이드에서 윈도우 환경에서 실행된 Fiddler, Burpsuite Proxy Server로 접속하도록 설정하여 Fiddler, Burpsuite HTTP Protocol Packet을 확인할 수 있다. Fiddler는 HTTP/HTTPS/WEBSocket 프로토콜만을 지원하기 때문에 TCP 통신에 대한 패킷 확인이 불가하나 Burp suite는 NoPE 플러그인 설치를 통해 TCP 통신 내용들도 확인할 수 있다.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Hooking&lt;/p&gt;
-
-    &lt;p&gt;Hooking Tool인 Frida를 통해 동적으로 송수신되는 값을 확인한다. frida는 동적 라이브러리를 프로세스에 삽입한다. 후킹 대상 Application Process에 삽입된 Library는 Process 메모리 전부 접근 및 변조 가능하다&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Debugging&lt;/p&gt;
-
-    &lt;p&gt;Debugging Tool인 JEB, Netbeans, IDA를 통해 동적으로 전달되는 변수 값을 확인한다. 최고 권한(root)으로 디버거를 실행할 경우, ptrace 시스템콜을 이용해 so 라이브러리 디버깅이 가능하며, JPDA(Java Platform Debugger Architecture)를 통해 DVM(Dalvik Virtual Machine)에서 실행 가능한 파일(dex) 디버깅이 가능하다.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Smali Code Injection&lt;/p&gt;
-
-    &lt;p&gt;Smali Code Injection을 통해 동적으로 변수 값을 확인한다. 컴파일 중 자바코드가 바이트코드(Smali)로 변환된다. 디컴파일 도구를 통해 Smali 코드로 복원한 후, 의도한 로직의 바이트코드 삽입한 후 리패키징하여 실행 로직 변조가 가능하다.&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;3-분석결과&quot;&gt;3. 분석결과&lt;/h1&gt;
-
-&lt;h5 id=&quot;1-악성-앱-검증-서비스-분석-결과&quot;&gt;1) 악성 앱 검증 서비스 분석 결과&lt;/h5&gt;
-
-&lt;p&gt;공격자가 전송한 LiveTalk.apk는 74개 중 8개의 회사가 악성 앱이라는 결과를 나타냈다. 이용자의 동의 없이 중요 정보를 추출하는 악성 앱으로 판단하고 있으나, 공격자가 앱 실행 도중 피해자 스마트폰에 전달되는 APK 파일은 전 회사가 정상 앱으로 판단하고 있다.&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/15.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/7.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-&lt;h5 id=&quot;2-정적-분석을-통한-악성-앱-분석-결과&quot;&gt;2) 정적 분석을 통한 악성 앱 분석 결과&lt;/h5&gt;
-
-&lt;p&gt;공격자는 배포한 APK와 실행 도중 전달한 APK를 이용해 공격 대상의 정보를 추출하고 이용자의 인가 없이 스마트폰을 조종한다.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;정보 추출 코드 목록&lt;/p&gt;
-
-    &lt;p&gt;가. 전화번호 목록&lt;/p&gt;
-
-    &lt;p&gt;연락처 정보 접근을 위해 설정된 권한 및 코드&lt;/p&gt;
-
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &amp;lt;uses-permission android:name=&quot;android.permission.READ_CONTACTS&quot;/&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/5.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-    &lt;p&gt;나. 위치&lt;/p&gt;
-
-    &lt;p&gt;위치 정보 접근을 위해 설정된 권한 및 코드&lt;/p&gt;
-
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &amp;lt;uses-permission android:name=&quot;android.permission.ACCESS_COARSE_LOCATION&quot; /&amp;gt;
-    &amp;lt;uses-permission android:name=&quot;android.permission.ACCESS_FINE_LOCATION&quot; /&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/11.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-    &lt;p&gt;다. 문자 내용&lt;/p&gt;
-
-    &lt;p&gt;문자 내용 접근을 위해 설정된 권한 및 코드&lt;/p&gt;
-
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;   &amp;lt;uses-permission android:name=&quot;android.permission.READ_SMS&quot;/&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/12.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-    &lt;p&gt;라. 통화 목록&lt;/p&gt;
-
-    &lt;p&gt;통화 기록 접근을 위해 설정된 권한 및 코드&lt;/p&gt;
-
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &amp;lt;uses-permission android:name=&quot;android.permission.READ_CALL_LOG&quot;/&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/14.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-    &lt;p&gt;마. 온라인 계정 ID&lt;/p&gt;
-
-    &lt;p&gt;안드로이드 기기에 등록된 계정 ID, 이용 서비스 정보 접근을 위해 설정된 권한 및 코드&lt;/p&gt;
-
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &amp;lt;uses-permission android:name=&quot;android.permission.GET_ACCOUNTS&quot;/&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/9.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-    &lt;p&gt;바. Wifi MAC Address, SSID&lt;/p&gt;
-
-    &lt;p&gt;Wifi Mac Adrress, Wifi 명 확인을 위해 설정된 권한 및 코드&lt;/p&gt;
-
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &amp;lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot;/&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/8.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-    &lt;p&gt;사. Device 정보 전달&lt;/p&gt;
-
-    &lt;p&gt;안드로이드 기기 정보 접근을 위한 권한 및 코드&lt;/p&gt;
-
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &amp;lt;uses-permission android:name=&quot;android.permission.READ_PHONE_STATE&quot;/&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/13.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-    &lt;p&gt;아. 파일&lt;/p&gt;
-
-    &lt;p&gt;기기 내 파일 내용 읽기를 위한 권한 및 코드&lt;/p&gt;
-
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &amp;lt;uses-permission android:name=&quot;android.permission.READ_EXTERNAL_STORAGE&quot;/&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/26.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;악성 행위 코드 목록&lt;/p&gt;
-
-    &lt;p&gt;가. 피해자 핸드폰 시스템 명령어 실행&lt;/p&gt;
-
-    &lt;p&gt;공격자가 전달한 명령어 실행 후 결과 반환 코드&lt;/p&gt;
-
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/3.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-    &lt;p&gt;나. 공격자가 전달한 번호로 전화&lt;/p&gt;
-
-    &lt;p&gt;공격자가 전달한 전화번호로 발신을 위한 권한 및 코드&lt;/p&gt;
-
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &amp;lt;uses-permission android:name=&quot;android.permission.CALL_PHONE&quot;/&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/16.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-    &lt;p&gt;다. 녹음&lt;/p&gt;
-
-    &lt;p&gt;녹음 후 저장을 위한 권한 및 코드&lt;/p&gt;
-
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &amp;lt;uses-permission android:name=&quot;android.permission.RECORD_AUDIO&quot;/&amp;gt;
-  &amp;lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot;/&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/18.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-    &lt;p&gt;라. 사진 촬영&lt;/p&gt;
-
-    &lt;p&gt;카메라 사진 촬영 및 저장을 위한 권한 및 코드&lt;/p&gt;
-
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &amp;lt;uses-permission android:name=&quot;android.permission.CAMERA&quot;/&amp;gt;
-  &amp;lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot;/&amp;gt;
-  &amp;lt;uses-permission android:name=&quot;android.permission.RECORD_AUDIO&quot;/&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/19.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/20.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-    &lt;p&gt;마. 파일 삭제, 암호화 후 제거&lt;/p&gt;
-
-    &lt;p&gt;파일 삭제, 암호화를 위한 권한 및 코드&lt;/p&gt;
-
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &amp;lt;uses-permission android:name=&quot;android.permission.READ_EXTERNAL_STORAGE&quot;/&amp;gt;
-  &amp;lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot;/&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-
-    &lt;p&gt;파일 제거&lt;/p&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/32.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-    &lt;p&gt;파일 암호화 (key “scream”+”공격자가 전송한 문자열”)&lt;/p&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/23.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-    &lt;p&gt;바. 지속적인 앱 실행&lt;/p&gt;
-
-    &lt;p&gt;지속적인 악성 앱 실행을 위한 재부팅 후 자동 실행 및 앱 유휴 상태에서도 지속적인 실행을 위한 권한 및 코드&lt;/p&gt;
-
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &amp;lt;uses-permission android:name=&quot;android.permission.RECEIVE_BOOT_COMPLETED&quot;/&amp;gt;
-  &amp;lt;uses-permission android:name=&quot;android.permission.FOREGROUND_SERVICE&quot;/&amp;gt;
-  &amp;lt;uses-permission android:name=&quot;android.permission.WAKE_LOCK&quot;/&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/34.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/33.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/35.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-    &lt;p&gt;사. 배경화면 변경&lt;/p&gt;
-
-    &lt;p&gt;공격자가 전송한 파일을 복호화한 후 배경화면으로 설정에 필요한 권한 및 코드&lt;/p&gt;
-
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &amp;lt;uses-permission android:name=&quot;android.permission.SET_WALLPAPER&quot;/&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/29.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-    &lt;p&gt;아.  소켓 통신&lt;/p&gt;
-
-    &lt;p&gt;소켓 통신을 이용한 명령어 실행, 개인 정보 추출을 위한 내용 송수신 코드&lt;/p&gt;
-
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/50.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/45.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/40.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/46.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/41.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/48.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-    &lt;p&gt;자. DexFile 로드&lt;/p&gt;
-
-    &lt;p&gt;파일 다운로드 후 DexFile 로드 및 실행 코드&lt;/p&gt;
-
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &amp;lt;uses-permission android:name=&quot;android.permission.READ_EXTERNAL_STORAGE&quot;/&amp;gt;
-  &amp;lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot;/&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/51.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h5 id=&quot;3-동적-분석을-통한-악성-앱-분석-결과&quot;&gt;3) 동적 분석을 통한 악성 앱 분석 결과&lt;/h5&gt;
-
-&lt;p&gt;공격자는 C&amp;amp;C서버로부터 DEX 파일 전송 후 실행하여 개인정보를 탈취하는 것을 확인할 수 있었다.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;공격지 정보&lt;/p&gt;
-
-    &lt;p&gt;가. Debugging&lt;/p&gt;
-
-    &lt;p&gt;JEB Debugging 도구를 통해 확인한 공격자의 Socket통신 Server, Port&lt;/p&gt;
-    &lt;ul&gt;
-      &lt;li&gt;통신 호스트 : 182.80.222.92&lt;/li&gt;
-      &lt;li&gt;통신 포트 : 4455&lt;/li&gt;
-    &lt;/ul&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/8%201.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;송수신 데이터&lt;/p&gt;
-
-    &lt;p&gt;가. Smali Code Injection&lt;/p&gt;
-
-    &lt;p&gt;Smali Code Injection을 통해 로그로 출력된 송수신 Data&lt;/p&gt;
-    &lt;ul&gt;
-      &lt;li&gt;로드 클래스명 : plugens.angel.plugnes.terminal&lt;/li&gt;
-      &lt;li&gt;소켓 통신을 통해 전달되는 APK&lt;/li&gt;
-    &lt;/ul&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/3%201.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-    &lt;p&gt;Smali Code Injection을 통해 파일 제거 로직 차단 후 확보한 APK 파일 목록&lt;/p&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/19%201.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-    &lt;p&gt;나. tcpdump&lt;/p&gt;
-
-    &lt;p&gt;tcpdump를 이용해 확인한 피해자 정보 전송 Packet Data&lt;/p&gt;
-    &lt;ul&gt;
-      &lt;li&gt;디바이스 기기 : Samsung S10&lt;/li&gt;
-      &lt;li&gt;안드로이드 OS 버전 : Pie&lt;/li&gt;
-      &lt;li&gt;설치된 어플리케이션 UUID : 5184e43e4-6245-e64f-54sd-69ff9e76d8f&lt;/li&gt;
-    &lt;/ul&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/5%201.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-    &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;/assets/2021-07-29-malwareAPK.asset/4.png&quot; style=&quot;max-width: 100%; height: auto;&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;4-결론&quot;&gt;4. 결론&lt;/h1&gt;
-
-&lt;p&gt;분석한 악성 앱은 단순히 몸캠피싱을 위한 앱이 아니라 피해자의 스마트폰에 명령어 실행, 존재하는 파일, 정보 탈취, 랜섬웨어도 가능하다. 앱이 설치되고 나면, 스마트폰은 공격자의 손에 들어가는 것과 다름없다. 사전 예방을 통해 안전하게 개인정보를 보호하자.&lt;/p&gt;
-
-&lt;p&gt;스마트폰에 백신을 설치하자. 백신은 악성 앱 제거, 실행을 차단해준다.&lt;/p&gt;
-
-&lt;p&gt;출처가 불분명한 앱은 다운로드 하지 말자. 구글플레이에 등록된 앱들은 보안 검증을 받은 앱들이다.&lt;/p&gt;
-
-&lt;p&gt;음란 영상 통화를 하지 말자. 매력적인 이성은 우리에게 처음부터 신체를 노출하지 않는다.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;김지현, 홍순빈, 오진영, “[The W]2030 노리는 보이스피싱… ‘알바’, ‘몸캠’으로 낚는다”, &lt;머니투데이&gt;, 2021.05.02, [https://news.mt.co.kr/mtview.php?no=2021050209122253595](https://news.mt.co.kr/mtview.php?no=2021050209122253595)*&lt;/머니투데이&gt;&lt;/p&gt;
-
-&lt;p&gt;신정은, “집콕족 노린 ‘몸캠 피싱’ 주의보…피해액만 22억”, &lt;SBS뉴스&gt;, 2021.02.18, https://news.sbs.co.kr/news/endPage.do?news_id=N1006212770&amp;amp;plink=SEARCH&amp;amp;cooper=SBSNEWSSEARCH&amp;amp;plink=COPYPASTE&amp;amp;cooper=SBSNEWSEND&lt;/SBS뉴스&gt;&lt;/p&gt;
-
-&lt;p&gt;최선을, “‘몸캠피싱’ 협박 당한 중학생, 아파트 옥상서 떨어져 숨져”, &lt;서울신문&gt;, 2021.05.31, [https://www.seoul.co.kr/news/newsView.php?id=20210531500185](https://www.seoul.co.kr/news/newsView.php?id=20210531500185)&lt;/서울신문&gt;&lt;/p&gt;</content><author><name>함세련</name></author><category term="R&amp;D" /><summary type="html">[ 만능 악성 APK 분석 후기 ]</summary></entry></feed>
+&lt;p&gt;&lt;img src=&quot;/assets/2021-08-20-CVE-2020-26934/cve202026934_7.png&quot; style=&quot;max-width:800px; height:auto;&quot; /&gt;&lt;/p&gt;</content><author><name>고기완</name></author><category term="R&amp;D" /><summary type="html">개요 phpMyAdmin은 MySQL/MariaDB 데이터베이스를 관리하기 위한 웹 인터페이스 서비스다. PHP 언어로 구현되어 있으며 웹서버에 설치하여 사용한다. 사용자는 웹 브라우저를 통해 phpMyAdmin 웹페이지에 로그인한 후, 데이터베이스 열람 및 수정이 가능하다.</summary></entry></feed>
