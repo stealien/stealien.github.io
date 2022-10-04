@@ -102,6 +102,8 @@ CCE에서 만난 제가 만든 VPC 서비스를 좀 더 발전시켜서 CCE 본�
 
 2022년 내에 교내 보안대회에서 사용하겠다는 목표로 시큐어 코딩 교육 플랫폼을 만들었습니다. 원래는 ssh 정보만 주고 `vi` 명령으로 소스코드를 수정하는 형식으로 운영하고자 했으나, 터미널에 익숙하지 않은 분들이 많다는 점을 알게 되어 WEB IDE를 제공하는 형식으로 개발했습니다. WEB IDE는  `monaco-editor` 라이브러리를 사용하여 React를 기반으로 만들어졌고, 이미지화하여 활용성을 높게 하였습니다.
 
+\* WEB IDE : [https://github.com/ch4n3-yoon/online-monaco-editor](https://github.com/ch4n3-yoon/online-monaco-editor)
+
 WEB IDE를 생성하는 과정은 다음과 같습니다.
 1. 문제 출제자가 지정한 이미지 이름을 가져와 컨테이너를 생성한다.
 2. 생성한 컨테이너에서 문제 출제자가 지정한 디렉터리에서 소스코드를 복사한다.
