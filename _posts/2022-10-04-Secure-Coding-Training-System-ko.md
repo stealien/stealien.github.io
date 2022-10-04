@@ -12,7 +12,7 @@ profile_image: /assets/2022-10-04-Secure-Coding-Training-System/profile.jpeg
 summary		: "경희대학교 SW 보안대회 운영기"
 thumbnail	: /assets/stealien.png
 lang        : ko
-permalink   : /2022-07-13/secure-coding-traing-system
+permalink   : /2022-10-04/secure-coding-traing-system
 ---
 
 
