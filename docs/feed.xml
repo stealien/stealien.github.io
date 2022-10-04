@@ -1,4 +1,117 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2022-07-13T17:34:22+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">LLVM을 사용한 Control Flow Flattening 패스 개발</title><link href="http://ufo.stealien.com/2022-07-13/llvm-flow-flatten" rel="alternate" type="text/html" title="LLVM을 사용한 Control Flow Flattening 패스 개발" /><published>2022-07-13T00:00:00+09:00</published><updated>2022-07-13T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-07-13/LLVM-flow-flatten-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-07-13/llvm-flow-flatten">&lt;h1 id=&quot;llvm을-사용한-control-flow-flattening-패스-개발&quot;&gt;LLVM을 사용한 Control Flow Flattening 패스 개발&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2022-10-04T19:02:56+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">Secure Coding Training System 개발기</title><link href="http://ufo.stealien.com/2022-07-13/secure-coding-traing-system" rel="alternate" type="text/html" title="Secure Coding Training System 개발기" /><published>2022-10-04T00:00:00+09:00</published><updated>2022-10-04T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-07-13/Secure-Coding-Training-System-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-07-13/secure-coding-traing-system">&lt;h1 id=&quot;개요&quot;&gt;개요&lt;/h1&gt;
+
+&lt;p&gt;안녕하세요. 스틸리언 R&amp;amp;D팀 윤석찬입니다. 저는 스틸리언에서 모의해킹, 보안 기술 연구 뿐만 아니라 다양한 제품을 개발하고 있기도 합니다. 제가 개발에 참여한 대표적인 것 중 하나는 &lt;em&gt;Cyber Drill System&lt;/em&gt;이라는 교육 플랫폼입니다. 스틸리언에서는 이 플랫폼을 이용해 학생 혹은 실무자 분들을 대상으로 교육하고 있습니다. 입사하고 약 2개월이 되던 때 쯔음 이 프로젝트에 참가하게 되었는데, 벌써 3년째가 되었네요 😄  저는 이 프로젝트를 좀 더 고도화하고 새로운 형식의 플랫폼을 위해서 노력하고 있습니다.&lt;/p&gt;
+
+&lt;p&gt;최근 몇몇 워게임, 해킹대회(CTF) 중에는 취약한 인스턴스를 할당받고, 이것을 공격하는 형태의 플랫폼이 증가하고 있습니다. 대표적으로는 HackTheBox, 드림핵 플랫폼이 있습니다. 이 중 HackTheBox 플랫폼은 실제 인스턴스를 할당받는 방식으로 구현되었으며, 독립적인 가상 서버에서 실습할 수 있기 때문에 좀 더 다양한 공격을 시도해볼 수 있게 됩니다.&lt;/p&gt;
+
+&lt;p&gt;가령 일반적인 CTF 플랫폼에서는 하나의 가상서버에 여러 사용자가 접근하여 취약점을 공격하기 때문에 LPE* 기법을 쓰지 못하도록 막아놓는 경우가 일반적인 반면,  HackTheBox는 타겟의 쉘을 얻는 것에 그치지 않고 가상서버에서 얻은 쉘을 이용해 LPE까지 유도하기도 합니다. 저도 HackTheBox와 같은 인스턴스 할당 방식의 교육 훈련 시스템을 만들어서 효용성 높은 훈련 시스템을 만들고자 했고, docker command 중 몇 개를 python 코드에 매핑만 해두어도 충분히 구현할 수 있겠다는 생각이 들었습니다. 그렇게 관련 자료를 찾아보다 Docker SDK라는 라이브러리를 찾을 수 있었습니다.&lt;/p&gt;
+
+&lt;p&gt;* LPE : Local Privilege Escalation&lt;/p&gt;
+
+&lt;h1 id=&quot;docker-sdk&quot;&gt;Docker SDK&lt;/h1&gt;
+
+&lt;p&gt;Docker SDK 라이브러리는 docker 안의 대부분의 명령어를 파이썬 코드로 매핑해놓은 라이브러리입니다. 그런데 제가 생각했던 점과 다른 점이 있다면 이 라이브러리는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker [command]&lt;/code&gt; 형식의 커맨드를 매핑해놓은게 아니라, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/run/docker.sock&lt;/code&gt; 에 마운트된 유닉스 소켓을 통한 HTTP API 통신으로 매핑해놓았다는 것입니다.&lt;/p&gt;
+
+&lt;p&gt;실제로 공식홈페이지에 들어가보면 도커 명령어를 파이썬 명령어로 실행시킬 수 있음을 확인할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Using echo command in alpine image&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;docker&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;docker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from_env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'alpine'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'echo hello world'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;sa&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'hello world&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Managing your containers&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Container&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'45e6d2de7c54'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Container&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'db18e4f20eaa'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...]&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;container&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'45e6d2de7c54'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;container&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attrs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Config'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Image'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;&quot;bfirsh/reticulate-splines&quot;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;container&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;logs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;&quot;Reticulating spline 1...&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;container&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;[참고] : &lt;a href=&quot;https://docker-py.readthedocs.io/en/stable/&quot;&gt;https://docker-py.readthedocs.io/en/stable/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;위처럼 Docker SDK를 통해 docker command를 자동화할 수 있고, 만들 수 있는 것들이 무궁무진해집니다. 이 라이브러리를 사용하면 docker를 통한 이미지, 컨테이너 관리 작업을 코드 상에서 안정적으로 구현할 수 있습니다. 저는 이것을 통해 AWS EC2 서비스 같은 VPC (Virtual Private Cloud) 서비스를 구현해볼 수 있을 것 같다는 생각이 들었습니다.&lt;/p&gt;
+
+&lt;h1 id=&quot;simple-vpc-service&quot;&gt;Simple VPC Service&lt;/h1&gt;
+
+&lt;p&gt;그래서 Docker SDK 라이브러리로 처음 구현해본 서비스는 VPC 서비스입니다. 제가 만든 VPC 서비스의 주요 기능은 사용자가 버튼을 클릭하면 SSH 서버를 제공하는 것입니다. 이 기능을 구현하기 위해 내부적으로 거쳐야 하는 과정은 다음과 같습니다.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;사용자의 정보를 확인해서 서버 생성 권한이 있는지 확인한다.&lt;/li&gt;
+  &lt;li&gt;사용자로부터 포트 번호를 받는다.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;openssh-server&lt;/code&gt; 패키지가 설치된 컨테이너 이미지를 기반으로 컨테이너를 생성하고, 사용자가 입력한 포트번호로 컨테이너의 22번 포트를 연결한다.&lt;/li&gt;
+  &lt;li&gt;생성한 컨테이너에 foreground에서 종료되지 않고 무기한으로 실행할 수 있는 명령어를 실행해서 컨테이너를 유지한다. (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tail -f /dev/null&lt;/code&gt; , `
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sleep infinity&lt;/code&gt;)&lt;/li&gt;
+  &lt;li&gt;생성한 컨테이너를 사용자에게 전달한다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;위 과정에서 사용된 컨테이너 이미지를 빌드하기 위한 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; 은 아래와 같습니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-Dockerfile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; ubuntu:latest&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;apt-get update &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;apt-get &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; openssh-server vim
+
+&lt;span class=&quot;c&quot;&gt;# change root password&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'root:admin123'&lt;/span&gt; | chpasswd
+
+&lt;span class=&quot;c&quot;&gt;# change ssh configure&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;PermitRootLogin &lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; /etc/ssh/sshd_config &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; service ssh restart
+
+&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;service ssh restart
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;(tl;dr) 위와 같은 식으로 VPC 서비스를 구현하고 제가 다니는 학교에 프로젝트 과제로 제출해서 좋은 성적을 받은 경험이 있습니다. ^^ v 소스코드는 현재 비공개로 되어있으며 현재는 사내 git 내부 프로젝트로 옮겨두었습니다.&lt;/p&gt;
+
+&lt;h1 id=&quot;cce-2021&quot;&gt;CCE 2021&lt;/h1&gt;
+
+&lt;p&gt;저는 국가정보원에서 주최한 2021 사이버공격방어대회(CCE)에 한국수력원자력 연합팀으로 공공부문에 참가한 경험이 있습니다. CCE는 우리나라에서 규모가 큰 대회이고 본선에서 공방전 형식 등 다양한 포맷을 시도하는 것으로 유명한 대회입니다. 저는 처음 CCE 본선 무대에 발을 딛은 터라 새로운 형식의 대회에 크게 감명 받았습니다.&lt;/p&gt;
+
+&lt;p&gt;본선 대회 형식은 라운드 별로 나뉘었던 것으로 기억합니다. 팀 내에서 제가 주도적으로 참여했던 첫번째 라운드는 출제진 쪽에서 제공한 가상 인스턴스에 ssh로 접속해서 취약한 소스코드를 수정하고 SLA 체크 후 점수가 변동되는 형식이었습니다. SLA 체크는 자동 스크립트를 통해 가상 인스턴스의 가용성, 취약성을 검사입니다. 30초마다 문제 출제진 쪽에서 만든 SLA 체크 스크립트를 돌려서 취약점이 아직 존재하거나 서비스의 가용성이 훼손된 경우 팀 점수에서 차감되는 형식입니다.&lt;/p&gt;
+
+&lt;p&gt;CCE에서 만난 제가 만든 VPC 서비스를 좀 더 발전시켜서 CCE 본선에서 봤던 시스템을 구현할 수 있겠다는 생각이 들었습니다.&lt;/p&gt;
+
+&lt;h1 id=&quot;secure-coding-training-platform&quot;&gt;Secure Coding Training Platform&lt;/h1&gt;
+
+&lt;p&gt;2022년 내에 교내 보안대회에서 사용하겠다는 목표로 시큐어 코딩 교육 플랫폼을 만들었습니다. 원래는 ssh 정보만 주고 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vi&lt;/code&gt; 명령으로 소스코드를 수정하는 형식으로 운영하고자 했으나, 터미널에 익숙하지 않은 분들이 많다는 점을 알게 되어 WEB IDE를 제공하는 형식으로 개발했습니다. WEB IDE는  &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;monaco-editor&lt;/code&gt; 라이브러리를 사용하여 React를 기반으로 만들어졌고, 이미지화하여 활용성을 높게 하였습니다.&lt;/p&gt;
+
+&lt;p&gt;WEB IDE를 생성하는 과정은 다음과 같습니다.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;문제 출제자가 지정한 이미지 이름을 가져와 컨테이너를 생성한다.&lt;/li&gt;
+  &lt;li&gt;생성한 컨테이너에서 문제 출제자가 지정한 디렉터리에서 소스코드를 복사한다.&lt;/li&gt;
+  &lt;li&gt;사용자에게 제공될 WEB-IDE를 생성한다.&lt;/li&gt;
+  &lt;li&gt;컨테이너에서 복사한 소스코드를 WEB IDE 안에 복사한다.&lt;/li&gt;
+  &lt;li&gt;사용자에게 WEB IDE 접속 정보를 출력한다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;SLA 체크 과정은 다음과 같습니다.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;사용자가 해당 문제를 이미 풀었는지 등을 확인한다.&lt;/li&gt;
+  &lt;li&gt;사용자가 수정한 파일들을 관리 서버에 복사한다.&lt;/li&gt;
+  &lt;li&gt;build 및 SLA 용 컨테이너를 생성한다.&lt;/li&gt;
+  &lt;li&gt;3에서 생성한 컨테이너에 사용자가 수정한 파일을 붙여넣는다.&lt;/li&gt;
+  &lt;li&gt;문제에 지정된 TestCase 명령어들을 수행하고 점수를 매긴다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;(tl;dr) 이 프로젝트도 소스코드는 현재 비공개로 되어있으며 현재는 사내 git 내부 프로젝트로 옮겨두었습니다.&lt;/p&gt;
+
+&lt;h1 id=&quot;경희대학교-sw-보안대회&quot;&gt;경희대학교 SW 보안대회&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2022-10-04-Secure-Coding-Training-System/poster.png&quot; width=&quot;400px&quot; title=&quot;KHUCTF Poster&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;실제로 해당 플랫폼으로 경희대학교에서 SW 보안대회를 진행했습니다. RAON, ENKI 등 국내 유명한 보안 업체 소속인 제 친구들과 재직자 분들께 부탁을 해서 양질의 문제를 출제할 수 있었습니다. 실제 문제 풀이자가 그렇게 많지 않아 사용자 피드백이 적다는 점이 아쉽긴하나, 이 대회를 계기로 회사 내에서 만들고 있는 사이드 프로젝트에 큰 도움이 되었습니다.&lt;/p&gt;
+
+&lt;h1 id=&quot;마무리&quot;&gt;마무리&lt;/h1&gt;
+
+&lt;p&gt;Docker SDK를 통해 실제 소프트웨어 보안대회에 사용되는 플랫폼을 개발하기까지의 과정을 한 예시로 설명드렸습니다. 클라우드 서비스 상품과 라이브러리는 지금도 다양하게 제공되고 있어서 쉽게 기능을 개발할 수 있습니다.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;거인의 어깨 위에 서서 더 높은 가치를 만들어낼 수 있습니다.&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name>윤석찬</name></author><category term="R&amp;D" /><summary type="html">개요</summary></entry><entry xml:lang="ko"><title type="html">LLVM을 사용한 Control Flow Flattening 패스 개발</title><link href="http://ufo.stealien.com/2022-07-13/llvm-flow-flatten" rel="alternate" type="text/html" title="LLVM을 사용한 Control Flow Flattening 패스 개발" /><published>2022-07-13T00:00:00+09:00</published><updated>2022-07-13T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-07-13/LLVM-flow-flatten-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-07-13/llvm-flow-flatten">&lt;h1 id=&quot;llvm을-사용한-control-flow-flattening-패스-개발&quot;&gt;LLVM을 사용한 Control Flow Flattening 패스 개발&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/llvm/llvm-project&quot;&gt;LLVM&lt;/a&gt;을 이용하여 난독화를 할 수 있으면 이를 기반으로 다양한 플랫폼에서 LLVM을 사용하여 빌드되는 코드들에 대한 공통 난독화 툴을 만들 수 있을 것이라고 생각하였습니다.&lt;/p&gt;
 
@@ -2482,66 +2595,4 @@ O:4:&lt;span class=&quot;s2&quot;&gt;&quot;user&quot;&lt;/span&gt;:3:&lt;span cl
 &lt;h2 id=&quot;공격-코드&quot;&gt;공격 코드&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;https://github.com/d0now/vulnerabilities/MikroTik_RouterOS/2021-10-13-post-auth-execve/exploit.py&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>김도현</name></author><category term="R&amp;D" /><summary type="html">MikroTik arbitrary call execve() (Post Authentication) Affect version : 6.48.3 to 6.48.? (not checked. sorry.) Impact : Low Difficulty : Low</summary></entry><entry xml:lang="ko"><title type="html">CVE-2020-26934 - phpMyAdmin Reflected Cross-site scripting</title><link href="http://ufo.stealien.com/2021-09-02/CVE-2020-26934-phpMyAdmin-Reflected-Cross-site-scripting" rel="alternate" type="text/html" title="CVE-2020-26934 - phpMyAdmin Reflected Cross-site scripting" /><published>2021-09-02T15:55:50+09:00</published><updated>2021-09-02T15:55:50+09:00</updated><id>http://ufo.stealien.com/2021-09-02/CVE-2020-26934%20-%20phpMyAdmin%20Reflected%20Cross-site%20scripting-ko</id><content type="html" xml:base="http://ufo.stealien.com/2021-09-02/CVE-2020-26934-phpMyAdmin-Reflected-Cross-site-scripting">&lt;h1 id=&quot;개요&quot;&gt;개요&lt;/h1&gt;
-&lt;p&gt;phpMyAdmin은 MySQL/MariaDB 데이터베이스를 관리하기 위한 웹 인터페이스 서비스다. PHP 언어로 구현되어 있으며 웹서버에 설치하여 사용한다. 사용자는 웹 브라우저를 통해 phpMyAdmin 웹페이지에 로그인한 후, 데이터베이스 열람 및 수정이 가능하다.&lt;/p&gt;
-
-&lt;h1 id=&quot;변환transformation-기능&quot;&gt;변환(Transformation) 기능&lt;/h1&gt;
-&lt;p&gt;데이터베이스의 값을 표시 또는 삽입할 때 데이터의 변환 방식을 지정하는 기능이다.
-변환 기능을 이용하는 예시는 다음과 같다.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;테이블 구조 변경 기능에서 아래 이미지와 같이 Media type, Browser display transformation 등을 지정한다.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2021-08-20-CVE-2020-26934/cve202026934_1.png&quot; style=&quot;max-width:800px; height:auto;&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;변환 기능이 적용된 테이블의 데이터를 표시할 때, 변환된 데이터를 보기 위해 [BLOB]을 클릭하면 transformation_wrapper.php 페이지로 이동된다.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2021-08-20-CVE-2020-26934/cve202026934_2.png&quot; style=&quot;max-width:800px; height:auto;&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;transformation_wrapper.php 페이지는 쿼리 구문을 입력 받아 실행하고, 실행 결과를 변환하여 표시한다.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;취약점-설명&quot;&gt;취약점 설명&lt;/h1&gt;
-&lt;p&gt;transformation_wrapper.php는 CSRF 토큰을 필요로 하지 않는다. CSRF 토큰 검증을 하지 않으므로, 공격자가 GET 요청 방식으로 파라미터 전달이 가능하다. 
-$request_params 변수에 선언된 ‘cn’, ‘ct’, ‘sql_query’, ‘transform_key’, ‘where_clause’를 파라미터로 받아, 해당 변수명으로 사용한다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2021-08-20-CVE-2020-26934/cve202026934_3.png&quot; style=&quot;max-width:800px; height:auto;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;where_clause 파라미터는 SELECT 쿼리 구문의 WHERE 절에 삽입해 실행된다. 
-쿼리 실행 결과를 출력하기 전, Core::downloadHeader 함수를 실행한다. Core::downloadHeader 함수는 /libraries/classes/Core.php에 선언되어 있다. 
-두 개의 인자를 받아 파일 다운로드와 관련된 HTTP 응답 헤더를 지정한다. 첫 번째 인자는 파일 이름이고, 두 번째 인자는 Content-Type을 지정한다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2021-08-20-CVE-2020-26934/cve202026934_4.png&quot; style=&quot;max-width:800px; height:auto;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;공격자가 ct 파라미터를 조작하면, Core::downloadHeader 함수의 두 번째 인자가 조작되어 Content-Type 조작이 가능하다.
-Core::downloadHeader 함수가 종료되고 쿼리 실행 결과를 출력한다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2021-08-20-CVE-2020-26934/cve202026934_5.png&quot; style=&quot;max-width:800px; height:auto;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Content-Type을 html으로 지정하는 경우, PHP의 htmlspecialchars 함수를 통해 XSS 문자열이 필터링된다. 공격자는 XSS 필터링을 우회하며 웹브라우저 화면에 출력하기 위해 Content-Type을 text/xml 으로 지정한다.
-Content-Type이 text/xml이므로 쿼리 실행으로 출력 되는 내용을 XML XSS으로 지정하면 XSS 취약점이 발생한다.
-출력 되는 내용을 조작하기 위해 where_clause 파라미터에 UNION SELECT 구문을 넣는다.&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1 UNION SELECT '&amp;lt;?xml version=&quot;1.0&quot;?&amp;gt;&amp;lt;html&amp;gt;&amp;lt;script xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&amp;gt;alert(1)&amp;lt;/script&amp;gt;&amp;lt;/html&amp;gt;',2,3,0 ORDER BY 4
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;위 SQL 구문을 삽입하는 전체 페이로드는 아래와 같다.&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~/index.php?target=transformation_wrapper.php&amp;amp;db=information_schema&amp;amp;table=CHARACTER_SETS&amp;amp;where_clause=1%20UNION%20SELECT%20%27%3C?xml%20version=%221.0%22?%3E%3Chtml%3E%3Cscript%20xmlns=%22http://www.w3.org/1999/xhtml%22%3Ealert(1)%3C/script%3E%3C/html%3E%27,2,3,0%20ORDER%20BY%204&amp;amp;cn=&amp;amp;ct=text/xml&amp;amp;transform_key=CHARACTER_SET_NAME
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2021-08-20-CVE-2020-26934/cve202026934_6.png&quot; style=&quot;max-width:800px; height:auto;&quot; /&gt;&lt;/p&gt;
-
-&lt;h1 id=&quot;패치-내역&quot;&gt;패치 내역&lt;/h1&gt;
-&lt;p&gt;phpMyAdmin에 해당 취약점을 제보하고 CVE-2020-26934으로 패치되었다.&lt;/p&gt;
-
-&lt;p&gt;https://www.phpmyadmin.net/security/PMASA-2020-5/&lt;/p&gt;
-
-&lt;p&gt;Thanks to Giwan Go, Yelang Lee of STEALIEN for reporting this vulnerability.&lt;/p&gt;
-
-&lt;p&gt;공격자가 GET 요청 방식으로 파라미터 전달을 하지 못하도록 where_clause 파라미터의 서명값을 검증한다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2021-08-20-CVE-2020-26934/cve202026934_7.png&quot; style=&quot;max-width:800px; height:auto;&quot; /&gt;&lt;/p&gt;</content><author><name>고기완</name></author><category term="R&amp;D" /><summary type="html">개요 phpMyAdmin은 MySQL/MariaDB 데이터베이스를 관리하기 위한 웹 인터페이스 서비스다. PHP 언어로 구현되어 있으며 웹서버에 설치하여 사용한다. 사용자는 웹 브라우저를 통해 phpMyAdmin 웹페이지에 로그인한 후, 데이터베이스 열람 및 수정이 가능하다.</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>김도현</name></author><category term="R&amp;D" /><summary type="html">MikroTik arbitrary call execve() (Post Authentication) Affect version : 6.48.3 to 6.48.? (not checked. sorry.) Impact : Low Difficulty : Low</summary></entry></feed>
