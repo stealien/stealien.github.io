@@ -178,6 +178,7 @@ Postgresql을 위해 정의된 `explain_query_prefix()` 메소드입니다. 앞�
 
 이 취약점은 `DatabaseOperations` 클래스에 `explain_options` 변수를 두어 `key` 부분에 대한 검증 로직이 추가되며 수정되었습니다. 아무래도 `options`의 key에 여러 값이 들어갈 수 있다보니, Django 사용자가 변수로 전달할 수 있는 여지를 인정한 것 같습니다.
 
+<br/>
 
 # 4. CVE-2022-34265
 **CVE-2022-34265: Potential SQL injection via ``Trunc(kind)`` and ``Extract(lookup_name)`` arguments.**
@@ -222,6 +223,10 @@ Postgresql을 위해 정의된 `explain_query_prefix()` 메소드입니다. 앞�
 ![image](/assets/2022-12-16-analyzing-django-orm-with-1-day/13.png)
 
 `as_sql()` 메소드를 호출하고 나서 `extract_trunc_lookup_pattern`을 인자로 넘겨진 `kind` 값과 정규식 기능을 통해 비교합니다. 정규식으로 검사하는 값은 `_lazy_re_compile(r"[\w\-_()]+")` 으로, `dates()` 메소드의 인자 `kind`에 특수문자를 사용하지 못하도록 하여 SQL Injection 취약점을 수정했습니다. 
+
+
+<br/>
+
 
 # 5. Django Single Quote Unescaping Bug in `KeyTransform` class
 
@@ -277,10 +282,14 @@ Django에서는 MySQL의 `JSON_EXTRACT()` 함수를 다른 DBMS에서도 사용�
 
 이 버그는 실제 SQL Injection 공격까지 트리거 할 수 없습니다. ORACLE DBMS에서는 MySQL에서와 다르게 모든 함수의 각 인자를 검증하는 과정이 있기 때문입니다. 이번 SQL Injection 취약점은 `JSON_QUERY()` 함수에서 SQL Injection 취약점이 두번째 문자열 인자에서 트리거되는데, 이때 Oracle DB의 유효성 검증을 우회하지 못합니다. Oracle DB는 MySQL처럼 SQL 구문을 자유자재로 다루기가 힘들기 때문입니다.
 
-
+<br />
 
 # 6. 끝으로..
 
-대형 오픈소스 프레임워크를 분석해보면 배울 수 있는 점이 많습니다. Django의 경우엔 Pythonic하게, 훌륭한 객체지향 디자인을 기반으로 작성된 프레임워크였던 것 같습니다. 그런데 이런 프레임워크의 각 기능은 프로그래머마다 사용하기 나름이라 generic하다고는 볼 수가 없습니다. 약간의 명예직이라고 생각하고 취약점을 찾아야 할 것 같습니다.
+대형 오픈소스 프레임워크를 분석해보면 배울 수 있는 점이 많습니다. 이번에 분석해본 Django의 경우에는 훌륭한 객체지향 디자인을 기반으로, Python의 가치를 최대화하여 작성된 프레임워크였던 것 같습니다. Django가 어떻게 구현되었는지 확인해보면서 부족했던 저의 프로그래밍, 소프트웨어 구조화 등 암묵지 실력을 키울 수 있었다고 생각합니다.
+
+
+하지만 프레임워크라는 것이 프로그래머마다 구현하기 나름이라, 사용하고 있는 Django의 버전에 1-day 취약점이 존재해도 어떻게 구현하느냐에 따라 취약점이 발생하지 않을 수 있습니다. 이것을 보통 generic하지 않다고 표현하기도 하는데, 프레임워크 분석할 때 이 부분이 조금 아쉬운 부분이긴 합니다.
+
 
 이 글은 Obsidian으로 제텔카스텐 기법을 써서 작성되었습니다. 제텔카스텐을 알려주시고 개인적으로 제게 큰 힘과 용기를 북돋아주신 호정님께 이 글을 빌려 감사인사를 드리고 싶습니다.
