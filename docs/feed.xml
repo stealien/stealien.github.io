@@ -1,4 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2022-12-18T17:32:26+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">Analyzing Django ORM with 1-day vulnerabilities and sql bug</title><link href="http://ufo.stealien.com/2022-12-16/analyzing-django-orm-with-1-day" rel="alternate" type="text/html" title="Analyzing Django ORM with 1-day vulnerabilities and sql bug" /><published>2022-12-16T00:00:00+09:00</published><updated>2022-12-16T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-12-16/analyzing-django-orm-with-1-day-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-12-16/analyzing-django-orm-with-1-day">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2022-12-19T21:50:03+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">Analyzing Django ORM with 1-day vulnerabilities and sql bug</title><link href="http://ufo.stealien.com/2022-12-16/analyzing-django-orm-with-1-day" rel="alternate" type="text/html" title="Analyzing Django ORM with 1-day vulnerabilities and sql bug" /><published>2022-12-16T00:00:00+09:00</published><updated>2022-12-16T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-12-16/analyzing-django-orm-with-1-day-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-12-16/analyzing-django-orm-with-1-day">&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;div style=&quot;text-align: left&quot;&gt;목차&lt;/div&gt;
+&lt;div style=&quot;text-align: left&quot;&gt;
+    &lt;a href=&quot;#0-introduction&quot;&gt;0. Introduction&lt;/a&gt;
+&lt;/div&gt;
+&lt;div style=&quot;text-align: left&quot;&gt;
+    &lt;a href=&quot;#1-how-does-django-execute-sql-query&quot;&gt;1. How does Django execute SQL query?&lt;/a&gt;
+&lt;/div&gt;
+&lt;div style=&quot;text-align: left&quot;&gt;
+    &lt;a href=&quot;#2-cve-2022-28346&quot;&gt;2. CVE-2022-28346&lt;/a&gt;
+&lt;/div&gt;
+&lt;div style=&quot;text-align: left&quot;&gt;
+    &lt;a href=&quot;#3-cve-2022-28347&quot;&gt;3. CVE-2022-28347&lt;/a&gt;
+&lt;/div&gt;
+&lt;div style=&quot;text-align: left&quot;&gt;
+    &lt;a href=&quot;#4-cve-2022-34265&quot;&gt;4. CVE-2022-34265&lt;/a&gt;
+&lt;/div&gt;
+&lt;div style=&quot;text-align: left&quot;&gt;
+    &lt;a href=&quot;#5-django-single-quote-unescaping-bug-in-keytransform-class&quot;&gt;5. Django Single Quote Unescaped Bug&lt;/a&gt;
+&lt;/div&gt;
+&lt;div style=&quot;text-align: left&quot;&gt;
+    &lt;a href=&quot;#6-끝으로&quot;&gt;6. 끝으로&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;0-introduction&quot;&gt;0. Introduction&lt;/h1&gt;
 
 &lt;p&gt;안녕하세요. 스틸리언 R&amp;amp;D팀 윤석찬 연구원입니다. 이번 차례에도 제가 기술블로그에 글을 쓰게 되었습니다. 벌써 12월이 되었는데 다들 올해 원하시던 목표 이루셨는지요? 제가 올해 세웠던 목표 중 하나는 Python의 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Django&lt;/code&gt; 나 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Flask&lt;/code&gt;, NodeJS의  &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;express.js&lt;/code&gt; 처럼 대중적으로 사용되는 웹 프레임워크에서 유의미한 보안 취약점을 찾아서 제보하는 것이었습니다. 결과적으로 말씀드리자면 목표를 달성하진 못했지만, 그래도 Django라는 국제적으로 유명한 대형 오픈소스 프로젝트를 분석하면서 배웠던 점이 많았던 것 같습니다.&lt;/p&gt;
 
@@ -30,6 +56,8 @@
   &lt;li&gt;&lt;a href=&quot;https://www.cve.org/CVERecord?id=CVE-2022-34265&quot;&gt;CVE-2022-34265&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
 &lt;h1 id=&quot;1-how-does-django-execute-sql-query&quot;&gt;1. How does Django execute SQL query?&lt;/h1&gt;
 
 &lt;p&gt;Django에서는 ORM으로 SQL을 어떻게 실행하는지 알아둘 필요가 있습니다. 아래 링크에 Django ORM이 실제로 어떻게 쿼리를 만들고 실행하는지 정리해두었습니다.&lt;/p&gt;
@@ -38,8 +66,11 @@
   &lt;p&gt;&lt;a href=&quot;https://blog.ch4n3.kr/569&quot;&gt;How does Django execute SQL Query?&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
 &lt;h1 id=&quot;2-cve-2022-28346&quot;&gt;2. CVE-2022-28346&lt;/h1&gt;
 &lt;p&gt;&lt;strong&gt;CVE-2022-28346: Potential SQL injection in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;QuerySet.annotate()&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;aggregate()&lt;/code&gt;, and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;extra()&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
+
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/django/django/commit/93cae5cb2f9a4ef1514cf1a41f714fef08005200&quot;&gt;https://github.com/django/django/commit/93cae5cb2f9a4ef1514cf1a41f714fef08005200&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -85,8 +116,9 @@
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;h1 id=&quot;3-cve-2022-28347&quot;&gt;3. CVE-2022-28347&lt;/h1&gt;
-&lt;p&gt;&lt;strong&gt;CVE-2022-28347: Potential SQL injection via &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;QuerySet.explain(**options)&lt;/code&gt; on PostgreSQL&lt;/strong&gt;
-이 취약점은 PostgreSQL 환경에서 Django &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;QuerySet&lt;/code&gt;의 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;explain()&lt;/code&gt; 메소드를 수행할 때 발생 가능한 SQL Injection 취약점입니다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;CVE-2022-28347: Potential SQL injection via &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;QuerySet.explain(**options)&lt;/code&gt; on PostgreSQL&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;이 취약점은 PostgreSQL 환경에서 Django &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;QuerySet&lt;/code&gt;의 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;explain()&lt;/code&gt; 메소드를 수행할 때 발생 가능한 SQL Injection 취약점입니다.&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/advisories/GHSA-w24h-v9qh-8gxj&quot;&gt;https://github.com/advisories/GHSA-w24h-v9qh-8gxj&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -167,11 +199,11 @@
 
 &lt;h2 id=&quot;4-4-패치&quot;&gt;4-4. 패치&lt;/h2&gt;
 
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;django/db/models/functions/datetime.py&lt;/code&gt;에 정의된 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;TruncBase&lt;/code&gt; 클래스의 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;as_sql()&lt;/code&gt; 메소드에 아래처럼 변경되었다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;django/db/models/functions/datetime.py&lt;/code&gt;에 정의된 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;TruncBase&lt;/code&gt; 클래스의 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;as_sql()&lt;/code&gt; 메소드에 아래처럼 변경되었습니다.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/assets/2022-12-16-analyzing-django-orm-with-1-day/13.png&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;as_sql()&lt;/code&gt; 메소드를 호출하고 나서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;extract_trunc_lookup_pattern&lt;/code&gt;을 인자로 넘겨진 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;kind&lt;/code&gt; 값과 정규식 기능을 통해 비교한다. 정규식으로 검사하는 값은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_lazy_re_compile(r&quot;[\w\-_()]+&quot;)&lt;/code&gt; 으로, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dates()&lt;/code&gt; 메소드의 인자 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;kind&lt;/code&gt;에 특수문자를 사용하지 못하도록 하여 SQL Injection 취약점을 수정했다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;as_sql()&lt;/code&gt; 메소드를 호출하고 나서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;extract_trunc_lookup_pattern&lt;/code&gt;을 인자로 넘겨진 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;kind&lt;/code&gt; 값과 정규식 기능을 통해 비교합니다. 정규식으로 검사하는 값은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_lazy_re_compile(r&quot;[\w\-_()]+&quot;)&lt;/code&gt; 으로, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dates()&lt;/code&gt; 메소드의 인자 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;kind&lt;/code&gt;에 특수문자를 사용하지 못하도록 하여 SQL Injection 취약점을 수정했습니다.&lt;/p&gt;
 
 &lt;h1 id=&quot;5-django-single-quote-unescaping-bug-in-keytransform-class&quot;&gt;5. Django Single Quote Unescaping Bug in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;KeyTransform&lt;/code&gt; class&lt;/h1&gt;
 
@@ -229,7 +261,7 @@
 
 &lt;p&gt;대형 오픈소스 프레임워크를 분석해보면 배울 수 있는 점이 많습니다. Django의 경우엔 Pythonic하게, 훌륭한 객체지향 디자인을 기반으로 작성된 프레임워크였던 것 같습니다. 그런데 이런 프레임워크의 각 기능은 프로그래머마다 사용하기 나름이라 generic하다고는 볼 수가 없습니다. 약간의 명예직이라고 생각하고 취약점을 찾아야 할 것 같습니다.&lt;/p&gt;
 
-&lt;p&gt;이 글은 Obsidian으로 제텔카스텐 기법을 써서 작성되었습니다. 제텔카스텐을 알려주시고 개인적으로 제게 큰 힘과 용기를 북돋아주신 호정님께 이 글을 빌려 감사인사를 드리고 싶습니다.&lt;/p&gt;</content><author><name>Seokchan Yoon</name></author><category term="R&amp;D" /><summary type="html">Introduction</summary></entry><entry xml:lang="ko"><title type="html">Secure Coding Training System 개발기</title><link href="http://ufo.stealien.com/2022-10-04/secure-coding-traing-system" rel="alternate" type="text/html" title="Secure Coding Training System 개발기" /><published>2022-10-04T00:00:00+09:00</published><updated>2022-10-04T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-10-04/Secure-Coding-Training-System-ko%20copy</id><content type="html" xml:base="http://ufo.stealien.com/2022-10-04/secure-coding-traing-system">&lt;h1 id=&quot;개요&quot;&gt;개요&lt;/h1&gt;
+&lt;p&gt;이 글은 Obsidian으로 제텔카스텐 기법을 써서 작성되었습니다. 제텔카스텐을 알려주시고 개인적으로 제게 큰 힘과 용기를 북돋아주신 호정님께 이 글을 빌려 감사인사를 드리고 싶습니다.&lt;/p&gt;</content><author><name>Seokchan Yoon</name></author><category term="R&amp;D" /><summary type="html">목차 0. Introduction 1. How does Django execute SQL query? 2. CVE-2022-28346 3. CVE-2022-28347 4. CVE-2022-34265 5. Django Single Quote Unescaped Bug 6. 끝으로</summary></entry><entry xml:lang="ko"><title type="html">Secure Coding Training System 개발기</title><link href="http://ufo.stealien.com/2022-10-04/secure-coding-traing-system" rel="alternate" type="text/html" title="Secure Coding Training System 개발기" /><published>2022-10-04T00:00:00+09:00</published><updated>2022-10-04T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-10-04/Secure-Coding-Training-System-ko%20copy</id><content type="html" xml:base="http://ufo.stealien.com/2022-10-04/secure-coding-traing-system">&lt;h1 id=&quot;개요&quot;&gt;개요&lt;/h1&gt;
 
 &lt;p&gt;안녕하세요. 스틸리언 R&amp;amp;D팀 윤석찬입니다. 저는 스틸리언에서 모의해킹, 보안 기술 연구 뿐만 아니라 다양한 제품을 개발하고 있기도 합니다. 제가 개발에 참여한 대표적인 것 중 하나는 &lt;em&gt;Cyber Drill System&lt;/em&gt;이라는 교육 플랫폼입니다. 스틸리언에서는 이 플랫폼을 이용해 학생 혹은 실무자 분들을 대상으로 교육하고 있습니다. 입사하고 약 2개월이 되던 때 즈음 이 프로젝트에 참가하게 되었는데, 벌써 3년째가 되었네요 😄  저는 이 프로젝트를 좀 더 고도화하고 새로운 형식의 플랫폼을 위해서 노력하고 있습니다.&lt;/p&gt;
 

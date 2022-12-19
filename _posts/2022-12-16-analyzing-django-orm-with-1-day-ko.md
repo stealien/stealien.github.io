@@ -15,7 +15,34 @@ lang        : ko
 permalink   : /2022-12-16/analyzing-django-orm-with-1-day
 ---
 
-# Introduction
+<br>
+<div style="text-align: left">목차</div>
+<div style="text-align: left">
+    <a href="#0-introduction">0. Introduction</a>
+</div>
+<div style="text-align: left">
+    <a href="#1-how-does-django-execute-sql-query">1. How does Django execute SQL query?</a>
+</div>
+<div style="text-align: left">
+    <a href="#2-cve-2022-28346">2. CVE-2022-28346</a>
+</div>
+<div style="text-align: left">
+    <a href="#3-cve-2022-28347">3. CVE-2022-28347</a>
+</div>
+<div style="text-align: left">
+    <a href="#4-cve-2022-34265">4. CVE-2022-34265</a>
+</div>
+<div style="text-align: left">
+    <a href="#5-django-single-quote-unescaping-bug-in-keytransform-class">5. Django Single Quote Unescaped Bug</a>
+</div>
+<div style="text-align: left">
+    <a href="#6-끝으로">6. 끝으로</a>
+</div>
+
+
+<br>
+
+# 0. Introduction
 
 안녕하세요. 스틸리언 R&D팀 윤석찬 연구원입니다. 이번 차례에도 제가 기술블로그에 글을 쓰게 되었습니다. 벌써 12월이 되었는데 다들 올해 원하시던 목표 이루셨는지요? 제가 올해 세웠던 목표 중 하나는 Python의 `Django` 나 `Flask`, NodeJS의  `express.js` 처럼 대중적으로 사용되는 웹 프레임워크에서 유의미한 보안 취약점을 찾아서 제보하는 것이었습니다. 결과적으로 말씀드리자면 목표를 달성하진 못했지만, 그래도 Django라는 국제적으로 유명한 대형 오픈소스 프로젝트를 분석하면서 배웠던 점이 많았던 것 같습니다.
 
@@ -42,6 +69,7 @@ Django는 2005년에 처음 시작되어 올해로 18년 째 유지되고 있는
 * [CVE-2022-34265](https://www.cve.org/CVERecord?id=CVE-2022-34265)
 
 
+<br>
 
 # 1. How does Django execute SQL query?
 
@@ -49,9 +77,11 @@ Django에서는 ORM으로 SQL을 어떻게 실행하는지 알아둘 필요가 �
 
 > [How does Django execute SQL Query?](https://blog.ch4n3.kr/569)
 
+<br>
 
 # 2. CVE-2022-28346
 **CVE-2022-28346: Potential SQL injection in ``QuerySet.annotate()``, ``aggregate()``, and `extra()`**
+
 - [https://github.com/django/django/commit/93cae5cb2f9a4ef1514cf1a41f714fef08005200](https://github.com/django/django/commit/93cae5cb2f9a4ef1514cf1a41f714fef08005200)
 
 취약점이 발생하는 메소드는 `django.db.models.query`에 지정된 `QuerySet` 클래스 내의  `annotate()`, `aggregate()`, `extra()` 메소드로, 이 세 메소드는 공통적으로 alias 기능이 내포되어 있다는 특징이 있습니다. 예를 들어 `annotate()` 메소드는 아래와 같이 사용합니다. 아래 예시를 보면 `Count()` 결과 값을 `num_books` 라는 이름으로 alias 처리하는 것을 볼 수 있습니다.
@@ -100,6 +130,7 @@ MySQL을 예로 들자면 Backtick 문자로 지정해주는 것을 볼 수 있�
 
 # 3. CVE-2022-28347
 **CVE-2022-28347: Potential SQL injection via `QuerySet.explain(**options)` on PostgreSQL**
+
 이 취약점은 PostgreSQL 환경에서 Django `QuerySet`의 `explain()` 메소드를 수행할 때 발생 가능한 SQL Injection 취약점입니다.
 - [https://github.com/advisories/GHSA-w24h-v9qh-8gxj](https://github.com/advisories/GHSA-w24h-v9qh-8gxj)
 
@@ -186,11 +217,11 @@ Postgresql을 위해 정의된 `explain_query_prefix()` 메소드입니다. 앞�
 
 ## 4-4. 패치
 
-`django/db/models/functions/datetime.py`에 정의된 `TruncBase` 클래스의 `as_sql()` 메소드에 아래처럼 변경되었다.
+`django/db/models/functions/datetime.py`에 정의된 `TruncBase` 클래스의 `as_sql()` 메소드에 아래처럼 변경되었습니다.
 
 ![image](/assets/2022-12-16-analyzing-django-orm-with-1-day/13.png)
 
-`as_sql()` 메소드를 호출하고 나서 `extract_trunc_lookup_pattern`을 인자로 넘겨진 `kind` 값과 정규식 기능을 통해 비교한다. 정규식으로 검사하는 값은 `_lazy_re_compile(r"[\w\-_()]+")` 으로, `dates()` 메소드의 인자 `kind`에 특수문자를 사용하지 못하도록 하여 SQL Injection 취약점을 수정했다. 
+`as_sql()` 메소드를 호출하고 나서 `extract_trunc_lookup_pattern`을 인자로 넘겨진 `kind` 값과 정규식 기능을 통해 비교합니다. 정규식으로 검사하는 값은 `_lazy_re_compile(r"[\w\-_()]+")` 으로, `dates()` 메소드의 인자 `kind`에 특수문자를 사용하지 못하도록 하여 SQL Injection 취약점을 수정했습니다. 
 
 # 5. Django Single Quote Unescaping Bug in `KeyTransform` class
 
