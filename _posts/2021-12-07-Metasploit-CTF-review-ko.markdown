@@ -8,7 +8,7 @@ category	: R&D
 author		: 김도현
 author_email: dhkim@stealien.com
 background	: /assets/bg.png
-profile_image: /assets/2021-01-28-metasploit-ctf-review/profile_image.jpg
+profile_image: /assets/stealien_inverse.png
 summary		: "2021 Metasploit Community CTF write-up, review"
 thumbnail	: /assets/stealien.png
 lang        : ko

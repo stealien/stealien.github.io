@@ -7,8 +7,8 @@ date		: 2021-10-13 19:00:00 +0900
 category	: R&D
 author		: 김도현
 author_email: dhkim@stealien.com
-background	: /assets/posts/thumbnails/20200619.jpg
-profile_image: /assets/posts/thumbnails/20200619.jpg
+background	: /assets/bg.png
+profile_image: /assets/stealien_inverse.png
 summary		: MikroTik Post-Auth execve() call.
 thumbnail	:  /assets/posts/thumbnails/20200619.jpg
 lang        : ko
