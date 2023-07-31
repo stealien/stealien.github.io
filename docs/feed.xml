@@ -1,4 +1,201 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2023-07-03T17:07:16+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">Django, CVE-2023-36053 Potential ReDoS in EmailValidator / URLValidator</title><link href="http://ufo.stealien.com/2023-07-03/django-cve-2023-36053" rel="alternate" type="text/html" title="Django, CVE-2023-36053 Potential ReDoS in EmailValidator / URLValidator" /><published>2023-07-03T00:00:00+09:00</published><updated>2023-07-03T00:00:00+09:00</updated><id>http://ufo.stealien.com/2023-07-03/cve-2023-36053-ko</id><content type="html" xml:base="http://ufo.stealien.com/2023-07-03/django-cve-2023-36053">&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2023-07-31T07:54:58-04:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">버그헌팅: 취약점 체이닝의 중요성</title><link href="http://ufo.stealien.com/2023-07-31/bughunting-vulnerability-chaining-ko" rel="alternate" type="text/html" title="버그헌팅: 취약점 체이닝의 중요성" /><published>2023-07-31T07:00:00-04:00</published><updated>2023-07-31T07:00:00-04:00</updated><id>http://ufo.stealien.com/2023-07-31/bughunting-vulnerability-chaining-ko</id><content type="html" xml:base="http://ufo.stealien.com/2023-07-31/bughunting-vulnerability-chaining-ko">&lt;h1 id=&quot;버그헌팅-취약점-체이닝의-중요성&quot;&gt;버그헌팅: 취약점 체이닝의 중요성&lt;/h1&gt;
+&lt;h2 id=&quot;no-impact-no-bug&quot;&gt;No impact, No bug&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2023-07-31-bughunting-vulnerability-chaining/0.png&quot; alt=&quot;CVSS3.1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;버그헌팅에서는 이 취약점으로 어떤 악의적인 행위를 할 수 있는지 증명해야 합니다.
+대부분의 기업이나 기관들이 CVSS 점수를 이용해 취약점에 대한 평가를 하기 때문에 취약점을 악용할 수 있는 창의적인 아이디어를 생각해내어 시나리오를 만들어야 합니다.&lt;/p&gt;
+
+&lt;p&gt;아무런 생각 없이 단일 취약점을 제보하면, 자칫 많은 시간을 들여 찾은 취약점이 낮은 평가를 받을 수도 있습니다.
+그렇다 보니 자연스럽게 버그헌터들은 추후 발견될 취약점과의 연계를 위해 낮은 영향도(impact)의 취약점을 저장해둡니다. 그리고 더 높은 영향력을 가진 시나리오를 만들 수 있게 되면 제보합니다.&lt;/p&gt;
+
+&lt;p&gt;이런 방식을 다른 취약점과의 연계, 즉 취약점 체이닝이라고 말합니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;vulnerability-chaining&quot;&gt;Vulnerability Chaining&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;취약점 체이닝이란, 두 개 이상의 취약점을 연결하여 상대적으로 중요하지 않은 보안 이슈들을 결합해 강력한 공격 시나리오를 구축하는 방법&lt;/p&gt;
+
+&lt;/blockquote&gt;
+
+&lt;p&gt;취약점 체이닝은 분석 대상에 대한 깊은 이해를 필요로 합니다. 아무래도 한 가지 취약점이 아닌 여러 취약점을 찾아야 함도 있고, 특히 취약점은 아니지만 서비스 상의 정상적인 기능을 이용해서도 취약점과의 연계가 이루어질 수 있기 때문입니다. 때문에 단순히 취약점 뿐만 아니라 기능에 대한 세부적인 분석도 필요하게 됩니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;취약점 체이닝 방법론 요약&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;시스템 이해 : 시스템이 어떻게 작동하는지 전반적으로 이해하는 것이 중요&lt;/li&gt;
+  &lt;li&gt;세부적인 분석 : 개별 취약점을 식별하고 이해하는 것이 중요&lt;/li&gt;
+  &lt;li&gt;시나리오 구축 : 실제 공격 시나리오를 구축하고 시뮬레이션 필요&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;취약점 체이닝에 대한 좋은 예시로 국내 CMS를 대상으로 한 취약점 하나를 예로 들어보겠습니다. 해당 취약점은 이윰빌더에서 경로 조작을 통한 LFI(Local File Inclusion)가 가능해 발생하는 RCE(Remote Code Execution) 취약점입니다.&lt;/p&gt;
+
+&lt;p&gt;자세한 정보는 KISA의 보안 취약점 정보 포털의 국내 취약점 정보 페이지에 방문하시면 확인하실 수 있습니다. (&lt;a href=&quot;https://knvd.krcert.or.kr/detailDos.do?IDX=5789&quot;&gt;https://knvd.krcert.or.kr/detailDos.do?IDX=5789&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h1 id=&quot;cve-2022-41158--이윰빌더-원격-코드-실행-취약점&quot;&gt;&lt;strong&gt;CVE-2022-41158 | 이윰빌더 원격 코드 실행 취약점&lt;/strong&gt;&lt;/h1&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;취약점 종류&lt;/th&gt;
+      &lt;th&gt;영향&lt;/th&gt;
+      &lt;th&gt;심각도&lt;/th&gt;
+      &lt;th&gt;CVSS 점수&lt;/th&gt;
+      &lt;th&gt;제품&lt;/th&gt;
+      &lt;th&gt;영향 받는 버전&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;LFI (Local File Inclusion)&lt;/td&gt;
+      &lt;td&gt;원격 코드 실행&lt;/td&gt;
+      &lt;td&gt;High&lt;/td&gt;
+      &lt;td&gt;7.2&lt;/td&gt;
+      &lt;td&gt;이윰빌더&lt;/td&gt;
+      &lt;td&gt;4.5.3 및 이전 버전&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;취약점 설명 : 이윰빌더가 쿠키 값을 파일의 경로에 사용하는 것을 이용하여 원격 코드 실행이 가능한 취약점&lt;/p&gt;
+
+&lt;h2 id=&quot;이윰빌더-개요&quot;&gt;이윰빌더 개요&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://eyoom.net/&quot;&gt;이윰빌더&lt;/a&gt;는 그누보드5(영카트5)를 프레임워크로 사용한 회원가입, 게시판, 쇼핑몰 결제 등의 기능을 제공하는 국내 CMS 중 하나입니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2023-07-31-bughunting-vulnerability-chaining/1.png&quot; alt=&quot;[https://eyoom.net/page/eb4_introduction](https://eyoom.net/page/eb4_introduction)&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://eyoom.net/page/eb4_introduction&quot;&gt;https://eyoom.net/page/eb4_introduction&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;lfi-patch-analysis&quot;&gt;LFI Patch Analysis&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;이윰빌더 변경 파일 소스 보기(Github)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2023-07-31-bughunting-vulnerability-chaining/2.png&quot; alt=&quot;[https://github.com/eyoom/eyoom_builder_4/commit/4fa8436cf2691dae5064d7c187ffa90327d41042](https://github.com/eyoom/eyoom_builder_4/commit/4fa8436cf2691dae5064d7c187ffa90327d41042)&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/eyoom/eyoom_builder_4/commit/4fa8436cf2691dae5064d7c187ffa90327d41042&quot;&gt;https://github.com/eyoom/eyoom_builder_4/commit/4fa8436cf2691dae5064d7c187ffa90327d41042&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;4.5.4 버전 이상에서는 위와 같이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$unique_theme_id&lt;/code&gt; 변수 값에 숫자만 입력 값으로 들어갈 수 있도록 정규식 필터링이 걸렸습니다.&lt;/p&gt;
+
+&lt;p&gt;다시 말해 4.5.3 이하 버전에서는 $unique_theme_id 변수의 값에 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;../&lt;/code&gt; 와 같은 파일의 경로를 조작할 수 있는 문자열이 들어갈 수 있다는 말과도 같습니다. 어떻게 그것이 가능한지 확인해보겠습니다.&lt;/p&gt;
+
+&lt;p&gt;아래 코드는 git commit에서 보았던 eyoom/class/theme.class.php 파일 내용 중 취약한 코드입니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cd&quot;&gt;/**
+ * 유니크 아이디 쿠키 생성
+ */&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get_cookie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'unique_theme_id'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$unique_theme_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get_cookie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'unique_theme_id'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$unique_theme_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'YmdHis'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str_pad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;microtime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;STR_PAD_LEFT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;set_cookie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'unique_theme_id'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$unique_theme_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3600&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tmp_path&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'/'&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$_SERVER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'REMOTE_ADDR'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'.'&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$unique_theme_id&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'.php'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;file_exists&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;include_once&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$is_shop_theme&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;$arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'theme'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;       &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$user_config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'theme'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;$arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'shop_theme'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$user_config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'shop_theme'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$_config&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;cd&quot;&gt;/**
+ * 파일 생성 및 갱신
+ */&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;save_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'user_config'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$_config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;쿠키 값으로부터 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$unique_theme_id&lt;/code&gt; 값을 받아오고, 다시 그 값은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$file&lt;/code&gt; 변수에 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$unique_theme_id&lt;/code&gt;에 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.php&lt;/code&gt; 라는 확장자가 더해져 특정 파일의 경로가 삽입됩니다.&lt;/p&gt;
+
+&lt;p&gt;그리고 바로 아래 줄에서 만약 해당 경로에 파일이 존재한다면, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;include_once($file)&lt;/code&gt; 에서 파일이 include 됩니다.&lt;/p&gt;
+
+&lt;p&gt;결과적으로 해당 코드는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$unique_theme_id&lt;/code&gt; 쿠키 값을 조작해 상위 경로에 존재하는 php 파일을 include 할 수 있는 &lt;strong&gt;LFI(Local File Inclusion) 취약점&lt;/strong&gt;이 발생하게 됩니다.&lt;/p&gt;
+
+&lt;p&gt;만약 공격자가 특정 경로에 php 파일을 생성하거나 이미 존재하는 PHP 파일에 임의 명령어를 삽입할 수 있다면, 이 LFI 취약점을 이용해 그 PHP 파일을 불러와 임의 명령어를 실행할 수 있는 &lt;strong&gt;RCE 취약점으로 연계&lt;/strong&gt;할 수 있게 됩니다.&lt;/p&gt;
+
+&lt;p&gt;실제로 이윰빌더에 대한 이해가 부족하다면, 위 LFI 취약점에서 RCE 취약점을 발견해내기 쉽지 않을 것입니다. 왜냐하면 위 코드에서 $file 변수의 값이 결국 하단의 save_file 함수에 들어가게 되는데, save_file 함수의 내용을 보면 PHP 파일의 내용으로 들어가게 되는 값들은 &lt;strong&gt;사용자가 직접 조작할 수 없기 때문&lt;/strong&gt;입니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cd&quot;&gt;/**
+ * 배열을 지정한 파일로 저장 - 폴더에 웹서버의 쓰기 권한이 있어야 함
+ */&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;save_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$outvar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$info&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$fp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;fopen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'w'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$contents&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&amp;lt;?php&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$contents&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;if (!defined('_EYOOM_')) exit;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$contents&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$outvar&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot; = array(&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$info&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;foreach&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$info&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;is_array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;c1&quot;&gt;// 키값으로 정수를 허용하지 않는다면&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;is_int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                        &lt;span class=&quot;nv&quot;&gt;$contents&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\t\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$key&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; =&amp;gt; &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;addslashes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$contents&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\t\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$key&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; =&amp;gt; &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;addslashes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;nv&quot;&gt;$arr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;''&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;foreach&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$value&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;is_int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                            &lt;span class=&quot;nv&quot;&gt;$arr&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$k&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; =&amp;gt; &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;addslashes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;,&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$arr&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$k&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; =&amp;gt; &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;addslashes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;,&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;nv&quot;&gt;$arr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;substr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;nv&quot;&gt;$contents&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\t\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$key&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; =&amp;gt; array(&quot;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$arr&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;),&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;nv&quot;&gt;$contents&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;);&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;fwrite&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$fp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$contents&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;fclose&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$fp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;chmod&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mo&quot;&gt;0644&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;코드를 보시면 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$value&lt;/code&gt; 값은 모두 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;addslashes()&lt;/code&gt; 함수로 필터링 되고 있습니다. 그리고 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$key&lt;/code&gt; 값은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;save_file()&lt;/code&gt; 함수 호출 전의 값을 확인해보시면 알 수 있는 것으로, 이윰빌더의 설정 값(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$arr['theme']&lt;/code&gt;)에 해당합니다. 이 값은 사용자 측에서 조작할 수 없는 값입니다.&lt;/p&gt;
+
+&lt;p&gt;때문에 위에서 본 코드 만으로는 LFI 취약점을 RCE 취약점으로 연계할 수 없다는 결론이 나옵니다.&lt;/p&gt;
+
+&lt;p&gt;만약 여러분이더라도 여기서 포기하기에는 너무 아쉽겠죠. 사실상 위 LFI 취약점만으로는 악성 시나리오를 제작하기에는 파급력이 많이 낮습니다. 어떤 곳에서는 단순히 가능성만 제시하여도 Potential 취약점으로 취급해주기도 합니다. 하지만 실질적인 시나리오를 제시하는 것이 제보자 뿐만 아니라 제보 받는 사람 입장에서도 취약점에 대한 심각도를 확실히 이해하고 문제의 시급함을 느낄 수 있습니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;finding-arbitrary-code-injection&quot;&gt;Finding Arbitrary Code Injection&lt;/h2&gt;
+
+&lt;p&gt;저희는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;save_file()&lt;/code&gt; 함수에서 php 파일을 작성하고 있음을 알 수 있었습니다. 위에서 보았던 코드에서는 이윰빌더의 설정 값을 받아서 작성하고 있다고 하지만, 다른 곳에서는 사용자로부터 입력 값을 받아서 작성하는 곳이 있지 않을까요?&lt;/p&gt;
+
+&lt;p&gt;그 질문에 대한 답을 찾는 쉬운 방법이 있습니다. 바로 Visual Studio Code에서 &lt;strong&gt;Go to References&lt;/strong&gt; 기능을 이용할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2023-07-31-bughunting-vulnerability-chaining/3.png&quot; alt=&quot;VSCode&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;보시다시피 우측의 수많은 파일에서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;save_file()&lt;/code&gt; 함수를 사용하고 있습니다. 이 파일들 중에서 하나쯤은 사용자로부터 받은 입력(user input, cookies, 등)으로부터 값을 받아 파일을 작성하고 있지 않을까요? 어떤 파일에서 그렇게 처리하고 있는지는 스포(?)하지 않겠습니다.  (개인 사유로 취약점에 대한 자세한 설명은 내년에 자세히 하게 될 것 같습니다.)&lt;/p&gt;
+
+&lt;p&gt;위에서 살펴본 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;save_file()&lt;/code&gt; 함수를 다시 면밀히 살펴보면, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$value&lt;/code&gt; 값은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;addslashes()&lt;/code&gt; 함수로 필터링하고 있지만, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$key&lt;/code&gt; 값은 필터링하고 있지 않습니다. 이 점 또한 중요한 포인트입니다. 만약 사용자가 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$key&lt;/code&gt; 값을 조작할 수 있다면, 원하는 내용의 스크립트를 php 파일에 삽입할 수 있게 됩니다.&lt;/p&gt;
+
+&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;지금까지 버그헌팅에서의 취약점 체이닝의 중요성에 대해 설명해보았습니다. 그리고 그 예시로 국내 오픈소스 CMS 중 하나인 이윰빌더에 대해서도 말씀드려보았습니다. 비록 취약점에 대한 자세한 설명은 드리지 않았지만, 그 이후의 과정보다는 취약점을 체이닝해나가는 그 과정 자체가 더욱 중요한 것 같습니다.&lt;/p&gt;
+
+&lt;p&gt;버그헌팅 뿐만 아니라 모의해킹 업무를 하면서도 많이 느끼곤 합니다. 고객사에 단일 취약점을 설명하는 것보다는 하나 또는 두 개 이상의 시나리오와 연계하여 취약점에 대한 파급력을 설명하는 경우가 당사자 간의 취약점의 위험성과 조치에 대한 시급함을 명확하게 설명할 수 있는 것 같습니다.&lt;/p&gt;
+
+&lt;p&gt;다만 취약점 체이닝은 보통 시스템에 대한 깊은 이해가 필요하므로 많은 시간을 투자해야 하곤 합니다. 이 때문에 제한된 시간 내에 취약점을 찾아야 하는 모의해킹보다는 비교적 시간 제한이 없는 편인 버그헌팅에 많이 활용되는 것 같기도 합니다.&lt;/p&gt;
+
+&lt;iframe style=&quot;width:100%&quot; height=&quot;420&quot; src=&quot;http://www.youtube.com/embed/3y-pW1qZf1U&quot; frameborder=&quot;0&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;저는 최근 파스텔플래닛(pastelplanet)에서 만든 &lt;a href=&quot;https://zerowhale.io/&quot;&gt;zerowhale&lt;/a&gt;이라는 플랫폼에서 버그헌팅을 하곤 합니다. 이 플랫폼은 비교적 외부에 잘 알려져 있지는 않지만, 버그헌터들 사이에서는 프라이빗 버그바운티를 위주로 진행되곤 합니다. 프라이빗은 말그대로 신뢰 가능한 몇몇 버그헌터들만 초대하여 비밀 유지 서약을 맺고 특정 제품 또는 웹사이트 대상으로 버그헌팅을 수행하는 프로그램입니다.&lt;/p&gt;
+
+&lt;p&gt;다른 플랫폼들도 많지만 개인적으로 저는 버그헌팅 기간이 길고 충분한 분석을 요구하고 무엇보다 보상이 좋은 곳을 선택하게 되는 것 같습니다.&lt;/p&gt;
+
+&lt;p&gt;이상으로 글을 마무리하겠습니다!&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Specially thanks to 이진성 님.&lt;/em&gt;&lt;/p&gt;</content><author><name>Donggyu Kim</name></author><category term="R&amp;D" /><summary type="html">버그헌팅: 취약점 체이닝의 중요성 No impact, No bug</summary></entry><entry xml:lang="ko"><title type="html">Django, CVE-2023-36053 Potential ReDoS in EmailValidator / URLValidator</title><link href="http://ufo.stealien.com/2023-07-03/django-cve-2023-36053" rel="alternate" type="text/html" title="Django, CVE-2023-36053 Potential ReDoS in EmailValidator / URLValidator" /><published>2023-07-02T11:00:00-04:00</published><updated>2023-07-02T11:00:00-04:00</updated><id>http://ufo.stealien.com/2023-07-03/cve-2023-36053-ko</id><content type="html" xml:base="http://ufo.stealien.com/2023-07-03/django-cve-2023-36053">&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;div style=&quot;text-align: left&quot;&gt;
     &lt;b&gt;목차&lt;/b&gt;
 &lt;/div&gt;
@@ -139,7 +336,7 @@
 &lt;p&gt;__&lt;/p&gt;
 &lt;h1 id=&quot;7-마무리&quot;&gt;7. 마무리&lt;/h1&gt;
 
-&lt;p&gt;지금까지 제가 Django에 대해 취약점을 분석한 과정과 Security Report를 보내고 CVE 코드를 할당받기까지의 과정을 작성해보았습니다. 제게 큰 용기와 동기부여를 주셨던 예랑님과 상호님, 그리고 스틸리언 R&amp;amp;D팀 식구들에게 대단히 감사드립니다. 🙇‍♂️&lt;/p&gt;</content><author><name>Seokchan Yoon</name></author><category term="R&amp;D" /><summary type="html">목차 1. Introduction 2. Core Engine 분석 3. 1-day 버그케이스 분석 4. 시나리오 기획 5. 분석 6. 제보 7. 마무리</summary></entry><entry xml:lang="ko"><title type="html">NITE Team 4: OPERATION CASTLE IVY Chapter 1 리뷰</title><link href="http://ufo.stealien.com/2023-03-19/nite-team-4-operation-castle-ivy-chapter-1" rel="alternate" type="text/html" title="NITE Team 4: OPERATION CASTLE IVY Chapter 1 리뷰" /><published>2023-03-19T00:00:00+09:00</published><updated>2023-03-19T00:00:00+09:00</updated><id>http://ufo.stealien.com/2023-03-19/nite-team-4-operation-castle-ivy-chapter-1-ko</id><content type="html" xml:base="http://ufo.stealien.com/2023-03-19/nite-team-4-operation-castle-ivy-chapter-1">&lt;h1 id=&quot;nite-team-4&quot;&gt;NITE Team 4&lt;/h1&gt;
+&lt;p&gt;지금까지 제가 Django에 대해 취약점을 분석한 과정과 Security Report를 보내고 CVE 코드를 할당받기까지의 과정을 작성해보았습니다. 제게 큰 용기와 동기부여를 주셨던 예랑님과 상호님, 그리고 스틸리언 R&amp;amp;D팀 식구들에게 대단히 감사드립니다. 🙇‍♂️&lt;/p&gt;</content><author><name>Seokchan Yoon</name></author><category term="R&amp;D" /><summary type="html">목차 1. Introduction 2. Core Engine 분석 3. 1-day 버그케이스 분석 4. 시나리오 기획 5. 분석 6. 제보 7. 마무리</summary></entry><entry xml:lang="ko"><title type="html">NITE Team 4: OPERATION CASTLE IVY Chapter 1 리뷰</title><link href="http://ufo.stealien.com/2023-03-19/nite-team-4-operation-castle-ivy-chapter-1" rel="alternate" type="text/html" title="NITE Team 4: OPERATION CASTLE IVY Chapter 1 리뷰" /><published>2023-03-18T11:00:00-04:00</published><updated>2023-03-18T11:00:00-04:00</updated><id>http://ufo.stealien.com/2023-03-19/nite-team-4-operation-castle-ivy-chapter-1-ko</id><content type="html" xml:base="http://ufo.stealien.com/2023-03-19/nite-team-4-operation-castle-ivy-chapter-1">&lt;h1 id=&quot;nite-team-4&quot;&gt;NITE Team 4&lt;/h1&gt;
 
 &lt;p align=&quot;center&quot;&gt;
     &lt;img src=&quot;/assets/2023-03-19-nite-team-4-operation-castle-ivy-chapter-1/nite-team-4.webp&quot; /&gt;&lt;br /&gt;
@@ -478,7 +675,7 @@ SAD는 Bureau 121의 소행으로 추정하고 있지만, 뒷덜미를 잡을만
 
 &lt;p&gt;혹시 “NITE Team 4”를 이미 플레이 해 보신 분은 &lt;a href=&quot;https://tryhackme.com/&quot;&gt;TryHackMe&lt;/a&gt;, &lt;a href=&quot;https://www.hackthebox.com/&quot;&gt;HackTheBox&lt;/a&gt;와 같은 플랫폼에서 실전 해킹을 탐구하고 연습 해 보셔도 좋겠네요.&lt;/p&gt;
 
-&lt;p&gt;이 포스팅은 시리즈로 이어집니다! 여러분의 많은 관심 부탁드립니다 :)&lt;/p&gt;</content><author><name>김도현</name></author><category term="R&amp;D" /><summary type="html">NITE Team 4</summary></entry><entry xml:lang="ko"><title type="html">Analyzing Django ORM with 1-day vulnerabilities and sql bug</title><link href="http://ufo.stealien.com/2022-12-16/analyzing-django-orm-with-1-day" rel="alternate" type="text/html" title="Analyzing Django ORM with 1-day vulnerabilities and sql bug" /><published>2022-12-16T00:00:00+09:00</published><updated>2022-12-16T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-12-16/analyzing-django-orm-with-1-day-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-12-16/analyzing-django-orm-with-1-day">&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;이 포스팅은 시리즈로 이어집니다! 여러분의 많은 관심 부탁드립니다 :)&lt;/p&gt;</content><author><name>김도현</name></author><category term="R&amp;D" /><summary type="html">NITE Team 4</summary></entry><entry xml:lang="ko"><title type="html">Analyzing Django ORM with 1-day vulnerabilities and sql bug</title><link href="http://ufo.stealien.com/2022-12-16/analyzing-django-orm-with-1-day" rel="alternate" type="text/html" title="Analyzing Django ORM with 1-day vulnerabilities and sql bug" /><published>2022-12-15T10:00:00-05:00</published><updated>2022-12-15T10:00:00-05:00</updated><id>http://ufo.stealien.com/2022-12-16/analyzing-django-orm-with-1-day-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-12-16/analyzing-django-orm-with-1-day">&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;div style=&quot;text-align: left&quot;&gt;목차&lt;/div&gt;
 &lt;div style=&quot;text-align: left&quot;&gt;
     &lt;a href=&quot;#0-introduction&quot;&gt;0. Introduction&lt;/a&gt;
@@ -749,7 +946,7 @@ SAD는 Bureau 121의 소행으로 추정하고 있지만, 뒷덜미를 잡을만
 
 &lt;p&gt;하지만 프레임워크라는 것이 프로그래머마다 구현하기 나름이라, 사용하고 있는 Django의 버전에 1-day 취약점이 존재해도 어떻게 구현하느냐에 따라 취약점이 발생하지 않을 수 있습니다. 이것을 보통 generic하지 않다고 표현하기도 하는데, 프레임워크 분석할 때 이 부분이 조금 아쉬운 부분이긴 합니다.&lt;/p&gt;
 
-&lt;p&gt;이 글은 Obsidian으로 제텔카스텐 기법을 써서 작성되었습니다. 제텔카스텐을 알려주시고 개인적으로 제게 큰 힘과 용기를 북돋아주신 호정님께 이 글을 빌려 감사인사를 드리고 싶습니다.&lt;/p&gt;</content><author><name>Seokchan Yoon</name></author><category term="R&amp;D" /><summary type="html">목차 0. Introduction 1. How does Django execute SQL query? 2. CVE-2022-28346 3. CVE-2022-28347 4. CVE-2022-34265 5. Django Single Quote Unescaped Bug 6. 끝으로</summary></entry><entry xml:lang="ko"><title type="html">Secure Coding Training System 개발기</title><link href="http://ufo.stealien.com/2022-10-04/secure-coding-traing-system" rel="alternate" type="text/html" title="Secure Coding Training System 개발기" /><published>2022-10-04T00:00:00+09:00</published><updated>2022-10-04T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-10-04/Secure-Coding-Training-System-ko%20copy</id><content type="html" xml:base="http://ufo.stealien.com/2022-10-04/secure-coding-traing-system">&lt;h1 id=&quot;개요&quot;&gt;개요&lt;/h1&gt;
+&lt;p&gt;이 글은 Obsidian으로 제텔카스텐 기법을 써서 작성되었습니다. 제텔카스텐을 알려주시고 개인적으로 제게 큰 힘과 용기를 북돋아주신 호정님께 이 글을 빌려 감사인사를 드리고 싶습니다.&lt;/p&gt;</content><author><name>Seokchan Yoon</name></author><category term="R&amp;D" /><summary type="html">목차 0. Introduction 1. How does Django execute SQL query? 2. CVE-2022-28346 3. CVE-2022-28347 4. CVE-2022-34265 5. Django Single Quote Unescaped Bug 6. 끝으로</summary></entry><entry xml:lang="ko"><title type="html">Secure Coding Training System 개발기</title><link href="http://ufo.stealien.com/2022-10-04/secure-coding-traing-system" rel="alternate" type="text/html" title="Secure Coding Training System 개발기" /><published>2022-10-03T11:00:00-04:00</published><updated>2022-10-03T11:00:00-04:00</updated><id>http://ufo.stealien.com/2022-10-04/Secure-Coding-Training-System-ko%20copy</id><content type="html" xml:base="http://ufo.stealien.com/2022-10-04/secure-coding-traing-system">&lt;h1 id=&quot;개요&quot;&gt;개요&lt;/h1&gt;
 
 &lt;p&gt;안녕하세요. 스틸리언 R&amp;amp;D팀 윤석찬입니다. 저는 스틸리언에서 모의해킹, 보안 기술 연구 뿐만 아니라 다양한 제품을 개발하고 있기도 합니다. 제가 개발에 참여한 대표적인 것 중 하나는 &lt;em&gt;Cyber Drill System&lt;/em&gt;이라는 교육 플랫폼입니다. 스틸리언에서는 이 플랫폼을 이용해 학생 혹은 실무자 분들을 대상으로 교육하고 있습니다. 입사하고 약 2개월이 되던 때 즈음 이 프로젝트에 참가하게 되었는데, 벌써 3년째가 되었네요 😄  저는 이 프로젝트를 좀 더 고도화하고 새로운 형식의 플랫폼을 위해서 노력하고 있습니다.&lt;/p&gt;
 
@@ -871,7 +1068,7 @@ SAD는 Bureau 121의 소행으로 추정하고 있지만, 뒷덜미를 잡을만
 
 &lt;blockquote&gt;
   &lt;p&gt;거인의 어깨 위에 서서 더 높은 가치를 만들어낼 수 있습니다.&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>윤석찬</name></author><category term="R&amp;D" /><summary type="html">개요</summary></entry><entry xml:lang="ko"><title type="html">LLVM을 사용한 Control Flow Flattening 패스 개발</title><link href="http://ufo.stealien.com/2022-07-13/llvm-flow-flatten" rel="alternate" type="text/html" title="LLVM을 사용한 Control Flow Flattening 패스 개발" /><published>2022-07-13T00:00:00+09:00</published><updated>2022-07-13T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-07-13/LLVM-flow-flatten-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-07-13/llvm-flow-flatten">&lt;h1 id=&quot;llvm을-사용한-control-flow-flattening-패스-개발&quot;&gt;LLVM을 사용한 Control Flow Flattening 패스 개발&lt;/h1&gt;
+&lt;/blockquote&gt;</content><author><name>윤석찬</name></author><category term="R&amp;D" /><summary type="html">개요</summary></entry><entry xml:lang="ko"><title type="html">LLVM을 사용한 Control Flow Flattening 패스 개발</title><link href="http://ufo.stealien.com/2022-07-13/llvm-flow-flatten" rel="alternate" type="text/html" title="LLVM을 사용한 Control Flow Flattening 패스 개발" /><published>2022-07-12T11:00:00-04:00</published><updated>2022-07-12T11:00:00-04:00</updated><id>http://ufo.stealien.com/2022-07-13/LLVM-flow-flatten-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-07-13/llvm-flow-flatten">&lt;h1 id=&quot;llvm을-사용한-control-flow-flattening-패스-개발&quot;&gt;LLVM을 사용한 Control Flow Flattening 패스 개발&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/llvm/llvm-project&quot;&gt;LLVM&lt;/a&gt;을 이용하여 난독화를 할 수 있으면 이를 기반으로 다양한 플랫폼에서 LLVM을 사용하여 빌드되는 코드들에 대한 공통 난독화 툴을 만들 수 있을 것이라고 생각하였습니다.&lt;/p&gt;
 
@@ -1051,7 +1248,124 @@ if (successors == 1)
       &lt;td&gt;평면화 모듈 적용 후 흐름 그래프&lt;/td&gt;
     &lt;/tr&gt;
   &lt;/tbody&gt;
-&lt;/table&gt;</content><author><name>조장현</name></author><category term="Dev" /><summary type="html">LLVM을 사용한 Control Flow Flattening 패스 개발 LLVM을 이용하여 난독화를 할 수 있으면 이를 기반으로 다양한 플랫폼에서 LLVM을 사용하여 빌드되는 코드들에 대한 공통 난독화 툴을 만들 수 있을 것이라고 생각하였습니다. 이를 위해 여러가지 난독화 및 암호화 패스를 개발하였고 이 글에서는 그 중 한 가지인 흐름 평면화 패스의 개발 과정에 대해 소개하겠습니다. LLVM이란 LLVM의 정식 명칭은 Low Level Virtual Machine입니다. 하지만 이 프로젝트의 핵심은 기존의 virtual machine 개념보다는 모듈화 되고 재사용 가능한 컴파일러 기술을 의미합니다. 그리고 이것은 target independent한 optimizer, target specific 한 어셈블리 코드를 생성하는 code generator 같은 컴파일러 도구들과 프로그래밍 언어와 어셈블리 코드 사이에 LLVM intermediate representation으로 알려진 LLVM IR이라는 중간 단계의 언어로 이루어져 있습니다. 이 글에서는 LLVM에서 모듈화된 컴파일러를 제작할 수 있는 구조인 패스를 통해 흐름 난독화를 하였습니다. Control Flow Flattening란 흐름 평면화, control flow flattening은 코드의 흐름을 평면화 시키는 난독화 기술입니다. Loop, conditional branch 같은 코드의 흐름을 전부 하나의 거대한 switch 문에 집어넣어서 모든 다른 블록으로의 이동이 단 하나의 블록으로부터 이루어지도록 만들어 코드를 분석하기 어렵게 만듭니다. 흐름 그래프가 마지막 사진과 같은 구조로 변경됩니다. 환경 구성 이 글에서는 llvm 13 버전을 바탕으로 LLVM을 빌드 하였습니다. 아래 cmake 명령이 정상적으로 실행된 후 ninja를 통해 빌드할 수 있습니다. LLVM 개발은 샘플 패스인 llvm/lib/Transforms/Hello를 덮어씌워 흐름 평면화를 위한 커스텀 패스를 개발하였습니다. cmake -G Ninja -DLLVM_PARALLEL_LINK_JOBS=1 -DCMAKE_BUILD_TYPE=Debug -DLLVM_ENABLE_PROJECTS=clang ../llvm-project/llvm 흐름 평면화 적용 시 발생하는 오류 LLVM에서 Function 클래스 아래에 존재하는 Basic Block들을 흐름 평면화의 개념에 따라 하나의 거대한 Switch Instruction 아래에 집어넣음으로써 구현해 낼 수 있습니다. 이처럼 수정을 시도할 경우 LLVM Verifier에서 수정된 내용이 유효한지 검증합니다. 흐름 그래프와 관련된 검증에는 preds라는 어떤 블록에서 이 블록으로 이동할 수 있는지에 대한 정보가 주로 사용되는데, 이와 관련된 아래 3가지 검증에서 오류가 자주 발생합니다. phi node의 경우 모든 케이스와 preds가 일치해야 한다. PHINode should have one entry for each predecessor of its parent basic block! %62 = phi i32 [ %30, %23 ], [ %35, %32 ], [ %40, %37 ], [ %60, %54 ], !dbg !1211 LLVM ERROR: Broken module found, compilation aborted! 블록 A에서 호출하는 변수는 entry block에서 블록 A에 도달하기 전에 정의되어야 한다. Instruction does not dominate all uses! %alloc = alloca i64, align 8 %load = load i64, i64* %alloc, align 8 LLVM ERROR: Broken module found, compilation aborted! Landingpad를 가진 블록은 반드시 invoke에 의해서 호출되어야 한다. Block containing LandingPadInst must be jumped to only by the unwind edge of an invoke. LLVM ERROR: Broken module found, compilation aborted! 이 문제들 중 1번과 2번은 opt에 기본으로 내장되어 있는 –reg2mem 옵션을 사용함으로써 대부분 해결할 수 있습니다. 이 옵션은 phi 노드들을 제거하고 모든 allocation을 entry block에서 하도록 수정해줍니다. 이를 적용함으로써 흐름 평면화를 진행하기 쉬워집니다. 다만 이 옵션을 적용하여도 남아있는 phi node가 있는 경우가 있어 이에 대한 예외처리를 해야 합니다. 3번의 경우 switch-case 블록에서 호출할 수 없기 때문에 예외처리를 해야 합니다. 평면화 코드 구현 우선 switch-case 문에서 호출할 수 있는 블록들을 확인해야합니다. Function 클래스에 iterator를 돌면서 위의 3번, LandingPad를 가졌는지 확인하고 아닌 것들을 벡터 형태로 수집합니다. Allocation이 이루어지는 블록은 따로 분리해 두어야 하기 때문에 entry block을 제거해주어야 합니다. vector&amp;lt;BasicBlock *&amp;gt; origBB; for (Function::iterator i = F.begin(); i != F.end(); ++i) { BasicBlock *block = &amp;amp;*i; if (!block-&amp;gt;isLandingPad()) { origBB.push_back(block); } } origBB.erase(origBB.begin()); return origBB; 그 다음 IRBuilder를 사용하여 Switch Instruction을 가지게 될 Basic Block을 만들어야 합니다. Switch 블록에는 default로 어떤 블록으로 점프할 것인지를 지정해 주어야 하는데 이것 역시 새로운 빈 블록, swDefault를 생성하여 지정해 주었습니다. BasicBlock *swDefault = BasicBlock::Create(Context, &quot;StealienCFGSwitchDefault&quot;, &amp;amp;F, *origBB.begin()); IRBuilder&amp;lt;&amp;gt; IRBswDefault(swDefault); IRBswDefault.CreateBr(*origBB.begin()); BasicBlock *startSwitch = BasicBlock::Create(Context, &quot;StealienCFGswitch&quot;, &amp;amp;F, swDefault); IRBuilder&amp;lt;&amp;gt; IRBswitch(startSwitch); 그 다음 Switch에서 사용할 변수를 Entry Block에서 allocation을 해 준 뒤, Switch 블록에서 이 값을 Value add로 가져오도록 설정합니다. AllocaInst *switchVar = new AllocaInst(llvm::Type::getInt64Ty(Context), AddrSpace, nullptr, AllocaAlign, &quot;&quot;, entryBlock-&amp;gt;getTerminator()); LoadInst *load = IRBswitch.CreateAlignedLoad(llvm::Type::getInt64Ty(Context), switchVar, MaybeAlign(8)); Value *add = IRBswitch.CreateAdd(load, ConstantInt::get(llvm::Type::getInt64Ty(Context), 762167)); 그 후 IRBSwitch에 Switch Instruction을 생성합니다. randomArr은 특정 범위의 수를 랜덤한 순서로 섞은 리스트이며, 이 값들을 사용해서 아래와 같이 case들을 추가해줍니다. switchI = IRBswitch.CreateSwitch(add, swDefault, randomArr[origBB.size()]); for (BasicBlock *setSwitchBlocks : origBB) { BasicBlock *selectedBlock = setSwitchBlocks; if(!this-&amp;gt;hasPHI(selectedBlock)) { ConstantInt *constCase = llvm::ConstantInt::get(llvm::Type::getInt64Ty(Context), randomArr[index]); switchI-&amp;gt;addCase(constCase, selectedBlock); } } 마지막으로 origBB에 있는 BasicBlock 들의 Terminator를 BranchInst인지 그리고 Successor 개수에 따라 분류할 수 있습니다. BranchInst는 1개 혹은 2개의 Successor를 가지며, 이것들이 수정 대상입니다. Branch Instruction이 아닌 경우 : return 혹은 unreachable 같은 종류되는 경우 혹은 invoke와 같이 수정이 불가능한 Terminating Instruction인 경우 Branch Instruction의 Successor가 1인 경우 : branch BlockA 같이 다른 블록으로 이동하는 경우 Branch Instruction의 Successor가 2인 경우 : branch condition BlockA BlockB 처럼 condition 값에 따라 이동하는 블록이 이동되는 경우 따라서 Branch Instruction에서 이동할 블록에 지정된 값을 Switch Instruction에서 찾아서 위에서 생성해둔 switchVar에 저장해주고 Switch Block으로 돌아가면 자동으로 이걸 로드해서 원하는 블록으로 이동하게 될 것입니다. Successor의 개수가 1인 경우에 대한 코드는 아래와 같습니다. 2인 경우에도 둘 다에 대해 동일하게 처리해주면 됩니다. 아래 코드에서는 Switch Instruction에서 가져온 intCase 값이 직접 드러나는 것을 숨기기 위해 추가적인 덧셈과 곱셈을 수행하도록 하였습니다. if(!isa&amp;lt;BranchInst&amp;gt;(selectedBlock-&amp;gt;getTerminator())){ continue; } uint64_t successors = selectedBlock-&amp;gt;getTerminator()-&amp;gt;getNumSuccessors(); if (successors == 1) { BasicBlock *follow = selectedBlock-&amp;gt;getTerminator()-&amp;gt;getSuccessor(0); ConstantInt *intCase = switchI-&amp;gt;findCaseDest(follow); if (intCase == NULL) { continue; } selectedBlock-&amp;gt;getTerminator()-&amp;gt;eraseFromParent(); IRBuilder&amp;lt;NoFolder&amp;gt; tempBuilder(selectedBlock); uint64_t origCase = intCase-&amp;gt;getSExtValue() - addVal; uint64_t randVal = 17+rand()%10000; Value * mul = tempBuilder.CreateMul(ConstantInt::get(llvm::Type::getInt64Ty(Context), origCase/randVal), ConstantInt::get(llvm::Type::getInt64Ty(Context), randVal)); Value * add = tempBuilder.CreateAdd(mul, ConstantInt::get(llvm::Type::getInt64Ty(Context), origCase%randVal)); tempBuilder.CreateAlignedStore(add, switchVar, MaybeAlign(8)); tempBuilder.CreateBr(startSwitch); } 전후비교 위와 같은 Control Flow Flattening 작업을 수행하면 아래와 같은 코드를 얻을 수 있습니다. Opt의 -dot-cfg 옵션을 사용하여 흐름 평면화 전용 전과 후를 비교하면 StealienCFGswitch 라는 Switch 블록이 추가된 것과 모든 블록이 다시 이 블록으로 돌아가는 난독화 기능이 적용된 것을 확인할 수 있습니다. 이러한 난독화 기능은 다른 난독화 기능들과 함께 적용하면 훨씬 더 분석하기 어려운 코드를 만들어 낼 수 있습니다. 기존 흐름 그래프 평면화 모듈 적용 후 흐름 그래프</summary></entry><entry xml:lang="ko"><title type="html">React로 pdf 다루기</title><link href="http://ufo.stealien.com/2022-06-30/pdf-with-react" rel="alternate" type="text/html" title="React로 pdf 다루기" /><published>2022-06-30T00:00:00+09:00</published><updated>2022-06-30T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-06-30/PDF-with-React-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-30/pdf-with-react">&lt;h1 id=&quot;react로-pdf-다루기&quot;&gt;React로 pdf 다루기&lt;/h1&gt;
+&lt;/table&gt;</content><author><name>조장현</name></author><category term="Dev" /><summary type="html">LLVM을 사용한 Control Flow Flattening 패스 개발 LLVM을 이용하여 난독화를 할 수 있으면 이를 기반으로 다양한 플랫폼에서 LLVM을 사용하여 빌드되는 코드들에 대한 공통 난독화 툴을 만들 수 있을 것이라고 생각하였습니다. 이를 위해 여러가지 난독화 및 암호화 패스를 개발하였고 이 글에서는 그 중 한 가지인 흐름 평면화 패스의 개발 과정에 대해 소개하겠습니다. LLVM이란 LLVM의 정식 명칭은 Low Level Virtual Machine입니다. 하지만 이 프로젝트의 핵심은 기존의 virtual machine 개념보다는 모듈화 되고 재사용 가능한 컴파일러 기술을 의미합니다. 그리고 이것은 target independent한 optimizer, target specific 한 어셈블리 코드를 생성하는 code generator 같은 컴파일러 도구들과 프로그래밍 언어와 어셈블리 코드 사이에 LLVM intermediate representation으로 알려진 LLVM IR이라는 중간 단계의 언어로 이루어져 있습니다. 이 글에서는 LLVM에서 모듈화된 컴파일러를 제작할 수 있는 구조인 패스를 통해 흐름 난독화를 하였습니다. Control Flow Flattening란 흐름 평면화, control flow flattening은 코드의 흐름을 평면화 시키는 난독화 기술입니다. Loop, conditional branch 같은 코드의 흐름을 전부 하나의 거대한 switch 문에 집어넣어서 모든 다른 블록으로의 이동이 단 하나의 블록으로부터 이루어지도록 만들어 코드를 분석하기 어렵게 만듭니다. 흐름 그래프가 마지막 사진과 같은 구조로 변경됩니다. 환경 구성 이 글에서는 llvm 13 버전을 바탕으로 LLVM을 빌드 하였습니다. 아래 cmake 명령이 정상적으로 실행된 후 ninja를 통해 빌드할 수 있습니다. LLVM 개발은 샘플 패스인 llvm/lib/Transforms/Hello를 덮어씌워 흐름 평면화를 위한 커스텀 패스를 개발하였습니다. cmake -G Ninja -DLLVM_PARALLEL_LINK_JOBS=1 -DCMAKE_BUILD_TYPE=Debug -DLLVM_ENABLE_PROJECTS=clang ../llvm-project/llvm 흐름 평면화 적용 시 발생하는 오류 LLVM에서 Function 클래스 아래에 존재하는 Basic Block들을 흐름 평면화의 개념에 따라 하나의 거대한 Switch Instruction 아래에 집어넣음으로써 구현해 낼 수 있습니다. 이처럼 수정을 시도할 경우 LLVM Verifier에서 수정된 내용이 유효한지 검증합니다. 흐름 그래프와 관련된 검증에는 preds라는 어떤 블록에서 이 블록으로 이동할 수 있는지에 대한 정보가 주로 사용되는데, 이와 관련된 아래 3가지 검증에서 오류가 자주 발생합니다. phi node의 경우 모든 케이스와 preds가 일치해야 한다. PHINode should have one entry for each predecessor of its parent basic block! %62 = phi i32 [ %30, %23 ], [ %35, %32 ], [ %40, %37 ], [ %60, %54 ], !dbg !1211 LLVM ERROR: Broken module found, compilation aborted! 블록 A에서 호출하는 변수는 entry block에서 블록 A에 도달하기 전에 정의되어야 한다. Instruction does not dominate all uses! %alloc = alloca i64, align 8 %load = load i64, i64* %alloc, align 8 LLVM ERROR: Broken module found, compilation aborted! Landingpad를 가진 블록은 반드시 invoke에 의해서 호출되어야 한다. Block containing LandingPadInst must be jumped to only by the unwind edge of an invoke. LLVM ERROR: Broken module found, compilation aborted! 이 문제들 중 1번과 2번은 opt에 기본으로 내장되어 있는 –reg2mem 옵션을 사용함으로써 대부분 해결할 수 있습니다. 이 옵션은 phi 노드들을 제거하고 모든 allocation을 entry block에서 하도록 수정해줍니다. 이를 적용함으로써 흐름 평면화를 진행하기 쉬워집니다. 다만 이 옵션을 적용하여도 남아있는 phi node가 있는 경우가 있어 이에 대한 예외처리를 해야 합니다. 3번의 경우 switch-case 블록에서 호출할 수 없기 때문에 예외처리를 해야 합니다. 평면화 코드 구현 우선 switch-case 문에서 호출할 수 있는 블록들을 확인해야합니다. Function 클래스에 iterator를 돌면서 위의 3번, LandingPad를 가졌는지 확인하고 아닌 것들을 벡터 형태로 수집합니다. Allocation이 이루어지는 블록은 따로 분리해 두어야 하기 때문에 entry block을 제거해주어야 합니다. vector&amp;lt;BasicBlock *&amp;gt; origBB; for (Function::iterator i = F.begin(); i != F.end(); ++i) { BasicBlock *block = &amp;amp;*i; if (!block-&amp;gt;isLandingPad()) { origBB.push_back(block); } } origBB.erase(origBB.begin()); return origBB; 그 다음 IRBuilder를 사용하여 Switch Instruction을 가지게 될 Basic Block을 만들어야 합니다. Switch 블록에는 default로 어떤 블록으로 점프할 것인지를 지정해 주어야 하는데 이것 역시 새로운 빈 블록, swDefault를 생성하여 지정해 주었습니다. BasicBlock *swDefault = BasicBlock::Create(Context, &quot;StealienCFGSwitchDefault&quot;, &amp;amp;F, *origBB.begin()); IRBuilder&amp;lt;&amp;gt; IRBswDefault(swDefault); IRBswDefault.CreateBr(*origBB.begin()); BasicBlock *startSwitch = BasicBlock::Create(Context, &quot;StealienCFGswitch&quot;, &amp;amp;F, swDefault); IRBuilder&amp;lt;&amp;gt; IRBswitch(startSwitch); 그 다음 Switch에서 사용할 변수를 Entry Block에서 allocation을 해 준 뒤, Switch 블록에서 이 값을 Value add로 가져오도록 설정합니다. AllocaInst *switchVar = new AllocaInst(llvm::Type::getInt64Ty(Context), AddrSpace, nullptr, AllocaAlign, &quot;&quot;, entryBlock-&amp;gt;getTerminator()); LoadInst *load = IRBswitch.CreateAlignedLoad(llvm::Type::getInt64Ty(Context), switchVar, MaybeAlign(8)); Value *add = IRBswitch.CreateAdd(load, ConstantInt::get(llvm::Type::getInt64Ty(Context), 762167)); 그 후 IRBSwitch에 Switch Instruction을 생성합니다. randomArr은 특정 범위의 수를 랜덤한 순서로 섞은 리스트이며, 이 값들을 사용해서 아래와 같이 case들을 추가해줍니다. switchI = IRBswitch.CreateSwitch(add, swDefault, randomArr[origBB.size()]); for (BasicBlock *setSwitchBlocks : origBB) { BasicBlock *selectedBlock = setSwitchBlocks; if(!this-&amp;gt;hasPHI(selectedBlock)) { ConstantInt *constCase = llvm::ConstantInt::get(llvm::Type::getInt64Ty(Context), randomArr[index]); switchI-&amp;gt;addCase(constCase, selectedBlock); } } 마지막으로 origBB에 있는 BasicBlock 들의 Terminator를 BranchInst인지 그리고 Successor 개수에 따라 분류할 수 있습니다. BranchInst는 1개 혹은 2개의 Successor를 가지며, 이것들이 수정 대상입니다. Branch Instruction이 아닌 경우 : return 혹은 unreachable 같은 종류되는 경우 혹은 invoke와 같이 수정이 불가능한 Terminating Instruction인 경우 Branch Instruction의 Successor가 1인 경우 : branch BlockA 같이 다른 블록으로 이동하는 경우 Branch Instruction의 Successor가 2인 경우 : branch condition BlockA BlockB 처럼 condition 값에 따라 이동하는 블록이 이동되는 경우 따라서 Branch Instruction에서 이동할 블록에 지정된 값을 Switch Instruction에서 찾아서 위에서 생성해둔 switchVar에 저장해주고 Switch Block으로 돌아가면 자동으로 이걸 로드해서 원하는 블록으로 이동하게 될 것입니다. Successor의 개수가 1인 경우에 대한 코드는 아래와 같습니다. 2인 경우에도 둘 다에 대해 동일하게 처리해주면 됩니다. 아래 코드에서는 Switch Instruction에서 가져온 intCase 값이 직접 드러나는 것을 숨기기 위해 추가적인 덧셈과 곱셈을 수행하도록 하였습니다. if(!isa&amp;lt;BranchInst&amp;gt;(selectedBlock-&amp;gt;getTerminator())){ continue; } uint64_t successors = selectedBlock-&amp;gt;getTerminator()-&amp;gt;getNumSuccessors(); if (successors == 1) { BasicBlock *follow = selectedBlock-&amp;gt;getTerminator()-&amp;gt;getSuccessor(0); ConstantInt *intCase = switchI-&amp;gt;findCaseDest(follow); if (intCase == NULL) { continue; } selectedBlock-&amp;gt;getTerminator()-&amp;gt;eraseFromParent(); IRBuilder&amp;lt;NoFolder&amp;gt; tempBuilder(selectedBlock); uint64_t origCase = intCase-&amp;gt;getSExtValue() - addVal; uint64_t randVal = 17+rand()%10000; Value * mul = tempBuilder.CreateMul(ConstantInt::get(llvm::Type::getInt64Ty(Context), origCase/randVal), ConstantInt::get(llvm::Type::getInt64Ty(Context), randVal)); Value * add = tempBuilder.CreateAdd(mul, ConstantInt::get(llvm::Type::getInt64Ty(Context), origCase%randVal)); tempBuilder.CreateAlignedStore(add, switchVar, MaybeAlign(8)); tempBuilder.CreateBr(startSwitch); } 전후비교 위와 같은 Control Flow Flattening 작업을 수행하면 아래와 같은 코드를 얻을 수 있습니다. Opt의 -dot-cfg 옵션을 사용하여 흐름 평면화 전용 전과 후를 비교하면 StealienCFGswitch 라는 Switch 블록이 추가된 것과 모든 블록이 다시 이 블록으로 돌아가는 난독화 기능이 적용된 것을 확인할 수 있습니다. 이러한 난독화 기능은 다른 난독화 기능들과 함께 적용하면 훨씬 더 분석하기 어려운 코드를 만들어 낼 수 있습니다. 기존 흐름 그래프 평면화 모듈 적용 후 흐름 그래프</summary></entry><entry xml:lang="ko"><title type="html">Stealien Security Seminar 1회 리뷰</title><link href="http://ufo.stealien.com/2022-06-30/stealien-security-seminar" rel="alternate" type="text/html" title="Stealien Security Seminar 1회 리뷰" /><published>2022-06-29T11:00:00-04:00</published><updated>2022-06-29T11:00:00-04:00</updated><id>http://ufo.stealien.com/2022-06-30/2022_3s_review-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-30/stealien-security-seminar">&lt;h1 id=&quot;stealien-security-seminar-1회-리뷰&quot;&gt;Stealien Security Seminar 1회 리뷰&lt;/h1&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/banner.png&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;Banner&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;안녕하세요! 저는 스틸리언의 김도현 선임연구원입니다.&lt;/p&gt;
+
+&lt;p&gt;2022년 6월 29일, 스틸리언에서 주관하는 첫 세미나가 성공적으로 진행되었습니다.&lt;/p&gt;
+
+&lt;p&gt;대망의 첫 세미나에서는 SSL&lt;sup id=&quot;fnref:1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 수료생 분들의 연구에 대해 소개하는 &lt;strong&gt;SSL 세션&lt;/strong&gt;과, 스틸리언 연구원들의 연구에 대해 소개하는 &lt;strong&gt;Open 세션&lt;/strong&gt; 그리고 오프라인에서만 진행하는 &lt;strong&gt;Secret 세션&lt;/strong&gt;이 있었는데요, 이번 세미나는 &lt;a href=&quot;https://www.youtube.com/watch?v=6YgSTZ9i7Vk&quot;&gt;유튜브를 통해 온라인&lt;/a&gt;으로도 송출하였기 때문에 혹시나 내용을 중간에 놓치셨거나, 시간이 없어 참석하지 못하신 분들은 다시보기를 통해 언제든 자유롭게 저희의 발표를 즐겨주시면 감사하겠습니다.&lt;/p&gt;
+
+&lt;p&gt;혹시나 아직 이번 세미나의 재미있는 발표 주제들을 듣지 못 하신분들을 위해서 이렇게 주제들에 대한 간단한 소개와 요약을 작성해 보았습니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;open-static-vulnerability-analysis&quot;&gt;[Open] Static Vulnerability Analysis&lt;/h2&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/dhkim.jpg&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;발표 현장&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;세미나의 첫발은 제가 내디뎠습니다.&lt;/p&gt;
+
+&lt;p&gt;저의 주요 관심사 중 한가지는 다양한 어플리케이션 또는 임베디드 장비의 취약점을 찾는 것입니다.
+이런류의 버그바운티 또는 프로젝트를 해 보신분들은 잘 아시겠지만, 생각보다는 국내의 타겟들은 아직도 복잡도가 낮은 취약점들이 많이 나오고 있습니다.&lt;/p&gt;
+
+&lt;p&gt;이런 취약점들을 effortless하게 발굴하기 위해서 저는 Static Vulnerability Analysis 또는 Static Program Analysis for Vulnerability Research라는 방법을 이용했습니다. 이번 발표에서는 Static Vulnerability Analysis에 대한 기본적인 소개와, Fuzzing과 비교하여 이 기법의 장점과 단점에 대해 설명하고, 간단한 몇가지 테크닉에 대해 발표했습니다.&lt;/p&gt;
+
+&lt;p&gt;또한 마지막에는 소개드린 주제를 바탕으로 SSL 3기에서 진행할 내용에 대해 소개 드렸습니다.&lt;/p&gt;
+
+&lt;p&gt;영상에서는 &lt;a href=&quot;https://youtu.be/6YgSTZ9i7Vk?t=1729&quot;&gt;28:49&lt;/a&gt;부터 저의 발표가 시작되니, 재미있게 들어주시면 감사하겠습니다 🤩&lt;/p&gt;
+
+&lt;h2 id=&quot;ssl-idapython으로-분석을-더-편하게-하는-방법&quot;&gt;[SSL] IDAPython으로 분석을 더 편하게 하는 방법&lt;/h2&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/snwo.jpg&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;발표 현장&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;두번째 발표는 SSL 2기 수료생 황선우님이 진행해 주셨습니다.&lt;/p&gt;
+
+&lt;p&gt;IDA Pro에서 제공하는 API를 이용하여 malware 분석, plugin에 대한 소개 및 CTF 문제를 IDAPython으로 해결하는 방법에 대해 소개 해 주셨습니다.
+특히 Windows OS의 application이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;GetModuleHandleA()&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LoadLibraryA()&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;GetProcAddress()&lt;/code&gt; chain을 이용해 binary에서 실행하고자 하는 procedure의 주소를 가져올 때, IDAPython을 이용하여 난독화 된 대상 library 및 procedure의 이름(문자열)을 복구할 수 있는 방법을 소개 해 주셨던 점이 저에게는 인상깊었습니다.&lt;/p&gt;
+
+&lt;p&gt;이후에는 &lt;a href=&quot;https://ctftime.org/event/1583&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;b01lers CTF - TM&lt;/code&gt;&lt;/a&gt;, &lt;a href=&quot;https://ctftime.org/task/20424&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DCTF - Glade&lt;/code&gt;&lt;/a&gt; 문제를 직접 IDAPython을 이용하여 분석하는 예를 보여주시기도 하였습니다.&lt;/p&gt;
+
+&lt;p&gt;영상에서는 &lt;a href=&quot;https://youtu.be/6YgSTZ9i7Vk?t=4105&quot;&gt;1:08:25&lt;/a&gt;부터 선우님의 발표가 시작되니, IDAPython의 강력한 기능을 이용해 보고 싶으신 분들은 한번 꼭 시청 해 보셔야겠네요 😎&lt;/p&gt;
+
+&lt;h2 id=&quot;ssl-권한-상승-취약점-분석-방법론--a&quot;&gt;[SSL] 권한 상승 취약점 분석 방법론 + a&lt;/h2&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/jhjang.jpg&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;발표 현장&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;세번째 발표 또한 SSL 2기 수료생 장재훈님이 진행해 주셨습니다.&lt;/p&gt;
+
+&lt;p&gt;장재훈님께서는 SSL 2기의 주제인 ‘권한 상승 취약점 분석 방법론’을 바탕으로 추가로 연구한 내용을 더해 이번 발표를 해 주셨습니다.
+방법론&lt;sup id=&quot;fnref:2&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:2&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;에는 권한 상승 취약점을 관리적 측면, 기술적 측면으로 나누어 소개하고 있는데, 각 취약점에 대한 디테일이 더해져 보는 맛이 있는 발표였던 것 같습니다.&lt;/p&gt;
+
+&lt;p&gt;또한 이번 발표에는 ‘File Junction’, ‘Named Pipe Impersonation’ 등 개발자가 유의하지 않으면 발생하기 쉽고, 치명적인 버그 클래스들에 대해서도 소개 해 주셨습니다.&lt;/p&gt;
+
+&lt;p&gt;요즘의 시스템들은 권한 분리가 잘 되어있는 경우가 많아지고 있지만, 권한이 분리 된 환경에서도 여전히 실수가 발생하면 성공적으로 공격을 수행시킬 수 있다는 사실을 이번 발표를 통해 잘 보여주신 것 같습니다.&lt;/p&gt;
+
+&lt;p&gt;영상에서는 &lt;a href=&quot;https://youtu.be/6YgSTZ9i7Vk?t=7145&quot;&gt;1:59:05&lt;/a&gt;부터 재훈님의 발표가 시작됩니다. SSL을 통해 어떤 프로젝트를 진행하며 뭘 배워갈 수 있을지에 대해 궁금하신 분들은 한번 시청 해 보시는 것을 추천 드립니다! 👏&lt;/p&gt;
+
+&lt;h2 id=&quot;open-모던-웹-환경에서의-버그케이스와-시큐어코딩&quot;&gt;[Open] 모던 웹 환경에서의 버그케이스와 시큐어코딩&lt;/h2&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/scyoon.jpg&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;발표 현장&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;네번째 발표는 저희 회사에서 많은 귀여움을 받고 있는 윤석찬 선임 연구원이 발표 해 주셨습니다.&lt;/p&gt;
+
+&lt;p&gt;윤석찬 연구원은 점점 스택이 높게 쌓여지는 모던 웹 어플리케이션에서 어떤 방식의 취약점을 찾을 수 있고, 이를 보완하는 방법에 대해 소개해 주셨습니다. 눈높이에 맞춰 하나씩 차근차근 알려주는 윤석찬 연구원의 스윗함에 빠질것 같았지만 겨우겨우 살아 돌아왔네요. 이 발표는 윤석찬 연구원이 직접 여러 프로젝트를 진행하며 배운 내용을 바탕으로 하고 있으니, 굉장히 practical한 발표라고 볼 수도 있겠네요!&lt;/p&gt;
+
+&lt;p&gt;백엔드, 프론트엔드에서 발생할 수 있는 일반적인 취약점들과, Django, React.js와 같은 특정한 플랫폼, 프레임워크에서만 발생할 수 있는 취약점들을 잘 알려 주셔서 너무 좋았다는 평이 가득합니다.&lt;/p&gt;
+
+&lt;p&gt;영상에서는 &lt;a href=&quot;https://youtu.be/6YgSTZ9i7Vk?t=10110&quot;&gt;2:48:30&lt;/a&gt;부터 석찬님의 발표가 시작됩니다. 평소 CTF를 통해 웹해킹은 어느정도 할 수 있지만, real-world에 입문하고 싶은 웹해커들에게 이 발표를 추천하는 바입니다. 🐞&lt;/p&gt;
+
+&lt;h2 id=&quot;open-mev&quot;&gt;[Open] MEV&lt;/h2&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/hjhan.jpg&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;발표 현장&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;다섯번째 발표는 스틸리언의 한호정 연구원님이 진행해주셨습니다&lt;/p&gt;
+
+&lt;p&gt;한호정 연구원님은 해당 발표에서 Blockchain에 대한 취약점 분석 외에 MEV(Miner Extractable Value)에 대해서 소개해주셨습니다
+Blockchain에 대한 Security Audit 산업이 MEV에 대한 research로도 발전할 것이라고 보는 한호정 연구원님의 견해는 매우 흥미로운것같습니다&lt;/p&gt;
+
+&lt;p&gt;해당 발표에서는 MEV가 무엇인지, 또 MEV에는 어떠한 종류들이 있었는지, MEV를 완화시키거나 제거하기위해서 어떠한것들이 존재하는지, 마지막으로 한호정연구원님이 직접 MEV에 대해서 추출한 경험담에 대해서 소개합니다&lt;/p&gt;
+
+&lt;p&gt;영상에서는 &lt;a href=&quot;https://youtu.be/6YgSTZ9i7Vk?t=12465&quot;&gt;3:27:38&lt;/a&gt;부터 호정님의 발표가 시작됩니다. 평소 Blockchain에 대해서 관심있는 분들이라면 한번 시청해보시는것을 추천드립니다. 💰&lt;/p&gt;
+
+&lt;h2 id=&quot;closing&quot;&gt;Closing&lt;/h2&gt;
+
+&lt;p&gt;이제 첫번째 Stealien Securit Seminar를 모두 돌아 봤습니다. 흥미진진한 주제로 발표해 주신 발표자님들 모두에게 감사드리며, 스틸리언에 관심을 가져주시고 방문해주신 분들에게 무한한 감사를 보냅니다. 또한, 비록 현장에 계시진 못했지만 온라인으로 저희를 응원해 주신 분들에게도 감사를 드립니다.&lt;/p&gt;
+
+&lt;p&gt;앞으로도 멋지게 발전해 나가는 스틸리언과 스틸리언의 해커들이 되도록 하겠습니다.&lt;/p&gt;
+
+&lt;p&gt;감사합니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;footnotes&quot;&gt;Footnotes&lt;/h2&gt;
+
+&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;Stealien Security Leader, 스틸리언 주관 멘토링 프로그램 &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:2&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;&lt;a href=&quot;https://drive.google.com/file/d/1Mk46m5tFapZZ0y4upKxD3R6YsXb4EVZ1/view?usp=sharing&quot;&gt;Paper: 권한 상승 취약점 점검 가이드 및 탐지 방법 제안&lt;/a&gt;, &lt;a href=&quot;https://drive.google.com/file/d/1LscZyKqve60LQsPU98-RgONbP43Mivy1/view?usp=sharing&quot;&gt;Doc: 권한 상승 취약점 점검 가이드&lt;/a&gt; &lt;a href=&quot;#fnref:2&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;</content><author><name>김도현</name></author><category term="R&amp;D" /><summary type="html">Stealien Security Seminar 1회 리뷰</summary></entry><entry xml:lang="ko"><title type="html">React로 pdf 다루기</title><link href="http://ufo.stealien.com/2022-06-30/pdf-with-react" rel="alternate" type="text/html" title="React로 pdf 다루기" /><published>2022-06-29T11:00:00-04:00</published><updated>2022-06-29T11:00:00-04:00</updated><id>http://ufo.stealien.com/2022-06-30/PDF-with-React-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-30/pdf-with-react">&lt;h1 id=&quot;react로-pdf-다루기&quot;&gt;React로 pdf 다루기&lt;/h1&gt;
 
 &lt;p&gt;올해 초, &lt;strong&gt;월간 레포트 리뉴얼&lt;/strong&gt; 이라는 업무를 새롭게 배정받게 되었습니다.
 디자인은 회사 대표 디자이너이신 재성님이 아주 아름답게 만들어주셨지만, 코드로 PDF를 만들거나 다뤄본 적이 없는 저는 막연한 두려움을 갖게 되었습니다.&lt;/p&gt;
@@ -1213,124 +1527,7 @@ if (successors == 1)
 
 &lt;p&gt;이제는 제가 만든 새로운 코드를 기반으로 많은 고객사에 앱슈트 월간 레포트가 전달되고 있습니다.&lt;/p&gt;
 
-&lt;p&gt;처음에 기획했던 기능들을 전부 넣지는 못했지만, 계속 업데이트를 해서 사내에서 가장 유용하게 사용하는 프로젝트가 되기를 바랍니다.&lt;/p&gt;</content><author><name>하준혁</name></author><category term="Dev" /><summary type="html">React로 pdf 다루기</summary></entry><entry xml:lang="ko"><title type="html">Stealien Security Seminar 1회 리뷰</title><link href="http://ufo.stealien.com/2022-06-30/stealien-security-seminar" rel="alternate" type="text/html" title="Stealien Security Seminar 1회 리뷰" /><published>2022-06-30T00:00:00+09:00</published><updated>2022-06-30T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-06-30/2022_3s_review-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-30/stealien-security-seminar">&lt;h1 id=&quot;stealien-security-seminar-1회-리뷰&quot;&gt;Stealien Security Seminar 1회 리뷰&lt;/h1&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/banner.png&quot; /&gt;&lt;br /&gt;
-    &lt;i&gt;Banner&lt;/i&gt;
-&lt;/p&gt;
-
-&lt;p&gt;안녕하세요! 저는 스틸리언의 김도현 선임연구원입니다.&lt;/p&gt;
-
-&lt;p&gt;2022년 6월 29일, 스틸리언에서 주관하는 첫 세미나가 성공적으로 진행되었습니다.&lt;/p&gt;
-
-&lt;p&gt;대망의 첫 세미나에서는 SSL&lt;sup id=&quot;fnref:1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 수료생 분들의 연구에 대해 소개하는 &lt;strong&gt;SSL 세션&lt;/strong&gt;과, 스틸리언 연구원들의 연구에 대해 소개하는 &lt;strong&gt;Open 세션&lt;/strong&gt; 그리고 오프라인에서만 진행하는 &lt;strong&gt;Secret 세션&lt;/strong&gt;이 있었는데요, 이번 세미나는 &lt;a href=&quot;https://www.youtube.com/watch?v=6YgSTZ9i7Vk&quot;&gt;유튜브를 통해 온라인&lt;/a&gt;으로도 송출하였기 때문에 혹시나 내용을 중간에 놓치셨거나, 시간이 없어 참석하지 못하신 분들은 다시보기를 통해 언제든 자유롭게 저희의 발표를 즐겨주시면 감사하겠습니다.&lt;/p&gt;
-
-&lt;p&gt;혹시나 아직 이번 세미나의 재미있는 발표 주제들을 듣지 못 하신분들을 위해서 이렇게 주제들에 대한 간단한 소개와 요약을 작성해 보았습니다.&lt;/p&gt;
-
-&lt;h2 id=&quot;open-static-vulnerability-analysis&quot;&gt;[Open] Static Vulnerability Analysis&lt;/h2&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/dhkim.jpg&quot; /&gt;&lt;br /&gt;
-    &lt;i&gt;발표 현장&lt;/i&gt;
-&lt;/p&gt;
-
-&lt;p&gt;세미나의 첫발은 제가 내디뎠습니다.&lt;/p&gt;
-
-&lt;p&gt;저의 주요 관심사 중 한가지는 다양한 어플리케이션 또는 임베디드 장비의 취약점을 찾는 것입니다.
-이런류의 버그바운티 또는 프로젝트를 해 보신분들은 잘 아시겠지만, 생각보다는 국내의 타겟들은 아직도 복잡도가 낮은 취약점들이 많이 나오고 있습니다.&lt;/p&gt;
-
-&lt;p&gt;이런 취약점들을 effortless하게 발굴하기 위해서 저는 Static Vulnerability Analysis 또는 Static Program Analysis for Vulnerability Research라는 방법을 이용했습니다. 이번 발표에서는 Static Vulnerability Analysis에 대한 기본적인 소개와, Fuzzing과 비교하여 이 기법의 장점과 단점에 대해 설명하고, 간단한 몇가지 테크닉에 대해 발표했습니다.&lt;/p&gt;
-
-&lt;p&gt;또한 마지막에는 소개드린 주제를 바탕으로 SSL 3기에서 진행할 내용에 대해 소개 드렸습니다.&lt;/p&gt;
-
-&lt;p&gt;영상에서는 &lt;a href=&quot;https://youtu.be/6YgSTZ9i7Vk?t=1729&quot;&gt;28:49&lt;/a&gt;부터 저의 발표가 시작되니, 재미있게 들어주시면 감사하겠습니다 🤩&lt;/p&gt;
-
-&lt;h2 id=&quot;ssl-idapython으로-분석을-더-편하게-하는-방법&quot;&gt;[SSL] IDAPython으로 분석을 더 편하게 하는 방법&lt;/h2&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/snwo.jpg&quot; /&gt;&lt;br /&gt;
-    &lt;i&gt;발표 현장&lt;/i&gt;
-&lt;/p&gt;
-
-&lt;p&gt;두번째 발표는 SSL 2기 수료생 황선우님이 진행해 주셨습니다.&lt;/p&gt;
-
-&lt;p&gt;IDA Pro에서 제공하는 API를 이용하여 malware 분석, plugin에 대한 소개 및 CTF 문제를 IDAPython으로 해결하는 방법에 대해 소개 해 주셨습니다.
-특히 Windows OS의 application이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;GetModuleHandleA()&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LoadLibraryA()&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;GetProcAddress()&lt;/code&gt; chain을 이용해 binary에서 실행하고자 하는 procedure의 주소를 가져올 때, IDAPython을 이용하여 난독화 된 대상 library 및 procedure의 이름(문자열)을 복구할 수 있는 방법을 소개 해 주셨던 점이 저에게는 인상깊었습니다.&lt;/p&gt;
-
-&lt;p&gt;이후에는 &lt;a href=&quot;https://ctftime.org/event/1583&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;b01lers CTF - TM&lt;/code&gt;&lt;/a&gt;, &lt;a href=&quot;https://ctftime.org/task/20424&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DCTF - Glade&lt;/code&gt;&lt;/a&gt; 문제를 직접 IDAPython을 이용하여 분석하는 예를 보여주시기도 하였습니다.&lt;/p&gt;
-
-&lt;p&gt;영상에서는 &lt;a href=&quot;https://youtu.be/6YgSTZ9i7Vk?t=4105&quot;&gt;1:08:25&lt;/a&gt;부터 선우님의 발표가 시작되니, IDAPython의 강력한 기능을 이용해 보고 싶으신 분들은 한번 꼭 시청 해 보셔야겠네요 😎&lt;/p&gt;
-
-&lt;h2 id=&quot;ssl-권한-상승-취약점-분석-방법론--a&quot;&gt;[SSL] 권한 상승 취약점 분석 방법론 + a&lt;/h2&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/jhjang.jpg&quot; /&gt;&lt;br /&gt;
-    &lt;i&gt;발표 현장&lt;/i&gt;
-&lt;/p&gt;
-
-&lt;p&gt;세번째 발표 또한 SSL 2기 수료생 장재훈님이 진행해 주셨습니다.&lt;/p&gt;
-
-&lt;p&gt;장재훈님께서는 SSL 2기의 주제인 ‘권한 상승 취약점 분석 방법론’을 바탕으로 추가로 연구한 내용을 더해 이번 발표를 해 주셨습니다.
-방법론&lt;sup id=&quot;fnref:2&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:2&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;에는 권한 상승 취약점을 관리적 측면, 기술적 측면으로 나누어 소개하고 있는데, 각 취약점에 대한 디테일이 더해져 보는 맛이 있는 발표였던 것 같습니다.&lt;/p&gt;
-
-&lt;p&gt;또한 이번 발표에는 ‘File Junction’, ‘Named Pipe Impersonation’ 등 개발자가 유의하지 않으면 발생하기 쉽고, 치명적인 버그 클래스들에 대해서도 소개 해 주셨습니다.&lt;/p&gt;
-
-&lt;p&gt;요즘의 시스템들은 권한 분리가 잘 되어있는 경우가 많아지고 있지만, 권한이 분리 된 환경에서도 여전히 실수가 발생하면 성공적으로 공격을 수행시킬 수 있다는 사실을 이번 발표를 통해 잘 보여주신 것 같습니다.&lt;/p&gt;
-
-&lt;p&gt;영상에서는 &lt;a href=&quot;https://youtu.be/6YgSTZ9i7Vk?t=7145&quot;&gt;1:59:05&lt;/a&gt;부터 재훈님의 발표가 시작됩니다. SSL을 통해 어떤 프로젝트를 진행하며 뭘 배워갈 수 있을지에 대해 궁금하신 분들은 한번 시청 해 보시는 것을 추천 드립니다! 👏&lt;/p&gt;
-
-&lt;h2 id=&quot;open-모던-웹-환경에서의-버그케이스와-시큐어코딩&quot;&gt;[Open] 모던 웹 환경에서의 버그케이스와 시큐어코딩&lt;/h2&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/scyoon.jpg&quot; /&gt;&lt;br /&gt;
-    &lt;i&gt;발표 현장&lt;/i&gt;
-&lt;/p&gt;
-
-&lt;p&gt;네번째 발표는 저희 회사에서 많은 귀여움을 받고 있는 윤석찬 선임 연구원이 발표 해 주셨습니다.&lt;/p&gt;
-
-&lt;p&gt;윤석찬 연구원은 점점 스택이 높게 쌓여지는 모던 웹 어플리케이션에서 어떤 방식의 취약점을 찾을 수 있고, 이를 보완하는 방법에 대해 소개해 주셨습니다. 눈높이에 맞춰 하나씩 차근차근 알려주는 윤석찬 연구원의 스윗함에 빠질것 같았지만 겨우겨우 살아 돌아왔네요. 이 발표는 윤석찬 연구원이 직접 여러 프로젝트를 진행하며 배운 내용을 바탕으로 하고 있으니, 굉장히 practical한 발표라고 볼 수도 있겠네요!&lt;/p&gt;
-
-&lt;p&gt;백엔드, 프론트엔드에서 발생할 수 있는 일반적인 취약점들과, Django, React.js와 같은 특정한 플랫폼, 프레임워크에서만 발생할 수 있는 취약점들을 잘 알려 주셔서 너무 좋았다는 평이 가득합니다.&lt;/p&gt;
-
-&lt;p&gt;영상에서는 &lt;a href=&quot;https://youtu.be/6YgSTZ9i7Vk?t=10110&quot;&gt;2:48:30&lt;/a&gt;부터 석찬님의 발표가 시작됩니다. 평소 CTF를 통해 웹해킹은 어느정도 할 수 있지만, real-world에 입문하고 싶은 웹해커들에게 이 발표를 추천하는 바입니다. 🐞&lt;/p&gt;
-
-&lt;h2 id=&quot;open-mev&quot;&gt;[Open] MEV&lt;/h2&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/hjhan.jpg&quot; /&gt;&lt;br /&gt;
-    &lt;i&gt;발표 현장&lt;/i&gt;
-&lt;/p&gt;
-
-&lt;p&gt;다섯번째 발표는 스틸리언의 한호정 연구원님이 진행해주셨습니다&lt;/p&gt;
-
-&lt;p&gt;한호정 연구원님은 해당 발표에서 Blockchain에 대한 취약점 분석 외에 MEV(Miner Extractable Value)에 대해서 소개해주셨습니다
-Blockchain에 대한 Security Audit 산업이 MEV에 대한 research로도 발전할 것이라고 보는 한호정 연구원님의 견해는 매우 흥미로운것같습니다&lt;/p&gt;
-
-&lt;p&gt;해당 발표에서는 MEV가 무엇인지, 또 MEV에는 어떠한 종류들이 있었는지, MEV를 완화시키거나 제거하기위해서 어떠한것들이 존재하는지, 마지막으로 한호정연구원님이 직접 MEV에 대해서 추출한 경험담에 대해서 소개합니다&lt;/p&gt;
-
-&lt;p&gt;영상에서는 &lt;a href=&quot;https://youtu.be/6YgSTZ9i7Vk?t=12465&quot;&gt;3:27:38&lt;/a&gt;부터 호정님의 발표가 시작됩니다. 평소 Blockchain에 대해서 관심있는 분들이라면 한번 시청해보시는것을 추천드립니다. 💰&lt;/p&gt;
-
-&lt;h2 id=&quot;closing&quot;&gt;Closing&lt;/h2&gt;
-
-&lt;p&gt;이제 첫번째 Stealien Securit Seminar를 모두 돌아 봤습니다. 흥미진진한 주제로 발표해 주신 발표자님들 모두에게 감사드리며, 스틸리언에 관심을 가져주시고 방문해주신 분들에게 무한한 감사를 보냅니다. 또한, 비록 현장에 계시진 못했지만 온라인으로 저희를 응원해 주신 분들에게도 감사를 드립니다.&lt;/p&gt;
-
-&lt;p&gt;앞으로도 멋지게 발전해 나가는 스틸리언과 스틸리언의 해커들이 되도록 하겠습니다.&lt;/p&gt;
-
-&lt;p&gt;감사합니다.&lt;/p&gt;
-
-&lt;h2 id=&quot;footnotes&quot;&gt;Footnotes&lt;/h2&gt;
-
-&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
-  &lt;ol&gt;
-    &lt;li id=&quot;fn:1&quot; role=&quot;doc-endnote&quot;&gt;
-      &lt;p&gt;Stealien Security Leader, 스틸리언 주관 멘토링 프로그램 &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
-    &lt;/li&gt;
-    &lt;li id=&quot;fn:2&quot; role=&quot;doc-endnote&quot;&gt;
-      &lt;p&gt;&lt;a href=&quot;https://drive.google.com/file/d/1Mk46m5tFapZZ0y4upKxD3R6YsXb4EVZ1/view?usp=sharing&quot;&gt;Paper: 권한 상승 취약점 점검 가이드 및 탐지 방법 제안&lt;/a&gt;, &lt;a href=&quot;https://drive.google.com/file/d/1LscZyKqve60LQsPU98-RgONbP43Mivy1/view?usp=sharing&quot;&gt;Doc: 권한 상승 취약점 점검 가이드&lt;/a&gt; &lt;a href=&quot;#fnref:2&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
-    &lt;/li&gt;
-  &lt;/ol&gt;
-&lt;/div&gt;</content><author><name>김도현</name></author><category term="R&amp;D" /><summary type="html">Stealien Security Seminar 1회 리뷰</summary></entry><entry xml:lang="ko"><title type="html">Homomorphism in RSA</title><link href="http://ufo.stealien.com/2022-06-08/homomorphism-in-rsa" rel="alternate" type="text/html" title="Homomorphism in RSA" /><published>2022-06-08T00:00:00+09:00</published><updated>2022-06-08T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-06-08/homomorphism-in-rsa-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-08/homomorphism-in-rsa">&lt;h1 id=&quot;homomorphism-in-rsa&quot;&gt;Homomorphism in RSA&lt;/h1&gt;
+&lt;p&gt;처음에 기획했던 기능들을 전부 넣지는 못했지만, 계속 업데이트를 해서 사내에서 가장 유용하게 사용하는 프로젝트가 되기를 바랍니다.&lt;/p&gt;</content><author><name>하준혁</name></author><category term="Dev" /><summary type="html">React로 pdf 다루기</summary></entry><entry xml:lang="ko"><title type="html">Homomorphism in RSA</title><link href="http://ufo.stealien.com/2022-06-08/homomorphism-in-rsa" rel="alternate" type="text/html" title="Homomorphism in RSA" /><published>2022-06-07T11:00:00-04:00</published><updated>2022-06-07T11:00:00-04:00</updated><id>http://ufo.stealien.com/2022-06-08/homomorphism-in-rsa-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-08/homomorphism-in-rsa">&lt;h1 id=&quot;homomorphism-in-rsa&quot;&gt;Homomorphism in RSA&lt;/h1&gt;
 
 &lt;h1 id=&quot;서론&quot;&gt;서론&lt;/h1&gt;
 
@@ -1697,7 +1894,7 @@ E.g. the last signature from the list above would become `LINECTF{174c96f2c629af
 
 &lt;p&gt;지금까지 &lt;strong&gt;RSA&lt;/strong&gt; 란 무엇인지, &lt;strong&gt;키 생성&lt;/strong&gt;, &lt;strong&gt;암/복호화&lt;/strong&gt;, &lt;strong&gt;서명/검증&lt;/strong&gt;은 어떻게 이루어지는지 알아보았고, 또 대수학에서의 &lt;strong&gt;준동형 사상(Homomorphism)&lt;/strong&gt; 개념을 CTF 에서 자주 출제되는 유형의 RSA 문제에 적용하여 풀어보았다. 이외에도 수많은 방식의 RSA 공격 기법들이 존재하지만 대부분 위 문제 풀이에서 본 것과 같이 수학적인 개념을 가지고 사칙연산만 할 줄 안다면 금방 이해하고 그것을 문제에 적용할 수 있을 것이다.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;암호&lt;/strong&gt;를 푼다는 것은 &lt;strong&gt;얽히고설킨 실타래를 푸는 것&lt;/strong&gt;과도 같다고 생각한다. 처음 문제를 접했을 때는 도무지 어떻게 이것을 풀어야 한다는 건지 감을 잡을 수조차 없지만 천천히 둘러보다 보면 문제를 해결할 수 있는 &lt;strong&gt;실마리&lt;/strong&gt;를 잡을 수 있을 것이다. 이 글이 암호학 문제를 푸는 이들에게 좋은 시작점이 되기를 기원하며 글을 마무리하도록 하겠다.&lt;/p&gt;</content><author><name>박지원</name></author><category term="R&amp;D" /><summary type="html">Homomorphism in RSA</summary></entry><entry xml:lang="ko"><title type="html">How to root your RouterOS v7 Virtual Machine</title><link href="http://ufo.stealien.com/2022-06-01/how-to-root-your-routeros-v7-virtual-machine" rel="alternate" type="text/html" title="How to root your RouterOS v7 Virtual Machine" /><published>2022-06-01T00:00:00+09:00</published><updated>2022-06-01T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-06-01/how-to-root-routeros-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-01/how-to-root-your-routeros-v7-virtual-machine">&lt;h1 id=&quot;how-to-root-your-routeros-v7-virtual-machine&quot;&gt;How to root your RouterOS v7 Virtual Machine&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;암호&lt;/strong&gt;를 푼다는 것은 &lt;strong&gt;얽히고설킨 실타래를 푸는 것&lt;/strong&gt;과도 같다고 생각한다. 처음 문제를 접했을 때는 도무지 어떻게 이것을 풀어야 한다는 건지 감을 잡을 수조차 없지만 천천히 둘러보다 보면 문제를 해결할 수 있는 &lt;strong&gt;실마리&lt;/strong&gt;를 잡을 수 있을 것이다. 이 글이 암호학 문제를 푸는 이들에게 좋은 시작점이 되기를 기원하며 글을 마무리하도록 하겠다.&lt;/p&gt;</content><author><name>박지원</name></author><category term="R&amp;D" /><summary type="html">Homomorphism in RSA</summary></entry><entry xml:lang="ko"><title type="html">How to root your RouterOS v7 Virtual Machine</title><link href="http://ufo.stealien.com/2022-06-01/how-to-root-your-routeros-v7-virtual-machine" rel="alternate" type="text/html" title="How to root your RouterOS v7 Virtual Machine" /><published>2022-05-31T11:00:00-04:00</published><updated>2022-05-31T11:00:00-04:00</updated><id>http://ufo.stealien.com/2022-06-01/how-to-root-routeros-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-01/how-to-root-your-routeros-v7-virtual-machine">&lt;h1 id=&quot;how-to-root-your-routeros-v7-virtual-machine&quot;&gt;How to root your RouterOS v7 Virtual Machine&lt;/h1&gt;
 
 &lt;p&gt;Finding vulnerabilities in RouterOS is tricky, and this is especially because it does not provide a shell environment like ash or bash.&lt;/p&gt;
 
@@ -1814,98 +2011,4 @@ Replaced: 00 2F 72 77 2F 64 69 73 6B 2F 62 75 73 79 62 6F 78 2F 61 73 68 00 00
 
 &lt;h2 id=&quot;limitation&quot;&gt;Limitation&lt;/h2&gt;
 
-&lt;p&gt;This is a ‘simple trick’ method and the shell is not persistent. If you reboot the RouterOS VM, you will have to repeat the process from stage 4.&lt;/p&gt;</content><author><name>오세준</name></author><category term="R&amp;D" /><summary type="html">How to root your RouterOS v7 Virtual Machine</summary></entry><entry xml:lang="ko"><title type="html">Ronin Bridge Vulnerability Analysis</title><link href="http://ufo.stealien.com/2022-04-12/ronin-bridge-vuln-analysis" rel="alternate" type="text/html" title="Ronin Bridge Vulnerability Analysis" /><published>2022-04-12T00:00:00+09:00</published><updated>2022-04-12T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-04-12/Ronin-Bridge-Vuln-Analysis-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-04-12/ronin-bridge-vuln-analysis">&lt;h1 id=&quot;ronin-bridge-취약점-분석&quot;&gt;Ronin Bridge 취약점 분석&lt;/h1&gt;
-
-&lt;h2 id=&quot;요약&quot;&gt;요약&lt;/h2&gt;
-&lt;p&gt;Ethereum의 side-chain인 ‘Ronin Network’가 해킹을 당해 6억1500만달러(약 7400억원) 규모의 Ethereum이 탈취된 사건이 최근 알려졌다. 이 글에서는 Ronin Network가 무엇인지 알아보고 어떤 요소때문에 자금이 유출된건지, 대응은 어떻게 하고있는지에 대해서 알아본다&lt;/p&gt;
-
-&lt;h2 id=&quot;ronin-network&quot;&gt;Ronin Network?&lt;/h2&gt;
-&lt;p&gt;유명인기게임 “Axie Infinity”를 개발한 베트남의 “Sky mavis”라는 회사에서 Ethereum Network의 높은 수수료와 낮은 처리속도를 보완하기 위한 Side chain으로 등장했다.&lt;/p&gt;
-
-&lt;h2 id=&quot;side-chain&quot;&gt;Side Chain?&lt;/h2&gt;
-&lt;p&gt;사이드체인은 서로 다른 블록체인들 위에 존재하는 자산들을 쉽게 거래할 수 있도록 하는 기술이다. 
-만약 모든 데이터를 Main Chain의 노드 안에 넣어 처리한다면 노드의 처리속도를 점점 느리게할 것이며, Main Chain에서 점점 많아지는 노드의 수로 인해서 발생하는 합의시간의 증가는 메인체인에서의 많은 문제점을 야기할 것이다..&lt;/p&gt;
-
-&lt;p&gt;TPS는 점점 느려질 수 밖에 없고 수수료의 값은 점점 올라가게 되는 것이다.&lt;/p&gt;
-
-&lt;p&gt;이러한 문제로 암호화폐의 상용성에 대해 많은 문제제기를 하게 되고 이에 대한 해결책으로 사이드체인이 등장하게 되었다.&lt;/p&gt;
-
-&lt;p&gt;Main Chain에 있는 자산을 Side Chain으로 옮겨 Transaction을 처리한다.&lt;/p&gt;
-
-&lt;p&gt;Side Chain에서 복수의 Transaction이 모두 끝나면 다시 중요한 정보만을 Main Chain로 보내주고 저장함으로써 Transaction을 상당히 간소화시킬 수 있다.&lt;/p&gt;
-
-&lt;p&gt;즉, Main Chain에서 모든 Transaction을 처리하는 것이 아니라 Side Chain이 Main Chain이 할 일을 나누어 도와주는 것이라고 할 수 있다.&lt;/p&gt;
-
-&lt;h2 id=&quot;무슨일이-일어난건가&quot;&gt;무슨일이 일어난건가?&lt;/h2&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;The Ronin bridge has been exploited for 173,600 Ethereum and 25.5M USDC. The Ronin bridge and Katana Dex have been halted.
-(Twitter @Ronin_Network)&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;위의 트윗 내용에 따르면 173,600 Ethereum과 25.5M USDC가 유출되었다고 하며, 이를 확인한 즉시 Ronin Bridge와 Katana Dex는 운영을 중단했다고 한다.&lt;/p&gt;
-
-&lt;p&gt;다소 놀라운 것은 Ronin Bridge에서 자금이 유출되고 6일이 경과한 후에 일반 사용자가 자신의 자산을 출금하지 못한다는 문의로 인해 사고의 발생을 알게된 것이다.&lt;/p&gt;
-
-&lt;h2 id=&quot;어떻게-발생한건가&quot;&gt;어떻게 발생한건가?&lt;/h2&gt;
-&lt;p&gt;Ronin network는 Ethereum network의 side chain으로써 기본적으로 Ethereum network에서 발생하는 다량의 transaction을 Ethereum network보다 비교적 속도가 빠르고 낮은 수수료를 소비하는 Ronin network에서 처리하고 그 결과만을 Ethereum network에 반영한다.&lt;/p&gt;
-
-&lt;p&gt;이러한 과정 중에 서로 다른 network로부터 오고가는 transaction의 유효성을 검증하기 위해서 validator라는 요소를 두게 된다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2022-04-12-Ronin-Bridge-Vuln-Analysis/image.png&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;위 사진은 블록체인 트릴레마라고 불리우는 난제이며, 모든 블록체인 네트워크에서 위 사진의 3가지를 효과적으로 해결할 수 있는 것을 목표로 하고 있다.&lt;/p&gt;
-
-&lt;p&gt;Ronin network에서 validator의 수를 결정할 때 블록체인 트릴레마에 대한 것을 생각해보면 Security와 Scalability는 trade-off관계임을 알 수 있다.&lt;/p&gt;
-
-&lt;p&gt;validator의 수를 많이 두자니 보안이 향상될 것이나 성능이 저하될 것이고, validator의 수를 적게 두자니 성능이 향상될 것이나 성능이 저하될 것이다.&lt;/p&gt;
-
-&lt;p&gt;이러한 이유로 인해서 Ronin network에서는 어느정도 보안을 포기하고 성능을 챙기려고 했던건지 validator의 수를 적게 둔 것이 취약점의 시발점이었다.&lt;/p&gt;
-
-&lt;p&gt;보안사고가 터진 것을 인식하기 전 Ronin network는 총 9개의 validator로 구성되어있었고, 5개의 validator 이상이 승인하면 유효한 transaction으로 승인되었다.&lt;/p&gt;
-
-&lt;p&gt;여기서 공격자는 validator 4개의 private key를 갖고있었고 특정 방법(?, Ronin network의 rpc node를 통해 axie dao 소유의 validator private key에 접근할 수 있는 백도어가 있었다고하는데 정확한 보고서나 직접 확인을 하기 위한 RPC Node 주소가 공개되어있지 않은듯함.)으로 인해서 Axie DAO가 운영하는 validator의 private key를 얻을 수 있었으며, 이를 악용하여 Ronin network에서는 실제로 자산이 없는데 자산이 있는 것처럼 속여 Ethereum network로 transaction을 보냈다.&lt;/p&gt;
-
-&lt;p&gt;Ethereum network에 존재하는 Ronin Network Contract는 이를 정상적인 transaction으로 인식하여 지정된 수신자에게 
-&lt;a href=&quot;https://etherscan.io/tx/0xc28fad5e8d5e0ce6a2eaf67b6687be5d58113e16be590824d6cfa1a94467d0b7&quot;&gt;173,600 Ethereum&lt;/a&gt;과 &lt;a href=&quot;https://etherscan.io/tx/0xed2c72ef1a552ddaec6dd1f5cddf0b59a8f37f82bdda5257d9c7c37db7bb9b08&quot;&gt;25.5M USDC&lt;/a&gt;를 송신했다.&lt;/p&gt;
-
-&lt;p&gt;Ronin Network에서 자금을 유출하기 위해서 사용한 validator의 주소는 다음과 같다.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://explorer.roninchain.com/address/0x11360eacdedd59bc433afad4fc8f0417d1fbebab/txs&quot;&gt;0x11360eacdedd59bc433afad4fc8f0417d1fbebab&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://explorer.roninchain.com/address/0x1a15a5e25811fe1349d636a5053a0e59d53961c9/txs&quot;&gt;0x1a15a5e25811fe1349d636a5053a0e59d53961c9&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://explorer.roninchain.com/address/0x70bb1fb41c8c42f6ddd53a708e2b82209495e455/txs&quot;&gt;0x70bb1fb41c8c42f6ddd53a708e2b82209495e455&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://explorer.roninchain.com/address/0xb9e59d56fd1632fc250935182bdd5c59188b2302/txs&quot;&gt;0xb9e59d56fd1632fc250935182bdd5c59188b2302 | Axie DAO&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://explorer.roninchain.com/address/0xf224beff587362a88d859e899d0d80c080e1e812/txs&quot;&gt;0xf224beff587362a88d859e899d0d80c080e1e812&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;분석을 하면서 나온 결론은 해당 사고는 Smart Contract Code Level에서 발생한 것이 아니라 Ronin Network의 한축을 담당하고 있는 validator의 private key 유출로 인해서 벌어진 일이라는 것이다.&lt;/p&gt;
-
-&lt;h2 id=&quot;범인을-특정할-수-있을까&quot;&gt;범인을 특정할 수 있을까?&lt;/h2&gt;
-&lt;p&gt;아래의 주소는 공개된 공격자의 지갑 주소이다.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://etherscan.io/address/0x098b716b8aaf21512996dc57eb0615e2383e2f96&quot;&gt;0x098b716b8aaf21512996dc57eb0615e2383e2f96&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;보통 블록체인 상에서 보안사고가 발생하면 공격자는 유출한 금액을 Tornado.cash나 다른 mixer를 이용해서 자금의 추적을 어렵게하는데 해당 사고의 공격자는 상당히 대범하게 곧바로 binance, FTX, huobi의 핫월렛에 입금하는 것을 볼 수 있다.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://etherscan.io/tx/0xe0669bbaaa12cf5ecc682848ddc373a9b86e1351bccc01092b744099bf52a87d&quot;&gt;Binance Hotwallet에서 1 Ether 출금하는 Transaction&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://etherscan.io/tx/0x075df6c4b44733a0e76aa4947b56b4c0c00ec136d7865edc1ac7068264e15704&quot;&gt;Huobi Hotwallet으로 입금하는 Transaction list&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://etherscan.io/address/0x5b5082214d62585d686850ab8d9e3f6b6a5c58ff&quot;&gt;FTX Hotwallet으로 입금하는 Transaction list&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;입출금한 거래소가 KYC를 요구하는 거래소라는 점을 생각해볼 때 얼마 지나지않아 공격자의 신원이 특정될 것으로 예상한다.&lt;/p&gt;
-
-&lt;h2 id=&quot;어떻게-조치를-하고있는가&quot;&gt;어떻게 조치를 하고있는가?&lt;/h2&gt;
-&lt;p&gt;우선 9개의 validator 중 공격에 사용된 validator의 권한을 정지시켰으며, 기존에 9개의 validator 중 5개의 validator만 승인했던 것에서 8개 이상의 validator가 승인해야만 정상적인 transaction 승인 받도록 변경되었다.&lt;/p&gt;
-
-&lt;p&gt;이것은 미봉책에 불과하며, 향후 validator의 수를 늘릴 것으로 공표했다.&lt;/p&gt;
-
-&lt;h2 id=&quot;비슷한-유형의-사건이-있을까&quot;&gt;비슷한 유형의 사건이 있을까?&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.theblockcrypto.com/post/140554/convex-finance-addresses-bug-that-couldve-led-to-a-15-billion-rug-pull&quot;&gt;Convex Finance addresses bug that could’ve led to a $15 billion rug pull&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;정리하며&quot;&gt;정리하며&lt;/h2&gt;
-&lt;p&gt;기존에 본인이 분석해왔던 블록체인 쪽의 보안사고와는 다소 다른 유형의 사고였다.
-지금까지 Smart contract의 Code level상의 취약점만 보다가 Architecture 상 중요한 역할을 하는 EOA의 private key가 유출되어서 그것이 플랫폼 자금의 유출로 이어지는 사건은 처음 분석해보았다.
-이로 인해 느낀점은 Smart Contract상에서 Code 뿐만 아니라 구성하고있는 EOA에 대한 보안도 신경써서 관리해야함을 다시한번 깨달았다.&lt;/p&gt;</content><author><name>한호정</name></author><category term="R&amp;D" /><summary type="html">Ronin Bridge 취약점 분석</summary></entry></feed>
+&lt;p&gt;This is a ‘simple trick’ method and the shell is not persistent. If you reboot the RouterOS VM, you will have to repeat the process from stage 4.&lt;/p&gt;</content><author><name>오세준</name></author><category term="R&amp;D" /><summary type="html">How to root your RouterOS v7 Virtual Machine</summary></entry></feed>
