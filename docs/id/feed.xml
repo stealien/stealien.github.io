@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/id/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/id/" rel="alternate" type="text/html" /><updated>2023-07-31T08:21:32-04:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">버그헌팅: 취약점 체이닝의 중요성</title><link href="http://ufo.stealien.com/id/2023-07-31/bughunting-vulnerability-chaining-ko" rel="alternate" type="text/html" title="버그헌팅: 취약점 체이닝의 중요성" /><published>2023-07-31T07:00:00-04:00</published><updated>2023-07-31T07:00:00-04:00</updated><id>http://ufo.stealien.com/2023-07-31/bughunting-vulnerability-chaining-ko</id><content type="html" xml:base="http://ufo.stealien.com/2023-07-31/bughunting-vulnerability-chaining-ko">&lt;h1 id=&quot;버그헌팅-취약점-체이닝의-중요성&quot;&gt;버그헌팅: 취약점 체이닝의 중요성&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/id/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/id/" rel="alternate" type="text/html" /><updated>2023-08-01T01:00:36-04:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">버그헌팅: 취약점 체이닝의 중요성</title><link href="http://ufo.stealien.com/id/2023-07-31/bughunting-vulnerability-chaining-ko" rel="alternate" type="text/html" title="버그헌팅: 취약점 체이닝의 중요성" /><published>2023-07-31T07:00:00-04:00</published><updated>2023-07-31T07:00:00-04:00</updated><id>http://ufo.stealien.com/2023-07-31/bughunting-vulnerability-chaining-ko</id><content type="html" xml:base="http://ufo.stealien.com/2023-07-31/bughunting-vulnerability-chaining-ko">&lt;h1 id=&quot;버그헌팅-취약점-체이닝의-중요성&quot;&gt;버그헌팅: 취약점 체이닝의 중요성&lt;/h1&gt;
 &lt;h2 id=&quot;no-impact-no-bug&quot;&gt;No impact, No bug&lt;/h2&gt;
 
 &lt;p&gt;&lt;img src=&quot;/assets/2023-07-31-bughunting-vulnerability-chaining/0.png&quot; alt=&quot;CVSS3.1&quot; /&gt;&lt;/p&gt;
@@ -6,7 +6,7 @@
 &lt;p&gt;버그헌팅에서는 이 취약점으로 어떤 악의적인 행위를 할 수 있는지 증명해야 합니다.
 대부분의 기업이나 기관들이 CVSS 점수를 이용해 취약점에 대한 평가를 하기 때문에 취약점을 악용할 수 있는 창의적인 아이디어를 생각해내어 시나리오를 만들어야 합니다.&lt;/p&gt;
 
-&lt;p&gt;아무런 생각 없이 단일 취약점을 제보하면, 자칫 많은 시간을 들여 찾은 취약점이 낮은 평가를 받을 수도 있습니다.
+&lt;p&gt;아무런 생각 없이 단일 취약점을 제보하면, 자칫 많은 시간을 들여 찾은 취약점이 낮은 평가를 받을 수도 있습니다.
 그렇다 보니 자연스럽게 버그헌터들은 추후 발견될 취약점과의 연계를 위해 낮은 영향도(impact)의 취약점을 저장해둡니다. 그리고 더 높은 영향력을 가진 시나리오를 만들 수 있게 되면 제보합니다.&lt;/p&gt;
 
 &lt;p&gt;이런 방식을 다른 취약점과의 연계, 즉 취약점 체이닝이라고 말합니다.&lt;/p&gt;
@@ -111,11 +111,15 @@
 
 &lt;p&gt;그리고 바로 아래 줄에서 만약 해당 경로에 파일이 존재한다면, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;include_once($file)&lt;/code&gt; 에서 파일이 include 됩니다.&lt;/p&gt;
 
-&lt;p&gt;결과적으로 해당 코드는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$unique_theme_id&lt;/code&gt; 쿠키 값을 조작해 상위 경로에 존재하는 php 파일을 include 할 수 있는 &lt;strong&gt;LFI(Local File Inclusion) 취약점&lt;/strong&gt;이 발생하게 됩니다.&lt;/p&gt;
+&lt;p&gt;만약 공격자가 특정 경로에 php 파일을 생성하거나 이미 존재하는 PHP 파일에 임의 명령어를 삽입할 수 있다면, 이 LFI 취약점을 이용해 그 PHP 파일을 불러와 임의 명령어를 실행할 수 있는 &lt;strong&gt;RCE 취약점으로 연계&lt;/strong&gt;할 수 있을 것입니다.&lt;/p&gt;
 
-&lt;p&gt;만약 공격자가 특정 경로에 php 파일을 생성하거나 이미 존재하는 PHP 파일에 임의 명령어를 삽입할 수 있다면, 이 LFI 취약점을 이용해 그 PHP 파일을 불러와 임의 명령어를 실행할 수 있는 &lt;strong&gt;RCE 취약점으로 연계&lt;/strong&gt;할 수 있게 됩니다.&lt;/p&gt;
+&lt;p&gt;하지만 실제로는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;file_exists&lt;/code&gt; 함수에서는 존재하지 않은 디렉터리의 상위경로에 접근할 수 없습니다. ex) not_exists_directory/../../index.php (X)&lt;/p&gt;
 
-&lt;p&gt;실제로 이윰빌더에 대한 이해가 부족하다면, 위 LFI 취약점에서 RCE 취약점을 발견해내기 쉽지 않을 것입니다. 왜냐하면 위 코드에서 $file 변수의 값이 결국 하단의 save_file 함수에 들어가게 되는데, save_file 함수의 내용을 보면 PHP 파일의 내용으로 들어가게 되는 값들은 &lt;strong&gt;사용자가 직접 조작할 수 없기 때문&lt;/strong&gt;입니다.&lt;/p&gt;
+&lt;p&gt;만약 이윰빌더에 대한 이해가 부족하다면, 위 취약점에서 어떻게 LFI로 연계하고 RCE 취약점까지 트러기할 수 있는지 발견해내기 쉽지 않을 것입니다.&lt;/p&gt;
+
+&lt;p&gt;$file 변수의 값이 결국 하단의 save_file 함수에 들어가게 되는데, save_file 함수의 내용을 보면 PHP 파일의 내용으로 들어가게 되는 값들은 사용자가 직접 조작할 수 없어 보입니다.&lt;/p&gt;
+
+&lt;p&gt;다만, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$unique_theme_id&lt;/code&gt; 값에 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;../&lt;/code&gt;와 같은 문자열이 들어왔을 때 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fopen&lt;/code&gt; 함수에서 상위 경로에 파일이 쓰여질 수 있다는 사실을 알 수 있습니다.&lt;/p&gt;
 
 &lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cd&quot;&gt;/**
  * 배열을 지정한 파일로 저장 - 폴더에 웹서버의 쓰기 권한이 있어야 함
@@ -158,11 +162,11 @@
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;코드를 보시면 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$value&lt;/code&gt; 값은 모두 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;addslashes()&lt;/code&gt; 함수로 필터링 되고 있습니다. 그리고 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$key&lt;/code&gt; 값은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;save_file()&lt;/code&gt; 함수 호출 전의 값을 확인해보시면 알 수 있는 것으로, 이윰빌더의 설정 값(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$arr['theme']&lt;/code&gt;)에 해당합니다. 이 값은 사용자 측에서 조작할 수 없는 값입니다.&lt;/p&gt;
+&lt;p&gt;또 코드를 보시면 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$value&lt;/code&gt; 값은 모두 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;addslashes()&lt;/code&gt; 함수로 필터링 되고 있습니다. 그리고 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$key&lt;/code&gt; 값은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;save_file()&lt;/code&gt; 함수 호출 전의 값을 확인해보시면 알 수 있는 것으로, 이윰빌더의 설정 값(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$arr['theme']&lt;/code&gt;)에 해당합니다. 이 값은 사용자 측에서 조작할 수 없는 값입니다.&lt;/p&gt;
 
-&lt;p&gt;때문에 위에서 본 코드 만으로는 LFI 취약점을 RCE 취약점으로 연계할 수 없다는 결론이 나옵니다.&lt;/p&gt;
+&lt;p&gt;때문에 위에서 본 코드 만으로는 임의 파일 작성 취약점을 LFI와 RCE 취약점으로 연계할 수 없다는 결론이 나옵니다.&lt;/p&gt;
 
-&lt;p&gt;만약 여러분이더라도 여기서 포기하기에는 너무 아쉽겠죠. 사실상 위 LFI 취약점만으로는 악성 시나리오를 제작하기에는 파급력이 많이 낮습니다. 어떤 곳에서는 단순히 가능성만 제시하여도 Potential 취약점으로 취급해주기도 합니다. 하지만 실질적인 시나리오를 제시하는 것이 제보자 뿐만 아니라 제보 받는 사람 입장에서도 취약점에 대한 심각도를 확실히 이해하고 문제의 시급함을 느낄 수 있습니다.&lt;/p&gt;
+&lt;p&gt;만약 여러분이더라도 여기서 포기하기에는 너무 아쉽겠죠. 사실상 위 취약점만으로는 악성 시나리오를 제작하기에는 파급력이 많이 낮습니다. 어떤 곳에서는 단순히 가능성만 제시하여도 Potential 취약점으로 취급해주기도 합니다. 하지만 실질적인 시나리오를 제시하는 것이 제보자 뿐만 아니라 제보 받는 사람 입장에서도 취약점에 대한 심각도를 확실히 이해하고 문제의 시급함을 느낄 수 있습니다.&lt;/p&gt;
 
 &lt;h2 id=&quot;finding-arbitrary-code-injection&quot;&gt;Finding Arbitrary Code Injection&lt;/h2&gt;
 
