@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta property="og:type" content="article">
+<meta property="og:image" content="http://ufo.stealien.com/assets/og_image.png">
+<meta property="og:title" content="STEALIEN Technical Blog">
+<meta property="og:description" content="Analyzing Django ORM with 1-day vulnerabilities and sql bug">
+<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700&display=swap" rel="stylesheet">
+<title>Analyzing Django ORM with 1-day vulnerabilities and sql bug</title>
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Analyzing Django ORM with 1-day vulnerabilities and sql bug | STEALIEN Technical Blog</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Analyzing Django ORM with 1-day vulnerabilities and sql bug" />
+<meta name="author" content="Seokchan Yoon" />
+<meta property="og:locale" content="ko" />
+<meta name="description" content="목차 0. Introduction 1. How does Django execute SQL query? 2. CVE-2022-28346 3. CVE-2022-28347 4. CVE-2022-34265 5. Django Single Quote Unescaped Bug 6. 끝으로" />
+<meta property="og:description" content="목차 0. Introduction 1. How does Django execute SQL query? 2. CVE-2022-28346 3. CVE-2022-28347 4. CVE-2022-34265 5. Django Single Quote Unescaped Bug 6. 끝으로" />
+<link rel="canonical" href="http://ufo.stealien.com/2022-12-16/analyzing-django-orm-with-1-day" />
+<meta property="og:url" content="http://ufo.stealien.com/2022-12-16/analyzing-django-orm-with-1-day" />
+<meta property="og:site_name" content="STEALIEN Technical Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-12-16T00:00:00+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Analyzing Django ORM with 1-day vulnerabilities and sql bug" />
+<script type="application/ld+json">
+{"headline":"Analyzing Django ORM with 1-day vulnerabilities and sql bug","dateModified":"2022-12-16T00:00:00+09:00","datePublished":"2022-12-16T00:00:00+09:00","url":"http://ufo.stealien.com/2022-12-16/analyzing-django-orm-with-1-day","mainEntityOfPage":{"@type":"WebPage","@id":"http://ufo.stealien.com/2022-12-16/analyzing-django-orm-with-1-day"},"author":{"@type":"Person","name":"Seokchan Yoon"},"description":"목차 0. Introduction 1. How does Django execute SQL query? 2. CVE-2022-28346 3. CVE-2022-28347 4. CVE-2022-34265 5. Django Single Quote Unescaped Bug 6. 끝으로","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name=“naver-site-verification” content=“74a9ec74d48a1ffca92bf9ac4704ba73be9afd65" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"/>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/assets/css/style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
+
+<link href="/assets/css/syntax.css" rel="stylesheet" >
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-06FFJEF76M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-06FFJEF76M');
+</script>
+</head>
+<body>
+	<header>
+		<div class="container"></div><div id="header">
+    <div class="container" style="display: flex;justify-content: space-between;">
+        <a href="/">
+            <img
+                class="header_image_logo"
+                src="/assets/logo.png"
+                style="width: 140px; margin: 20px 28px 0px;"
+            />
+        </a>
+        <a href="https://www.stealien.com/" target="_blank" style="font-family: 'NotoSansKR Medium', sans-serif;font-size: 14px;margin-right: 30px; color: #000; line-height: 70px;">스틸리언 홈페이지</a>
+    </div>
+</div>
+</header>
+	<section>
+		<div>
+			<div class="header_image_bg header_image_post" style="background-image: url('/assets/bg.png');">
+    <div class="header_image_post_body">
+        <div class="container">
+            <div class="page-category">R&D</div>
+            <div class="page-title">Analyzing Django ORM with 1-day vulnerabilities and sql bug</div>
+            <div class="page-summary">
+                <div style="float:left;">
+                    <img class="page-profile_image" src="/assets/2022-10-04-Secure-Coding-Training-System/profile.jpeg" />
+                    <span>Seokchan Yoon</span>
+                </div>
+                <div style="float:right;" class="page-date">Dec 16, 2022</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container page-content">
+    <p><br /></p>
+<div style="text-align: left">목차</div>
+<div style="text-align: left">
+    <a href="#0-introduction">0. Introduction</a>
+</div>
+<div style="text-align: left">
+    <a href="#1-how-does-django-execute-sql-query">1. How does Django execute SQL query?</a>
+</div>
+<div style="text-align: left">
+    <a href="#2-cve-2022-28346">2. CVE-2022-28346</a>
+</div>
+<div style="text-align: left">
+    <a href="#3-cve-2022-28347">3. CVE-2022-28347</a>
+</div>
+<div style="text-align: left">
+    <a href="#4-cve-2022-34265">4. CVE-2022-34265</a>
+</div>
+<div style="text-align: left">
+    <a href="#5-django-single-quote-unescaping-bug-in-keytransform-class">5. Django Single Quote Unescaped Bug</a>
+</div>
+<div style="text-align: left">
+    <a href="#6-끝으로">6. 끝으로</a>
+</div>
+
+<p><br /></p>
+
+<h1 id="0-introduction">0. Introduction</h1>
+
+<p>안녕하세요. 스틸리언 R&amp;D팀 윤석찬 연구원입니다. 이번 차례에도 제가 기술블로그에 글을 쓰게 되었습니다. 벌써 12월이 되었는데 다들 올해 원하시던 목표 이루셨는지요? 제가 올해 세웠던 목표 중 하나는 Python의 <code class="language-plaintext highlighter-rouge">Django</code> 나 <code class="language-plaintext highlighter-rouge">Flask</code>, NodeJS의  <code class="language-plaintext highlighter-rouge">express.js</code> 처럼 대중적으로 사용되는 웹 프레임워크에서 유의미한 보안 취약점을 찾아서 제보하는 것이었습니다. 결과적으로 말씀드리자면 목표를 달성하진 못했지만, 그래도 Django라는 국제적으로 유명한 대형 오픈소스 프로젝트를 분석하면서 배웠던 점이 많았던 것 같습니다.</p>
+
+<p>이 글에서는 2022년에 제보된 Django 1-day 취약점들과 제가 발견한 SQL Single Quote Unescaped Bug를 소개하고자 합니다. 글이 다소 길고 첨부된 소스코드가 많아서 PC에서 보시는 것을 추천드립니다.</p>
+
+<p>_</p>
+
+<p>올해는 Django 버전이 4.0으로 업그레이드된 첫 해로, 저 같이 Django를 즐겨서 사용하는 사용자로서는 의미있는 한해였다고 생각합니다. 4.0으로 업데이트되면서 뷰에서 <code class="language-plaintext highlighter-rouge">async</code> 기능을 사용할 수 있게 되었고, <code class="language-plaintext highlighter-rouge">JSONField</code>, <code class="language-plaintext highlighter-rouge">ArrayField</code>, <code class="language-plaintext highlighter-rouge">BigAutoField</code> 같은 새로운 데이터베이스 Field Type이 등장하기도 했습니다. 실제로 어떤 기능이 업데이트되었는지는 아래 링크에서 자세히 확인해볼 수 있습니다.</p>
+
+<blockquote>
+  <p><a href="https://docs.djangoproject.com/en/4.1/releases/4.0/">https://docs.djangoproject.com/en/4.1/releases/4.0/</a>
+<br />
+<br /></p>
+</blockquote>
+
+<p>올해도 Django에 여러 취약점이 제보되었습니다. 2021년 12월 6일 배포된 Django 4.0을 기준으로, 2022년에 <code class="language-plaintext highlighter-rouge">Severity Level</code>*이 <strong><code class="language-plaintext highlighter-rouge">Critical</code></strong> 로 분류된 취약점은 총 3건이었고 모두 SQL Injection 취약점이었습니다.</p>
+
+<p>* <code class="language-plaintext highlighter-rouge">Severity Level</code>은 보안 취약점은 파급력에 따라 <code class="language-plaintext highlighter-rouge">Low</code>, <code class="language-plaintext highlighter-rouge">Medium</code>, <code class="language-plaintext highlighter-rouge">High</code>, <code class="language-plaintext highlighter-rouge">Critical</code> 4가지 등급으로 분류됩니다. 이 중 <code class="language-plaintext highlighter-rouge">Critical</code> 등급은 가장 파급력이 높은 보안 취약점으로 평가됩니다.</p>
+
+<p>Django는 2005년에 처음 시작되어 올해로 18년 째 유지되고 있는 대형 프로젝트입니다. 이 프로젝트에서 절대 발견되지 않을 것 같았던 SQL Injection 취약점이,  그것도 3개나 연달아서 발견되는 것은 이례적인 일이라고 생각해서 관심을 갖게 되었습니다. Django에 제보된 취약점은 아래 링크에서 확인해보실 수 있습니다.</p>
+
+<blockquote>
+  <p><a href="https://security.snyk.io/package/pip/django">https://security.snyk.io/package/pip/django</a></p>
+</blockquote>
+
+<ul>
+  <li><a href="https://www.cve.org/CVERecord?id=CVE-2022-28346">CVE-2022-28346</a></li>
+  <li><a href="https://www.cve.org/CVERecord?id=CVE-2022-28347">CVE-2022-28347</a></li>
+  <li><a href="https://www.cve.org/CVERecord?id=CVE-2022-34265">CVE-2022-34265</a></li>
+</ul>
+
+<p><br /></p>
+
+<h1 id="1-how-does-django-execute-sql-query">1. How does Django execute SQL query?</h1>
+
+<p>Django에서는 ORM으로 SQL을 어떻게 실행하는지 알아둘 필요가 있습니다. 아래 링크에 Django ORM이 실제로 어떻게 쿼리를 만들고 실행하는지 정리해두었습니다.</p>
+
+<blockquote>
+  <p><a href="https://blog.ch4n3.kr/569">How does Django execute SQL Query?</a></p>
+</blockquote>
+
+<p><br /></p>
+
+<h1 id="2-cve-2022-28346">2. CVE-2022-28346</h1>
+<p><strong>CVE-2022-28346: Potential SQL injection in <code class="language-plaintext highlighter-rouge">QuerySet.annotate()</code>, <code class="language-plaintext highlighter-rouge">aggregate()</code>, and <code class="language-plaintext highlighter-rouge">extra()</code></strong></p>
+
+<ul>
+  <li><a href="https://github.com/django/django/commit/93cae5cb2f9a4ef1514cf1a41f714fef08005200">https://github.com/django/django/commit/93cae5cb2f9a4ef1514cf1a41f714fef08005200</a></li>
+</ul>
+
+<p>취약점이 발생하는 메소드는 <code class="language-plaintext highlighter-rouge">django.db.models.query</code>에 지정된 <code class="language-plaintext highlighter-rouge">QuerySet</code> 클래스 내의  <code class="language-plaintext highlighter-rouge">annotate()</code>, <code class="language-plaintext highlighter-rouge">aggregate()</code>, <code class="language-plaintext highlighter-rouge">extra()</code> 메소드로, 이 세 메소드는 공통적으로 alias 기능이 내포되어 있다는 특징이 있습니다. 예를 들어 <code class="language-plaintext highlighter-rouge">annotate()</code> 메소드는 아래와 같이 사용합니다. 아래 예시를 보면 <code class="language-plaintext highlighter-rouge">Count()</code> 결과 값을 <code class="language-plaintext highlighter-rouge">num_books</code> 라는 이름으로 alias 처리하는 것을 볼 수 있습니다.</p>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/Pasted%20image%2020221216162758.png" alt="Pasted image 20221216162758.png" /></p>
+
+<p>결과적으로 말하자면 이 취약점은 <code class="language-plaintext highlighter-rouge">annotate()</code> 메소드에 <code class="language-plaintext highlighter-rouge">kwargs</code> 방식으로 전달하여, <code class="language-plaintext highlighter-rouge">kwargs</code>의 <code class="language-plaintext highlighter-rouge">key</code> 값으로 alias를 지정할 때 이 <code class="language-plaintext highlighter-rouge">key</code> 값을 검증하지 않기 때문에 발생합니다. <code class="language-plaintext highlighter-rouge">annotate()</code> 메소드를 수행하면 내부적으로는 아래와 같은 과정을 거칩니다.</p>
+
+<h2 id="2-1-querysetannotate">2-1. <code class="language-plaintext highlighter-rouge">QuerySet.annotate()</code></h2>
+
+<p><code class="language-plaintext highlighter-rouge">annotate()</code> 메소드를 실행하면 <code class="language-plaintext highlighter-rouge">QuerySet</code> 클래스 내부 <code class="language-plaintext highlighter-rouge">_annotate()</code> 메소드 실행합니다.</p>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/1.png" alt="image" /></p>
+
+<h2 id="2-2-queryset_annotate">2-2. <code class="language-plaintext highlighter-rouge">QuerySet._annotate()</code></h2>
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/2.png" alt="image" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">_annotate()</code> 메소드에서는 <code class="language-plaintext highlighter-rouge">kwargs</code>로 전달된 정보를 내부 변수 <code class="language-plaintext highlighter-rouge">annotations</code>에 저장하고, 이를 <code class="language-plaintext highlighter-rouge">Query</code> 클래스의 <code class="language-plaintext highlighter-rouge">add_annnotation()</code>에 전달합니다.</p>
+
+<h2 id="2-3-queryadd_annotation">2-3. <code class="language-plaintext highlighter-rouge">Query.add_annotation()</code></h2>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/3.png" alt="image" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">Query</code> 클래스에서는 이전 <code class="language-plaintext highlighter-rouge">QuerySet._annotate()</code> 에서 전달된 <code class="language-plaintext highlighter-rouge">annotations</code>를 내부 <code class="language-plaintext highlighter-rouge">self.annotations</code>에 설정하여 Alias 기능을 구현합니다. 그리고 다른 클래스에서 설정된 <code class="language-plaintext highlighter-rouge">self.annotations</code>를 가져올 때 <code class="language-plaintext highlighter-rouge">@property</code>로 설정된 <code class="language-plaintext highlighter-rouge">annotation_slect()</code> 함수를 실행해서 <code class="language-plaintext highlighter-rouge">self.annotations</code>를 반환합니다.</p>
+
+<h2 id="2-4-djangodbmodelssqlcompiler">2-4. <code class="language-plaintext highlighter-rouge">django.db.models.sql.compiler</code></h2>
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/Pasted%20image%2020221218152519.png" alt="image" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">SQLCompiler</code> 클래스의 <code class="language-plaintext highlighter-rouge">as_sql()</code> 메소드는 실제 실행될 SQL 쿼리를 만듭니다. <code class="language-plaintext highlighter-rouge">self.select</code>에 저장된 값을 SQL <code class="language-plaintext highlighter-rouge">AS</code> 구문으로 쿼리를 생성합니다. <code class="language-plaintext highlighter-rouge">QuerySet</code>클래스의 <code class="language-plaintext highlighter-rouge">annotate()</code> 메소드를 실행할 때 전달한 <code class="language-plaintext highlighter-rouge">kwargs</code>의 키 값은 <code class="language-plaintext highlighter-rouge">self.connection.ops.quote_name()</code> 을 거쳐 SQL에 들어갑니다. 이 <code class="language-plaintext highlighter-rouge">quote_name()</code> 메소드는 각 DBMS 별로 정의되어 있습니다.</p>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/Pasted%20image%2020221218152848.png" alt="image" /></p>
+
+<p>MySQL을 예로 들자면 Backtick 문자로 지정해주는 것을 볼 수 있습니다. 하지만 이 전까지 <code class="language-plaintext highlighter-rouge">key</code> 값에 대한 escape 처리가 없었기 때문에 여기서 SQL Injection 취약점이 발생할 수 있습니다.</p>
+
+<h2 id="2-5-패치">2-5. 패치</h2>
+
+<p>해당 취약점은 Django 4.0.4에서 수정되었고  <code class="language-plaintext highlighter-rouge">django.db.models.sql.query.Query</code> 클래스에서 <code class="language-plaintext highlighter-rouge">add_annotation()</code> 메소드를 수행할 때 내부적으로 <code class="language-plaintext highlighter-rouge">check_alias()</code> 메소드를 호출하는 식으로 취약점이 제거되었습니다.</p>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/Pasted%20image%2020221218153153.png" alt="image" /></p>
+
+<p><br /></p>
+
+<h1 id="3-cve-2022-28347">3. CVE-2022-28347</h1>
+<p><strong>CVE-2022-28347: Potential SQL injection via <code class="language-plaintext highlighter-rouge">QuerySet.explain(**options)</code> on PostgreSQL</strong></p>
+
+<p>이 취약점은 PostgreSQL 환경에서 Django <code class="language-plaintext highlighter-rouge">QuerySet</code>의 <code class="language-plaintext highlighter-rouge">explain()</code> 메소드를 수행할 때 발생 가능한 SQL Injection 취약점입니다.</p>
+<ul>
+  <li><a href="https://github.com/advisories/GHSA-w24h-v9qh-8gxj">https://github.com/advisories/GHSA-w24h-v9qh-8gxj</a></li>
+</ul>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/Pasted image 20221218043457.png" alt="explain()" />
+<a href="https://docs.djangoproject.com/en/4.1/ref/models/querysets/#explain">https://docs.djangoproject.com/en/4.1/ref/models/querysets/#explain</a></p>
+
+<p>Django Project Docs에는 위 예시가 작성되어 있습니다. 위 예시처럼 <code class="language-plaintext highlighter-rouge">explain()</code>은 실행하고자하는 데이터베이스 쿼리의 성능을 테스트하는 메소드입니다. 이 메소드를 실행하면 SQL의 <code class="language-plaintext highlighter-rouge">EXPLAIN</code> 명령을 사용할 수 있고, MySQL과 PostgreSQL에서는 특별히 EXPLAIN에 옵션까지 지정이 가능합니다.</p>
+
+<p>이때 explain() 메소드의 구현에서 SQL Injection이 가능했던 CVE-2022-28347 취약점을 분석해보고자 합니다.</p>
+
+<h2 id="3-1-queryset">3-1. <code class="language-plaintext highlighter-rouge">QuerySet</code></h2>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/4.png" alt="image" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">QuerySet</code> 클래스의 <code class="language-plaintext highlighter-rouge">explain()</code> 메소드는 위와 같이 정의되었습니다. 내부적으로 <code class="language-plaintext highlighter-rouge">self.query.explain()</code>를 수행합니다. <code class="language-plaintext highlighter-rouge">self.query</code>는 <code class="language-plaintext highlighter-rouge">django/db/models/sql/query.py</code>에 정의된 <code class="language-plaintext highlighter-rouge">Query</code> 클래스의 객체입니다.</p>
+
+<h2 id="3-2-query">3-2. <code class="language-plaintext highlighter-rouge">Query</code></h2>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/5.png" alt="image" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">Query</code>클래스의 <code class="language-plaintext highlighter-rouge">explain()</code> 메소드는 <code class="language-plaintext highlighter-rouge">get_compiler()</code> 메소드를 통해 <code class="language-plaintext highlighter-rouge">compiler</code>를 가져오고 사용하는 DB에 맞추어 <code class="language-plaintext highlighter-rouge">django.db.models.sql.compiler.SQLCompiler</code>를 상속한 클래스의 <code class="language-plaintext highlighter-rouge">explain_query()</code> 메소드를 실행시켜줍니다. <strong>여기서 kwargs 형식으로 인자를 받는 <code class="language-plaintext highlighter-rouge">**options</code>, 그리고 <code class="language-plaintext highlighter-rouge">q.explain_info</code>가 <code class="language-plaintext highlighter-rouge">ExplainInfo</code> 객체로 설정되었음을 기억해야합니다.</strong></p>
+
+<h2 id="3-3-sqlcompiler">3-3. <code class="language-plaintext highlighter-rouge">SQLCompiler</code></h2>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/6.png" alt="image" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">SQLCompiler</code> 클래스 내부의 <code class="language-plaintext highlighter-rouge">explain_query()</code> 메소드에서는 동일 클래스의 <code class="language-plaintext highlighter-rouge">execute_sql()</code>를 실행합니다. <code class="language-plaintext highlighter-rouge">execute_sql()</code> 메소드는 실제로 <code class="language-plaintext highlighter-rouge">self.as_sql()</code> 메소드를 실행해서 컴파일된 SQL Query구문을 실행하는 메소드입니다. 실제 쿼리를 생성하는 <code class="language-plaintext highlighter-rouge">as_sql()</code> 메소드는 각 DBMS마다 정의된 <code class="language-plaintext highlighter-rouge">explain_query_prefix()</code> 메소드를 실행합니다.</p>
+
+<h2 id="3-4-djangodbbackendspostgresqloperationspy">3-4. <code class="language-plaintext highlighter-rouge">django/db/backends/postgresql/operations.py</code></h2>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/7.png" alt="image" /></p>
+
+<p>Postgresql을 위해 정의된 <code class="language-plaintext highlighter-rouge">explain_query_prefix()</code> 메소드입니다. 앞서 <code class="language-plaintext highlighter-rouge">QuerySet</code> 클래스의 <code class="language-plaintext highlighter-rouge">explain()</code> 메소드를 설명할 때 <code class="language-plaintext highlighter-rouge">**options</code>에 kwargs 형식으로 <code class="language-plaintext highlighter-rouge">dict</code> 형식의 값이 들어갈 수 있음을 언급했습니다. 이 값이 그대로 <code class="language-plaintext highlighter-rouge">explain_query_prefix()</code> 메소드에 전달되며 <code class="language-plaintext highlighter-rouge">prefix</code> 에 그대로 쿼리가 저장되면서, <code class="language-plaintext highlighter-rouge">options</code>에 저장된 <code class="language-plaintext highlighter-rouge">dict</code> 값 key 부분에서 SQL Injection이 가능해집니다.</p>
+
+<h2 id="3-5-패치">3-5. 패치</h2>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/8.png" alt="image" /></p>
+
+<p>이 취약점은 <code class="language-plaintext highlighter-rouge">DatabaseOperations</code> 클래스에 <code class="language-plaintext highlighter-rouge">explain_options</code> 변수를 두어 <code class="language-plaintext highlighter-rouge">key</code> 부분에 대한 검증 로직이 추가되며 수정되었습니다. 아무래도 <code class="language-plaintext highlighter-rouge">options</code>의 key에 여러 값이 들어갈 수 있다보니, Django 사용자가 변수로 전달할 수 있는 여지를 인정한 것 같습니다.</p>
+
+<p><br /></p>
+
+<h1 id="4-cve-2022-34265">4. CVE-2022-34265</h1>
+<p><strong>CVE-2022-34265: Potential SQL injection via <code class="language-plaintext highlighter-rouge">Trunc(kind)</code> and <code class="language-plaintext highlighter-rouge">Extract(lookup_name)</code> arguments.</strong></p>
+<ul>
+  <li><a href="https://github.com/django/django/commit/284b188a4194e8fa5d72a73b09a869d7dd9f0dc5">https://github.com/django/django/commit/284b188a4194e8fa5d72a73b09a869d7dd9f0dc5</a></li>
+</ul>
+
+<p>이 취약점은 <code class="language-plaintext highlighter-rouge">django/db/models/query.py</code> 에 정의된 <code class="language-plaintext highlighter-rouge">QuerySet</code> 클래스의 <code class="language-plaintext highlighter-rouge">dates()</code> 메소드로부터 시작됩니다. <code class="language-plaintext highlighter-rouge">dates()</code> 메소드의 쓰임은 아래 <code class="language-plaintext highlighter-rouge">docs.djangoproject.com</code> 링크에서 확인할 수 있습니다. 이 메소드는 내부적으로 <code class="language-plaintext highlighter-rouge">Trunc</code> 클래스를 사용하는데, <code class="language-plaintext highlighter-rouge">Trunc</code> 클래스에서 취약점이 발견되었습니다.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">dates()</code> : <a href="https://docs.djangoproject.com/en/4.0/ref/models/querysets/#dates">https://docs.djangoproject.com/en/4.0/ref/models/querysets/#dates</a></li>
+</ul>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/Pasted%20image%2020221218033513.png" alt="image" /></p>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/12.png" alt="image" /></p>
+
+<h2 id="4-1-trunc">4-1. <code class="language-plaintext highlighter-rouge">Trunc</code></h2>
+
+<p>위와 같이 <code class="language-plaintext highlighter-rouge">dates()</code> 메소드는 <code class="language-plaintext highlighter-rouge">DateField</code>로 지정된 <code class="language-plaintext highlighter-rouge">field</code>를 <code class="language-plaintext highlighter-rouge">datetime.date</code> 객체로 반환해주는 역할을 합니다. <code class="language-plaintext highlighter-rouge">dates()</code> 메소드를 실행할 때는 첫번째 <code class="language-plaintext highlighter-rouge">field</code> 인자 두번째 <code class="language-plaintext highlighter-rouge">kind</code> 인자를 넘깁니다. 이 중 두번째 <code class="language-plaintext highlighter-rouge">kind</code> 인자는  <code class="language-plaintext highlighter-rouge">str</code> 형식의 값을 받으며, <code class="language-plaintext highlighter-rouge">django/db/models/functions/datetime.py</code>에 정의된 <code class="language-plaintext highlighter-rouge">Trunc</code> 클래스에 인자로 넘겨집니다.</p>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/9.png" alt="image" /></p>
+
+<p>위 <code class="language-plaintext highlighter-rouge">Trunc</code> 클래스는 <code class="language-plaintext highlighter-rouge">TruncBase</code> 클래스를 상속받은 형태로, <code class="language-plaintext highlighter-rouge">DateField</code> 를 <code class="language-plaintext highlighter-rouge">datetime.date</code> 객체로 변환시켜주는 클래스입니다. <code class="language-plaintext highlighter-rouge">__init__()</code> 메소드에서 <code class="language-plaintext highlighter-rouge">expression</code>, <code class="language-plaintext highlighter-rouge">kind</code> 를 받아 내부 property로 저장합니다. Django Project Docs에 올라온 예시를 보았을 때 두 파라미터 모두 <code class="language-plaintext highlighter-rouge">str</code> 형식으로 사용자의 입력값이 충분히 들어갈 수 있습니다. 결과적으로 <code class="language-plaintext highlighter-rouge">expression</code> 파라미터는 부모클래스 <code class="language-plaintext highlighter-rouge">__init__()</code> 메소드에 전해지며 <code class="language-plaintext highlighter-rouge">django/db/models/expressions.py</code> 에 정의된 <code class="language-plaintext highlighter-rouge">F</code> 클래스로 저장됩니다. <strong>하지만 <code class="language-plaintext highlighter-rouge">kind</code> 는 아무런 검증 없이 <code class="language-plaintext highlighter-rouge">self.kind</code> 에 저장된다는 점을 기억해두어야 합니다.</strong></p>
+
+<h2 id="4-2-truncbase">4-2. <code class="language-plaintext highlighter-rouge">TruncBase</code></h2>
+
+<p>실질적으로 Django ORM으로 <code class="language-plaintext highlighter-rouge">QuerySet</code> 클래스를 SQL 쿼리로 변환하는 기능은, 동일 파일에 정의된 <code class="language-plaintext highlighter-rouge">TruncBase</code> 클래스의 <code class="language-plaintext highlighter-rouge">as_sql()</code> 메소드로 정의되어 있기 때문에 다음은 <code class="language-plaintext highlighter-rouge">TruncBase</code> 클래스를 분석해보는 것으로 합니다.</p>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/10.png" alt="image" /></p>
+
+<p>이는 인자로 넘겨진 <code class="language-plaintext highlighter-rouge">self.output_field</code> 변수의 type 별로 <code class="language-plaintext highlighter-rouge">datetime_trunc_sql()</code>, <code class="language-plaintext highlighter-rouge">date_trunc_sql()</code>, <code class="language-plaintext highlighter-rouge">time_trunc_sql()</code> 메소드를 호출합니다. 여기서 세 메소드 모두 이전 <code class="language-plaintext highlighter-rouge">Trunc</code> 클래스에서 사용자로부터 아무런 검증없이 받을 수 있는  <code class="language-plaintext highlighter-rouge">self.kind</code> 를 인자로 취한다는 점이 중요합니다. 이 메소드들은 각 데이터베이스 문법에 따라 각각 정의되어 있으며, 예시로 SQLite3에서는 아래와 같이 구현되었습니다.</p>
+
+<h2 id="4-3-databaseoperations">4-3. <code class="language-plaintext highlighter-rouge">DatabaseOperations</code></h2>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/11.png" alt="image" /></p>
+
+<p>두 번째에 전달되는 인자 <code class="language-plaintext highlighter-rouge">lookup_type</code>에는 이전 <code class="language-plaintext highlighter-rouge">Trunc</code> 클래스에서 사용자로부터 받은 인자 <code class="language-plaintext highlighter-rouge">kind</code> 가 전달이 되는데, 실제 SQL Query를 만들기까지 <code class="language-plaintext highlighter-rouge">kind</code> 값에 대한 아무런 검증이 없습니다. 때문에 <code class="language-plaintext highlighter-rouge">kind</code> 값을 통해 SQL Injection이 가능합니다.</p>
+
+<h2 id="4-4-패치">4-4. 패치</h2>
+
+<p><code class="language-plaintext highlighter-rouge">django/db/models/functions/datetime.py</code>에 정의된 <code class="language-plaintext highlighter-rouge">TruncBase</code> 클래스의 <code class="language-plaintext highlighter-rouge">as_sql()</code> 메소드에 아래처럼 변경되었습니다.</p>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/13.png" alt="image" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">as_sql()</code> 메소드를 호출하고 나서 <code class="language-plaintext highlighter-rouge">extract_trunc_lookup_pattern</code>을 인자로 넘겨진 <code class="language-plaintext highlighter-rouge">kind</code> 값과 정규식 기능을 통해 비교합니다. 정규식으로 검사하는 값은 <code class="language-plaintext highlighter-rouge">_lazy_re_compile(r"[\w\-_()]+")</code> 으로, <code class="language-plaintext highlighter-rouge">dates()</code> 메소드의 인자 <code class="language-plaintext highlighter-rouge">kind</code>에 특수문자를 사용하지 못하도록 하여 SQL Injection 취약점을 수정했습니다.</p>
+
+<p><br /></p>
+
+<h1 id="5-django-single-quote-unescaping-bug-in-keytransform-class">5. Django Single Quote Unescaping Bug in <code class="language-plaintext highlighter-rouge">KeyTransform</code> class</h1>
+
+<p>위 세 개의 취약점이 크게 인상깊어서 올해 6월 경부터 Django 프레임워크에서 SQL Injection 취약점을 찾아내겠다는 목표를 갖고 취약점 분석을 시작했습니다. 그래서 결국 Oracle 데이터베이스 환경에서 특정 기능을 이용할 때 특수문자가 unescaped 되어 SQL 쿼리를 탈출할 수 있는 버그를 찾았습니다.</p>
+
+<h2 id="5-1-keytransform">5-1. <code class="language-plaintext highlighter-rouge">KeyTransform</code></h2>
+
+<p><code class="language-plaintext highlighter-rouge">django.db.models.fields.json</code>에 정의된 <code class="language-plaintext highlighter-rouge">KeyTransform</code> 클래스는 MySQL의 <code class="language-plaintext highlighter-rouge">JSON_EXTRACT()</code> 함수를 Django ORM으로 구현하기 위해 만들어졌습니다. 아래는 <code class="language-plaintext highlighter-rouge">KeyTransform</code> 클래스의 <code class="language-plaintext highlighter-rouge">as_mysql()</code> 메소드가 정의된 부분입니다.</p>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/14.png" alt="image" /></p>
+
+<p>MySQL에서 사용되는 <code class="language-plaintext highlighter-rouge">JSON_EXTRACT()</code> 함수의 사용 예는 아래와 같습니다. 첫번째 인자로 JSON Document를 받고, 두 번째 인자로 Path를 받습니다. 아래 예시처럼 사용하여 JSON Document의 Path에 해당되는 값을 불러올 수 있습니다.</p>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/Pasted%20image%2020221217022516.png" alt="image" /></p>
+
+<h2 id="5-2-keytransformas_oracle">5-2. <code class="language-plaintext highlighter-rouge">KeyTransform.as_oracle()</code></h2>
+
+<p>Django에서는 MySQL의 <code class="language-plaintext highlighter-rouge">JSON_EXTRACT()</code> 함수를 다른 DBMS에서도 사용할 수 있도록 하기 위해 아래와 같이 여러 함수를 중첩적으로 사용하여 구현해두었습니다. 아래는 Oracle DB 환경에서 <code class="language-plaintext highlighter-rouge">JSON_EXTRACT()</code> 함수를 구현해둔 것입니다.</p>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/15.png" alt="image" /></p>
+
+<h2 id="5-3-keytransformpreprocess_lhs">5-3. <code class="language-plaintext highlighter-rouge">KeyTransform.preprocess_lhs()</code></h2>
+
+<p>우선 첫번째로 호출하는 <code class="language-plaintext highlighter-rouge">self.preprocess_lhs()</code>를 분석해볼 필요가 있습니다. <code class="language-plaintext highlighter-rouge">lhs</code>는 Left-Hand Side의 줄임말로, Django에서는 내부적으로 쿼리를 생성할 때 사용되는 일종의 접미사라고 볼 수 있습니다. 이 메소드의 내용은 아래와 같습니다.</p>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/16.png" alt="image" /></p>
+
+<p>이 메소드에서는 기존 JSON에서 사용되는 특수문자를 escape 처리하기 위해 <code class="language-plaintext highlighter-rouge">key_transforms</code> 라는 변수를 반환합니다. 이 변수는 <code class="language-plaintext highlighter-rouge">__init__</code>에서 만들어진 값이며 클래스 생성 시 전달한 <code class="language-plaintext highlighter-rouge">key_name</code> 값이 저장되어 있습니다.</p>
+
+<h2 id="5-4-compile_json_path">5-4. <code class="language-plaintext highlighter-rouge">compile_json_path()</code></h2>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/17.png" alt="image" /></p>
+
+<p>다시 <code class="language-plaintext highlighter-rouge">as_oracle()</code> 메소드로 돌아와서, <code class="language-plaintext highlighter-rouge">key_transforms</code> 변수를 <code class="language-plaintext highlighter-rouge">compile_json_path()</code>의 인자로 전달하는 것을 볼 수 있습니다.</p>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/18.png" alt="image" /></p>
+
+<p>이 <code class="language-plaintext highlighter-rouge">compile_json_path()</code> 함수는 인자로 받은 <code class="language-plaintext highlighter-rouge">key_trancsforms</code> 값이 <code class="language-plaintext highlighter-rouge">int()</code>를 호출할 때 Exception이 난다면 <code class="language-plaintext highlighter-rouge">json.dumps()</code> 를 통해 변수를 JSON 형식으로 저장해 반환해줍니다. 이때 <code class="language-plaintext highlighter-rouge">json.dumps()</code>는 백슬래시와 더블쿼터를 escape처리하는데, 싱글쿼터(<code class="language-plaintext highlighter-rouge">'</code>)는 백슬래시를 통해 처리되지 않기 때문에 SQL Query에 영향을 끼칠 수 있습니다.</p>
+
+<h2 id="5-5-boom">5-5. BOOM!</h2>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/19.png" alt="image" /></p>
+
+<p>또 다시 <code class="language-plaintext highlighter-rouge">as_oracle()</code> 메소드로 돌아와서 확인해보면, 싱글쿼터가 그대로 들어갈 수 있는 <code class="language-plaintext highlighter-rouge">json_path</code> 가 Format String으로 <code class="language-plaintext highlighter-rouge">JSON_QUERY()</code>, <code class="language-plaintext highlighter-rouge">JSON_VALUE()</code> 함수 안에 그대로 들어가는 것을 확인할 수 있습니다.</p>
+
+<p><img src="/assets/2022-12-16-analyzing-django-orm-with-1-day/Pasted%20image%2020221217030925.png" alt="image" /></p>
+
+<p>따라서, 어떤 Django Application의 <code class="language-plaintext highlighter-rouge">views.py</code>에 위와 같은 코드가 있다면 실제 Single Quotes Unescaped Bug를 트리거 할 수 있습니다.</p>
+
+<h2 id="5-6-한계">5-6. 한계</h2>
+
+<p>이 버그는 실제 SQL Injection 공격까지 트리거 할 수 없습니다. ORACLE DBMS에서는 MySQL에서와 다르게 모든 함수의 각 인자를 검증하는 과정이 있기 때문입니다. 이번 SQL Injection 취약점은 <code class="language-plaintext highlighter-rouge">JSON_QUERY()</code> 함수에서 SQL Injection 취약점이 두번째 문자열 인자에서 트리거되는데, 이때 Oracle DB의 유효성 검증을 우회하지 못합니다. Oracle DB는 MySQL처럼 SQL 구문을 자유자재로 다루기가 힘들기 때문입니다.</p>
+
+<p><br /></p>
+
+<h1 id="6-끝으로">6. 끝으로..</h1>
+
+<p>대형 오픈소스 프레임워크를 분석해보면 배울 수 있는 점이 많습니다. 이번에 분석해본 Django의 경우에는 훌륭한 객체지향 디자인을 기반으로, Python의 가치를 최대화하여 작성된 프레임워크였던 것 같습니다. Django가 어떻게 구현되었는지 확인해보면서 부족했던 저의 프로그래밍, 소프트웨어 구조화 등 암묵지 실력을 키울 수 있었다고 생각합니다.</p>
+
+<p>하지만 프레임워크라는 것이 프로그래머마다 구현하기 나름이라, 사용하고 있는 Django의 버전에 1-day 취약점이 존재해도 어떻게 구현하느냐에 따라 취약점이 발생하지 않을 수 있습니다. 이것을 보통 generic하지 않다고 표현하기도 하는데, 프레임워크 분석할 때 이 부분이 조금 아쉬운 부분이긴 합니다.</p>
+
+<p>이 글은 Obsidian으로 제텔카스텐 기법을 써서 작성되었습니다. 제텔카스텐을 알려주시고 개인적으로 제게 큰 힘과 용기를 북돋아주신 호정님께 이 글을 빌려 감사인사를 드리고 싶습니다.</p>
+
+    <div class="page-profile-detail">
+        <div class="page-profile-detail-info">
+            <div>
+                <img class="page-profile_image-detail" src="/assets/2022-10-04-Secure-Coding-Training-System/profile.jpeg" />
+            </div>
+            <div style="position: relative; top: 12px;left: 10px;">
+                <div class="page-profile-author">Seokchan Yoon</div>
+                <div class="page-profile-email">scyoon@stealien.com</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="recent-post-area">
+    <div class="posts container">
+        <div class="h1-recent-post">RECENT POST</div>
+            <div class="row">
+    <div class="col-sm-2 col-md-2">
+        <div class="profile">
+            <img src="/assets/stealien_inverse.png" class="profile_image" />
+            <div class="profile_author">이주협, 이주영</div>
+        </div>
+    </div>
+    <div class="col">
+        <a href="/2024-02-06/IoT-TechBlog-ko">
+            <div class="post-title">
+                뉴비들의 하드웨어 해킹 입문기
+            </div>
+        </a>
+        <div class="post-summary">뉴비들의 하드웨어 해킹 입문기</div>
+        <div class="post-info">
+            <span style="color: #545454" class="post-author-mobile">
+                이주협, 이주영
+                <span style="color: #f5f5f5; margin: 2px">|</span>
+            </span>
+            Feb 6, 2024
+            <span style="color: #f5f5f5; margin: 2px">|</span>
+            <span>R&D</span>
+        </div>
+    </div>
+</div><div class="row">
+    <div class="col-sm-2 col-md-2">
+        <div class="profile">
+            <img src="/assets/stealien_inverse.png" class="profile_image" />
+            <div class="profile_author">Hyerim Jeon</div>
+        </div>
+    </div>
+    <div class="col">
+        <a href="/2023-11-15/Android-malware-%EC%82%AC%EB%A7%88%EA%B7%80-%ED%95%B4%EB%B6%80%ED%95%99-ko">
+            <div class="post-title">
+                Android Malware : 사마귀 해부학
+            </div>
+        </a>
+        <div class="post-summary">about Roaming Mantis</div>
+        <div class="post-info">
+            <span style="color: #545454" class="post-author-mobile">
+                Hyerim Jeon
+                <span style="color: #f5f5f5; margin: 2px">|</span>
+            </span>
+            Nov 15, 2023
+            <span style="color: #f5f5f5; margin: 2px">|</span>
+            <span>R&D</span>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+</div>
+		</div>
+	</section><footer>
+  <div class="container" style="display: flex; justify-content: space-between;">
+    <!-- <a href="#top">
+      <img src="/assets/white_logo.png" class="footer-logo" />
+    </a> -->
+    <div class="footer-copyright">Copyright &copy; Stealien Inc.</div>
+    <div class="footer-icons">
+      <a target="_blank" href="https://twitter.com/stealien"><img class="sns" src="/assets/icons/twitter_ic.png"/></a>
+      <a target="_blank" href="https://blog.naver.com/stealien_official"><img class="sns" src="/assets/icons/blog_ic.png"/></a>
+      <a target="_blank" href="https://www.facebook.com/stealien/"><img class="sns" src="/assets/icons/facebook_ic.png"/></a>
+      <a target="_blank" href="https://www.youtube.com/c/STEALIEN"><img class="sns" src="/assets/icons/youtube_ic.png"/></a>
+    </div>
+  </div>
+</footer></body>
+</html>

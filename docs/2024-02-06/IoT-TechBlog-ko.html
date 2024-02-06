@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta property="og:type" content="article">
+<meta property="og:image" content="http://ufo.stealien.com/assets/og_image.png">
+<meta property="og:title" content="STEALIEN Technical Blog">
+<meta property="og:description" content="뉴비들의 하드웨어 해킹 입문기">
+<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700&display=swap" rel="stylesheet">
+<title>뉴비들의 하드웨어 해킹 입문기</title>
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>뉴비들의 하드웨어 해킹 입문기 | STEALIEN Technical Blog</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="뉴비들의 하드웨어 해킹 입문기" />
+<meta name="author" content="이주협, 이주영" />
+<meta property="og:locale" content="ko" />
+<meta name="description" content="뉴비들의 하드웨어 해킹 입문기" />
+<meta property="og:description" content="뉴비들의 하드웨어 해킹 입문기" />
+<link rel="canonical" href="http://ufo.stealien.com/2024-02-06/IoT-TechBlog-ko" />
+<meta property="og:url" content="http://ufo.stealien.com/2024-02-06/IoT-TechBlog-ko" />
+<meta property="og:site_name" content="STEALIEN Technical Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-02-06T10:00:00+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="뉴비들의 하드웨어 해킹 입문기" />
+<script type="application/ld+json">
+{"headline":"뉴비들의 하드웨어 해킹 입문기","dateModified":"2024-02-06T10:00:00+09:00","datePublished":"2024-02-06T10:00:00+09:00","url":"http://ufo.stealien.com/2024-02-06/IoT-TechBlog-ko","mainEntityOfPage":{"@type":"WebPage","@id":"http://ufo.stealien.com/2024-02-06/IoT-TechBlog-ko"},"author":{"@type":"Person","name":"이주협, 이주영"},"description":"뉴비들의 하드웨어 해킹 입문기","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name=“naver-site-verification” content=“74a9ec74d48a1ffca92bf9ac4704ba73be9afd65" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"/>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/assets/css/style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
+
+<link href="/assets/css/syntax.css" rel="stylesheet" >
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-06FFJEF76M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-06FFJEF76M');
+</script>
+</head>
+<body>
+	<header>
+		<div class="container"></div><div id="header">
+    <div class="container" style="display: flex;justify-content: space-between;">
+        <a href="/">
+            <img
+                class="header_image_logo"
+                src="/assets/logo.png"
+                style="width: 140px; margin: 20px 28px 0px;"
+            />
+        </a>
+        <a href="https://www.stealien.com/" target="_blank" style="font-family: 'NotoSansKR Medium', sans-serif;font-size: 14px;margin-right: 30px; color: #000; line-height: 70px;">스틸리언 홈페이지</a>
+    </div>
+</div>
+</header>
+	<section>
+		<div>
+			<div class="header_image_bg header_image_post" style="background-image: url('/assets/bg.png');">
+    <div class="header_image_post_body">
+        <div class="container">
+            <div class="page-category">R&D</div>
+            <div class="page-title">뉴비들의 하드웨어 해킹 입문기</div>
+            <div class="page-summary">
+                <div style="float:left;">
+                    <img class="page-profile_image" src="/assets/stealien_inverse.png" />
+                    <span>이주협, 이주영</span>
+                </div>
+                <div style="float:right;" class="page-date">Feb 6, 2024</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container page-content">
+    <h1 id="뉴비들의-하드웨어-해킹-입문기">뉴비들의 하드웨어 해킹 입문기</h1>
+
+<blockquote>
+  <p>이 포스트는 스틸리언 선제대응팀의 ‘이주협’ 선임 연구원님과 ‘이주영’ 연구원님이 정성스럽게 작성 해 주셨습니다.</p>
+
+  <p>선제대응팀(Team Defend Forward)은 IoT, 임베디드 디바이스, 네트워크 디바이스같은 장비의 취약점 분석은 물론이고,
+모바일 디바이스 어플리케이션, 웹 서비스/어플리케이션, 데스크탑/서버 어플리케이션/서비스 등 다양한 소프트웨어에 대한
+화이트박스/블랙박스 펜테스팅 서비스를 제공하고 있습니다.</p>
+
+  <p>by 선제대응팀 팀장 김도현</p>
+</blockquote>
+
+<h2 id="목차">목차</h2>
+
+<ul>
+  <li>UART
+    <ul>
+      <li>필요한 장비 정리</li>
+      <li>메인 칩셋 데이터 시트 참고하는 법</li>
+    </ul>
+  </li>
+  <li>Desoldering</li>
+  <li>FlashROM을 통한 펌웨어 추출</li>
+  <li>펌웨어 조작 - 쉘 떨구기</li>
+  <li>Soldering</li>
+  <li>Glitching
+    <ul>
+      <li>Serial Data Output Pin Glitching</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="1-인트로">1. 인트로</h2>
+
+<blockquote>
+  <p>본 블로그 포스트는 SPI를 사용하는 Router의 하드웨어 해킹을 기준 해 작성했습니다. 라우터의 구현에 따른 한가지 방법일 뿐, 일반적으로 통용되는 하드웨어 해킹 방법론이 아님을 명시합니다.</p>
+</blockquote>
+
+<h2 id="2-uart">2. UART</h2>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/UART.drawio.png" alt="UART drawio" /></p>
+
+<p>UART(Universal Asynchronous Receiver/Transmitter)는 두 하드웨어 기기가 서로 Serial 통신할 때 사용하는 프로토콜입니다. 주로 하드웨어 개발자들이 디버깅 용도로 사용합니다.</p>
+
+<h3 id="21-uart를-사용하는-이유">2.1. UART를 사용하는 이유</h3>
+
+<p>경우에 따라 다르지만 UART로 Login Prompt 또는 OS Shell을 제공하는 하드웨어 기기가 있습니다. 하드웨어 기기의 쉘에 접근하면 기기 내에 동작하는 프로세스를 확인하거나 gdb와 같은 디버거를 원격으로 업로드하여 프로세스를 직접 디버깅하는 등의 분석을 수행할 수 있습니다.</p>
+
+<p>UART로 쉘을 제공하지 않더라도 부팅 로그를 출력하는 경우도 있습니다. 이 경우, 부팅 로그에 펌웨어 복호화 키와 같은 민감한 정보가 포함되어 있을 수 있습니다. 따라서 하드웨어 기기의 UART를 확인해야 하는 근거는 충분합니다.</p>
+
+<h3 id="22-uart-연결-준비">2.2. UART 연결 준비</h3>
+
+<p>UART 연결에 필요한 장비는 다음과 같습니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>장비</th>
+      <th>역할</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>USB to TTL</td>
+      <td>기기의 UART와 PC 간 시리얼 통신을 위한 USB Converter</td>
+    </tr>
+    <tr>
+      <td>점퍼 케이블(optional)</td>
+      <td>USB to TTL과 기기의 UART 핀을 연결하는 케이블</td>
+    </tr>
+    <tr>
+      <td>MultiMeter</td>
+      <td>전기 및 전자 장비의 전압, 전류, 저항 등을 측정하는 테스트기</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="221-uart의-종류">2.2.1. UART의 종류</h3>
+
+<p>UART에 연결하기 전 기기마다 가질 수 있는 UART 형태의 종류를 알아보겠습니다.</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/ipTIME_N704VS_UART.jpg" alt="ipTIME N704VS router UART PIN" /></p>
+
+<p>ipTIME N704VS router UART PIN</p>
+
+<p>ipTIME N704VS 라우터의 경우, UART에 핀 헤더가 연결되어 있기 때문에 각 핀의 역할만 찾으면 바로 USB to TTL과 연결하여 Serial 통신이 가능합니다.</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/Netis_UART.jpg" alt="Netis router UART PIN" /></p>
+
+<p>Netis router UART PIN</p>
+
+<p>Netis 라우터의 UART 핀입니다. 대부분의 UART 핀은 위 사진과 같이 4개의 패드로 존재합니다. 이러한 경우 암-수 점퍼 케이블을 연결하거나, 홀에 헤더핀을 납땜하여 암-암 점퍼케이블로 USB to TTL과 연결할 수 있습니다.</p>
+
+<h3 id="222-점퍼-케이블-종류">2.2.2. 점퍼 케이블 종류</h3>
+
+<p>점퍼 케이블의 종류는 다음과 같습니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>케이블 명</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>암-암 점퍼 케이블</td>
+      <td>케이블 헤더에 핀이 존재하지 않아 UART 핀과 탈부착할 수 있는 케이블</td>
+    </tr>
+    <tr>
+      <td>암-수 점퍼 케이블</td>
+      <td>케이블의 한쪽 헤더에만 핀이 고정 되어있는 케이블</td>
+    </tr>
+    <tr>
+      <td>수-수 점퍼 케이블</td>
+      <td>케이블의 양쪽 헤더에 핀이 고정 되어있는 케이블</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>일반 USB to TTL은 별도의 암-수 점퍼 케이블이나 암-암 점퍼 케이블과 핀 헤더가 필요합니다.</p>
+
+<p>케이블 일체형 USB to TTL은 암-암 점퍼 케이블이 내장되어 있어 별도의 암-암 점퍼 케이블 없이도 UART 핀에 연결할 수 있습니다. 각 UART 핀의 역할을 점퍼 케이블의 색깔로 구분하여 연결합니다.</p>
+
+<h3 id="223-uart-pin의-종류">2.2.3. UART Pin의 종류</h3>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/UART_Pin.drawio.png" alt="UART Pin drawio" /></p>
+
+<p>UART 핀의 각 역할은 다음과 같습니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>UART 핀</th>
+      <th>역할</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GND</td>
+      <td>메인 보드의 기준 전압을 맞춰주는 핀</td>
+    </tr>
+    <tr>
+      <td>TX</td>
+      <td>시리얼 데이터를 송신하는 핀</td>
+    </tr>
+    <tr>
+      <td>RX</td>
+      <td>시리얼 데이터를 수신하는 핀</td>
+    </tr>
+    <tr>
+      <td>VCC</td>
+      <td>전원을 공급하는 핀</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>하드웨어 기기에 전원 케이블을 통해서 전원 공급이 가능하다면 VCC 핀은 연결하지 않습니다.</p>
+
+<p>UART 핀의 역할을 알아보았으니 각 UART 핀을 식별해 봅시다.</p>
+
+<h2 id="23-uart-pin-식별">2.3. UART PIN 식별</h2>
+
+<h3 id="231-uart-gnd-pin-식별">2.3.1. UART GND PIN 식별</h3>
+
+<p>UART의 GND 핀은 멀티미터를 통해 찾을 수 있습니다. 멀티미터의 Conductivity 모드는 전기회로가 서로 연결 되어있을 때 부저음을 출력합니다. PCB<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>에서 SPI Flash 칩의 GND 핀과 UART의 GND 핀은 연결되어 있습니다.</p>
+
+<p>따라서 SPI Flash 칩의 GND 핀 위치를 찾고 각 UART 핀과 한번씩 연결해보는 방식으로 부저음을 통해서 UART의 GND 핀을 찾을 수 있습니다.</p>
+
+<p><strong>(1) SPI Flash Chip GND PIN → UART GND PIN</strong></p>
+
+<p>SPI Flash 칩에서 GND 핀 위치는 데이터 시트를 통해 찾을 수 있습니다. SPI Flash 칩의 모델명을 확인하여 데이터 시트를 검색합니다.</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/flashchip.jpg" alt="SPI Flash chip" /></p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/flashchip_datasheet.png" alt="SPI Flash chip datasheet" /></p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/flashchip_datasheet_table.png" alt="SPI Flash chip datasheet table" /></p>
+
+<p>데이터 시트를 통해 SPI Flash 칩의 GND 핀은 점을 기준으로 4번째 핀인 VSS 핀임을 알 수 있습니다.</p>
+
+<p>이제 UART의 GND 핀을 식별해봅시다. 기기에 전원을 공급하지 않은 상태에서, 멀티미터를 Conductivity 모드로 설정합니다.</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/conductivity_mode.jpg" alt="conductivity mode" /></p>
+
+<p>멀티미터의 검은 리드선<sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>을 SPI Flash 칩의 GND 핀에 고정한 상태에서 빨간 리드선을 각 UART 핀에 한번씩 연결합니다.</p>
+
+<p><strong>(2) Other Method</strong></p>
+
+<p>데이터시트를 찾지 못한 이유로 SPI Flash 칩의 GND 핀 위치를 찾지 못할 수 있습니다. 해당 경우에는 멀티미터의 검은 리드선을 PCB의 구리 홀에 연결하고, 빨간 리드선을 각 UART 핀에 한번씩 연결하여 UART의 GND 핀을 찾을 수 있습니다.</p>
+
+<h3 id="232-tx--rx-식별">2.3.2. TX &amp; RX 식별</h3>
+
+<p><strong>(1) MCU와 UART의 단락 상태 검사</strong></p>
+
+<p>UART의 TX, RX핀은 MCU의 TX와 RX 핀과 연결되어 있습니다. 이를 이용해서 MCU의 TX와 RX 핀을 찾고 멀티미터 Conductivity 모드로 UART의 TX와 RX 핀을 찾을 수 있습니다.</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/mcu.jpg" alt="mcu" /></p>
+
+<p>경우에 따라 MCU 위에 방열판이 덮고 있을 수 있습니다. MCU를 덮고 있는 방열판을 제거하고 MCU 칩 정보를 확인하여 데이터 시트를 검색합니다:</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/mcu_datasheet.png" alt="mcu datasheet" /></p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/mcu_datasheet_table.png" alt="mcu datasheet table" /></p>
+
+<p>UART 핀은 125번 핀과 126번 핀입니다. MCU의 기준점(사진의 빨간 동그라미)을 바탕으로 125번, 126번 핀의 실제 위치를 찾을 수 있습니다.</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/mcu_highlighted.jpg" alt="mcu highlighted" /></p>
+
+<p>이제 기기에 전원을 공급하지 않은 상태에서 멀티미터를 Conductivity 모드로 설정합니다. 검은색 리드선을 MCU의 RX에 고정하고 빨간색 리드선을 각 UART 핀에 연결했을 때, 부저음을 출력하는 핀이 UART의 RX 핀입니다. TX도 같은 방식으로 식별해봅시다.</p>
+
+<p><strong>(2) 핀의 전압, 전류 측정</strong></p>
+
+<p>이번에는 MCU의 데이터시트가 없어 RX와 TX를 찾지 못한 경우에 UART의 RX와 TX 핀을 식별할 수 있는 방법을 사용해봅시다.</p>
+
+<p>멀티미터를 DCV(직류전압) 모드로 설정한 후 검은색 프로브를 COM 단자, 빨간색 프로브를 V-Ω 단자에 연결합니다. 기기에 전원을 공급한 후, 검은색 리드선을 기기의 GND와 접촉하고, 빨간색 리드선은 식별하고자 하는 UART핀과 접촉하여 전압을 측정합니다.</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/dcv.jpg" alt="dcv" /></p>
+
+<p>일반적으로 전압이 2.4V ~ 3.3V 사이를 지속적으로 변한다면 TX 핀, 전압이 0.0V이면 RX 핀입니다. TX 핀은 다양한 데이터를 송신하기 때문에 2.4V ~ 3.3V 사이에서 전압이 지속적으로 변합니다. RX 핀은 송신 행위 없이 데이터를 수신하는 역할만 수행하기 때문에 0.0V의 전압을 띄고 있습니다. 하지만 전원이 들어온 상태에서 TX와 RX의 전압을 측정할 때 노이즈가 발생하므로 경우에 따라 UART의 TX와 RX 전압이 거의 동일하게 측정됩니다.</p>
+
+<p>전압으로 TX와 RX를 구분할 수 없는 경우라면 전류를 측정하여 구분해봅니다. 멀티미터를 DCA(직류 전압) 모드로 설정한 후 검은색 프로브는 COM 단자에, 빨간색 프로브는 전류측정단자(~mA)에 연결합니다. 검은색 리드선은 기기의 GND와 접촉하고 빨간색 리드선은 식별대상 UART 핀에 접촉합니다. 기기에 전원을 공급한 후 측정되는 전류를 관찰합니다. 일반적으로 VCC, GND, RX는 전류가 흐르지 않고(0mA) TX의 경우에만 23mA~44mA 사이의 전류가 흐르고 있습니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>mode</th>
+      <th>PIN1</th>
+      <th>PIN2</th>
+      <th>PIN3</th>
+      <th>PIN4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>DCV</td>
+      <td>0 V</td>
+      <td>0 V</td>
+      <td>3.25 V</td>
+      <td>3.25 V</td>
+    </tr>
+    <tr>
+      <td>DCA</td>
+      <td>0 mA</td>
+      <td>0 mA</td>
+      <td>23.4 mA</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>GND</td>
+      <td>RX</td>
+      <td>TX</td>
+      <td>VCC</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>TIP: 멀티미터를 통한 RX, TX 구분이 어렵다면 :
+    <ul>
+      <li>MCU의 데이터시트를 참고하여 정확하게 식별합니다.</li>
+      <li>일단 RX, TX를 임의로 가정한 후 뒤의 과정대로 연결 수행 → 시리얼 통신 시 아무 반응이 없다면 바꿔서 연결합니다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="24-baud-rate란">2.4. Baud Rate란</h2>
+
+<p>GND, TX, RX 핀을 모두 식별하였으니 UART 통신에 필요한 Baud Rate 개념을 알아야 합니다.</p>
+
+<p>Baud Rate는 1초에 전송할 수 있는 symbol<sup id="fnref:3" role="doc-noteref"><a href="#fn:3" class="footnote" rel="footnote">3</a></sup>의 수입니다. 따라서 IoT 기기와 UART Serial 통신을 하기 위해서는 각 기기마다 사용하는 Baud Rate에 맞춰 통신 속도를 설정해야 합니다.</p>
+
+<p>아래는 UART에서 흔히 사용하는 Baud Rate 리스트입니다. <code class="language-plaintext highlighter-rouge">115200</code> 이하 값을 주로 사용합니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Baud Rate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>4147200</td>
+    </tr>
+    <tr>
+      <td>921600</td>
+    </tr>
+    <tr>
+      <td>576000</td>
+    </tr>
+    <tr>
+      <td>460800</td>
+    </tr>
+    <tr>
+      <td>115200</td>
+    </tr>
+    <tr>
+      <td>57600</td>
+    </tr>
+    <tr>
+      <td>38400</td>
+    </tr>
+    <tr>
+      <td>28800</td>
+    </tr>
+    <tr>
+      <td>19200</td>
+    </tr>
+    <tr>
+      <td>9600</td>
+    </tr>
+    <tr>
+      <td>4800</td>
+    </tr>
+    <tr>
+      <td>2400</td>
+    </tr>
+    <tr>
+      <td>1200</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Baud Rate 개념까지 알았으니 다음으로는 USB to TTL을 통해 UART Serial 통신을 해봅시다.</p>
+
+<p>위의 값들이 아닌 다른 Baud Rate 값을 사용한다면, Logical Analyzer를 사용하거나 기기 이름의 buad rate에 대해 검색하는 등의 방법을 사용할 수 있습니다.</p>
+
+<h2 id="25-uart-연결">2.5. UART 연결</h2>
+
+<h3 id="251-mac-환경">2.5.1. Mac 환경</h3>
+
+<p>본 항목에서는 Mac 환경에서의 UART 연결 방법에 대해서 다루겠습니다. Serial 통신 콘솔을 위해 minicom 프로그램을 사용합니다.</p>
+
+<p>점퍼 케이블을 사용해 USB to TTL의 케이블을 UART핀에 연결 합니다. 각 케이블의 역할은 아래와 같습니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>케이블 색</th>
+      <th>USB to TTL 핀</th>
+      <th>UART 핀</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>검은색</td>
+      <td>GND</td>
+      <td>GND</td>
+    </tr>
+    <tr>
+      <td>흰색</td>
+      <td>RX</td>
+      <td>TX</td>
+    </tr>
+    <tr>
+      <td>청록색</td>
+      <td>TX</td>
+      <td>RX</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>연결 시 UART의 TX 핀에는 USB to TTL의 RX 케이블을, UART RX 핀에는 USB to TTL의 TX 케이블을 연결하도록 주의해야 합니다. IoT 기기에서 송신한 데이터를 USB to TTL이 수신하고, USB to TTL이 송신한 데이터를 IoT 기기가 수신하기 때문입니다.</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/lsusb.png" alt="lsusb" /></p>
+
+<p>USB to TTL의 USB 포트는 PC에 연결합니다. <code class="language-plaintext highlighter-rouge">lsusb</code> 명령어를 사용해서 USB to TTL이 PC에 제대로 연결되었는지 확인할 수 있습니다. minicom의 Serial 장치를 설정하기 위해 <code class="language-plaintext highlighter-rouge">ls /dev | grep usb</code> 명령어로 연결된 USB to TTL의 장치 이름을 확인합니다.</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/ls_dev.png" alt="list dev directory" /></p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/minicom_s.png" alt="minicom setting" /></p>
+
+<p>USB to TTL의 장치 이름을 알았으니 <code class="language-plaintext highlighter-rouge">minicom -s</code> 명령어로 UART 통신을 설정합니다. Serial 장치를 설정하고 Baud Rate를 <code class="language-plaintext highlighter-rouge">38400</code>으로 설정하여 UART 통신 시 출력이 제대로 되는지 확인합니다. 만약 출력 결과를 읽을 수 없다면 Baud Rate를 바꿔가면서 정확한 값을 구할 수 있습니다.</p>
+
+<p>Baud Rate을 바꿔줄 때마다 장치 재부팅이 필요합니다. 부트 로그가 UART로 모두 출력되었다면 더 이상 출력할 데이터가 없습니다. 이 때문에 재부팅 없이 Baud Rate 값만 바꿔주면 값이 올바른지 여부가 의심스럽습니다. 따라서 Baud Rate 테스트를 진행할 때 기기를 재부팅해야 모든 부트 로그를 확인할 수 있습니다.</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/uart.png" alt="uart" /></p>
+
+<p>확인 결과 부트로그가 제대로 출력 되었습니다.</p>
+
+<h3 id="252-windows-환경">2.5.2. Windows 환경</h3>
+
+<p>본 항목에서는 Windows 환경에서 UART를 연결해보겠습니다. Serial 통신을 위해서 PuTTY 프로그램을 사용한다는 점이 Mac 환경과 다릅니다.</p>
+
+<p>USB to TTL의 점퍼 케이블을 IoT 기기의 UART에 연결한 후 PC에 USB를 연결합니다. <code class="language-plaintext highlighter-rouge">내 컴퓨터 &gt; 장치관리자</code> 의 <code class="language-plaintext highlighter-rouge">포트</code> 탭에서 USB to TTL이 PC에 올바르게 인식되는지 확인할 수 있습니다. PuTTY의 Serial line을 설정하기 위해 인식된 USB to TTL 장치의 이름을 확인합니다. (만약 포트 탭에 장치가 인식되지 않는다면, 기타 장치 탭을 확인해봅시다. 기타 장치로 인식되었다면 드라이버를 설치해야 합니다.)</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/windows_device_manager.png" alt="windows device manager" /></p>
+
+<p>Serial 장치를 설정한 후 정확한 Baud Rate 값을 구합니다. UART 통신을 모두 설정하였다면 IoT 기기의 전원을 공급하여 부팅 시 로그가 출력 되는지 확인합니다.</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/putty_s.png" alt="putty setting" /></p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/putty.png" alt="putty" /></p>
+
+<h2 id="3-spi-통신으로-펌웨어-추출하기">3. SPI 통신으로 펌웨어 추출하기</h2>
+
+<h3 id="31-spi란">3.1. SPI란</h3>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/I2C.drawio.png" alt="I2C drawio" /></p>
+
+<p>SPI 통신을 이해하기 위해서는 먼저 I2C 통신을 알아야 합니다. I2C(Inter-Integrated Circuit)는 2개의 직렬 버스로 여러 디바이스와 통신할 수 있는 프로토콜입니다. 한 개의 Master 디바이스와 여러 Slave 디바이스로 구성될 수 있습니다. 2개의 직렬 버스 중 SDA 선은 시리얼 데이터를 송수신하는 버스이고, SCL 선은 Master가 생성한 기준 클럭을 전송하는 버스입니다. 따라서 Master 디바이스에서 기준 클럭을 생성하고 해당 클럭에 맞춰서 I2C 통신에서는 반이중(Half-Duplex) 방식으로 시리얼 데이터를 송수신하게 됩니다.</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/SPI.drawio.png" alt="SPI drawio" /></p>
+
+<p>SPI(Serial Peripheral Interface)는 I2C 통신 방식과 비슷한 방식이며, MCU와 주변 회로 간 통신에서 가장 널리 사용되는 통신 방식입니다. SPI 통신은 I2C 통신과 다르게 전이중(Full-Duplex) 방식으로 시리얼 데이터를 송수신합니다. 또한 MOSI 선, MISO 선, Clock 선과 SS 선이 사용됩니다.</p>
+
+<ul>
+  <li>MOSI(Master Out Slave IN) 선 : Master → Slave 시리얼 데이터 전송 선</li>
+  <li>MISO(Master In Slave Out) 선 : Slave → Master 시리얼 데이터 전송 선</li>
+  <li>Clock(SCLK, CLK) 선 : 동기화 신호를 위한 클럭 전송 선</li>
+  <li>
+    <p>SS, CS(Slave Select, Chip Select) 선 : 여러 Slave 디바이스 중 통신을 위해 시리얼 데이터를 보낼 경로를 결정하는 신호 선</p>
+
+    <p>Master 디바이스가 Slave 디바이스로 시리얼 데이터를 전송하면, Slave 디바이스의 Shift Register 데이터는 1 클럭 당 1 비트의 시리얼 데이터가 MSB(Most Significant Bit) 혹은 LSB(Least Significant Bit) 방식으로 shift 되어 데이터가 저장되는 구조로 동작합니다.</p>
+  </li>
+</ul>
+
+<h3 id="32-방법">3.2. 방법</h3>
+
+<p>일반적으로 MCU는 부팅 단계에서 SPI Flash 칩과 통신하여 펌웨어를 얻습니다. 우리는 동일한 방법을 통해서 SPI Flash 칩으로부터 펌웨어를 얻으려고 합니다. 따라서 SPI Flash 칩의 데이터 시트를 참고하여 SPI 통신에 필요한 정보를 수집해야 합니다.</p>
+
+<p>저희는 flashrom<sup id="fnref:4" role="doc-noteref"><a href="#fn:4" class="footnote" rel="footnote">4</a></sup> 프로그램을 사용할 것입니다. flashrom은 Flash 칩을 식별하여 reading, writing, verifying, erasing 등의 작업을 수행해주는 유틸리티 프로그램입니다. 476개 이상의 Flash 칩, 291개의 칩셋, 500개의 메인보드 등과 통신할 수 있습니다. 따라서 SPI Flash 칩의 데이터시트에 명시된 명령어들을 몰라도 flashrom 명령어를 통해 읽기, 쓰기 등의 작업을 수행할 수 있습니다.</p>
+
+<p>최신 버전의 flashrom을 라즈베리파이에 빌드하여 사용합니다.</p>
+
+<p>SPI Flash 칩의 데이터시트에서 핀 맵을 확인합니다. 이를 라즈베리파이의 SPI 핀과 매핑합니다.</p>
+
+<h3 id="33-soic-test-clip-사용">3.3. SOIC Test-Clip 사용</h3>
+
+<p>데이터 시트를 참고하여 암-암 점퍼 케이블로 라즈베리파이와 SOIC-CLIP을 연결해줍니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>사용 장비</th>
+      <th>역할</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>POMONA SOIC-CLIP</td>
+      <td>점퍼케이블로 8 PIN SOIC와 연결할 수 있게 해준다.</td>
+    </tr>
+    <tr>
+      <td>라즈베리파이</td>
+      <td>flashrom을 실행하여 flash memory와 통신</td>
+    </tr>
+    <tr>
+      <td>분석용 PC</td>
+      <td>라즈베리파이에 접속(ssh)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>펌웨어 추출 과정</strong></p>
+
+<p>분석용 PC와 라즈베리파이를 같은 네트워크 대역에 연결한 후, PC에서 라즈베리파이에 접속합니다.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh user@xxx.xxx.xxx.xxx
+</code></pre></div></div>
+
+<p>라즈베리파이에서 flashrom을 이용해 firmware를 추출합니다.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>flashrom <span class="nt">-p</span> linux_spi:dev<span class="o">=</span>/dev/spidev0.0 <span class="nt">-r</span> <span class="o">[</span>filename]
+</code></pre></div></div>
+
+<p>추출한 펌웨어를 binwalk를 이용해서 분석합니다. binwalk는 펌웨어와 같은 바이너리 파일의 구조을 분석하고, 펌웨어에 포함된 파일을 추출 및 압축 해제할 수 있는 도구입니다. binwalk는 파일 시그니처를 기반으로 바이너리 파일의 구조를 분석해줍니다.</p>
+
+<ul>
+  <li>
+    <p>펌웨어 구조 확인</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>binwalk <span class="o">[</span>filename]
+</code></pre></div>    </div>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@raspberrypi:~/ <span class="nv">$ </span>flashrom <span class="nt">-p</span> linux_spi:dev<span class="o">=</span>/dev/spidev0.0 <span class="nt">-r</span> firmware.bin <span class="nt">-c</span> <span class="s2">"EN25QH32B"</span>
+flashrom 1.4.0-devel <span class="o">(</span>git:v1.2-1386-g5106287e<span class="o">)</span> on Linux 6.1.0-rpi6-rpi-v8 <span class="o">(</span>aarch64<span class="o">)</span>
+flashrom is free software, get the <span class="nb">source </span>code at https://flashrom.org
+
+Using clock_ gettime <span class="k">for </span>delay loops <span class="o">(</span>clk_id: 1, resolution: 1ns<span class="o">)</span><span class="nb">.</span>
+Using default 2000kHz clock. Use <span class="s1">'spispeed'</span> parameter to override.
+Found Eon flash chip <span class="s2">"EN25QH32B"</span> <span class="o">(</span>4096 kB, SPI<span class="o">)</span> on linux_spi.
+ニニニ
+This flash part has status UNTESTED <span class="k">for </span>operations: WP
+The <span class="nb">test </span>status of this chip may have been updated <span class="k">in </span>the latest development version of flashrom. If you are running the latest development version, please email a report to flashrom@flashrom.org <span class="k">if </span>any of the above operations work correctly <span class="k">for </span>you with this flash chip. Please include the flashrom log file <span class="k">for </span>all operations you tested <span class="o">(</span>see the man page <span class="k">for </span>details<span class="o">)</span>, and mention which mainboard or programmer you tested <span class="k">in </span>the subject line.
+Thanks <span class="k">for </span>your <span class="nb">help</span><span class="o">!</span>
+Reading flash... <span class="k">done</span><span class="nb">.</span>
+
+user@raspberrypi:~/ <span class="nv">$ </span>binwalk firmware.bin
+DECIMAL		HEXADECIMAL	  DESCRIPTION
+<span class="nt">------------------------------------------------------------------------------</span>
+5360		  0x14F0		    LZMA compressed data, properties: 0x5D, dictionary size: 8388608 bytes, uncompressed size: 60784 bytes
+65584		  0x10030		    <span class="nb">gzip </span>compressed data, maximum compression, from Unix, last modified: 2013-12-31 15:00:48
+141408		0x22860		    LZMA compressed data, properties: 0x5D, dictionary size: 8388608 bytes, uncompressed size: 4119960 bytes
+1441792		0x160000	    Squashfs filesystem, little endian, version 4.0, compression:xz, size: 2489160 bytes, 1364 inodes, blocksize: 131072 bytes, created: 2021-04-19 03:14:42
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>추출된 결과의 상단에는 LZMA, gzip으로 압축된 파일들이 보이고, 그 밑에 SquashFS filesystem이 파일을 확인할 수 있습니다. SquashFS는 경량 리눅스 디바이스에서 사용하는 읽기 전용 파일시스템으로, 여러 파일과 디렉토리를 단일 파일에 압축하여 저장할 수 있습니다.</p>
+
+<p>offset을 확인했을 때 앞부분부터 끝까지 잘 식별한 걸 보니, 펌웨어가 잘 추출된 것 같습니다. 만약 펌웨어를 제대로 읽지 못했다면, 3.4. Desoldering 과정으로 진행합니다.</p>
+
+<h2 id="34-desoldering">3.4. Desoldering</h2>
+
+<p>여기서는 땜납을 녹여 직접 SPI Flash 칩을 떼어낸 후 펌웨어를 추출하겠습니다. 3.2. 과정에서 펌웨어 추출에 성공하였다면, Desoldering 과정은 생략하여도 괜찮습니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>장비</th>
+      <th>역할</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Heat gun</td>
+      <td>뜨거운 바람으로 납을 녹인다.</td>
+    </tr>
+    <tr>
+      <td>SOP8 - DIP8 변환 소켓</td>
+      <td>8핀 flash chip의 핀을 점퍼케이블(DIP) 핀 규격으로 변환해주는 어댑터</td>
+    </tr>
+    <tr>
+      <td>라즈베리파이</td>
+      <td>flashrom을 실행하여 flash memory와 통신</td>
+    </tr>
+    <tr>
+      <td>분석용 PC</td>
+      <td>라즈베리파이에 접속(ssh)</td>
+    </tr>
+    <tr>
+      <td>핀셋</td>
+      <td>Flash 칩을 PCB 기판에서 분리할 때 사용. 없어도 괜찮지만 있으면 매우 편리하다.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>SPI Flash 칩을 PCB 기판에서 떼어낸 후 펌웨어를 추출하는 이유는 PCB 기판의 노이즈를 줄여 펌웨어를 정상적으로 추출하기 위해서 입니다.</p>
+
+<p>히트건으로 납을 데워 녹이고(저희는 온도 380도, 바람세기 6으로 설정하였습니다), 핀셋으로 SPI Flash 칩을 들어내면 PCB 기판으로부터 분리할 수 있습니다.</p>
+
+<p>분리한 SPI Flash 칩을 SOP8-DIP8 변환 소켓에 꽂아주고, 암-암 점퍼케이블을 사용해 라즈베리파이와 연결합니다. 이후 과정은 3.3. SOIC Test-Clip 사용 - 펌웨어 추출 과정과 동일하게 진행합니다.</p>
+
+<h1 id="4-펌웨어-조작fusing">4. 펌웨어 조작(Fusing)</h1>
+
+<p>성공적으로 <code class="language-plaintext highlighter-rouge">firmware.bin</code> 이름의 펌웨어 파일을 획득했습니다. 본 항목에서는 펌웨어의 파일시스템만 추출할 것입니다.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@raspberrypi:~/ <span class="nv">$ </span>binwalk firmware.bin
+DECIMAL		HEXADECIMAL	  DESCRIPTION
+<span class="nt">------------------------------------------------------------------------------</span>
+5360		  0x14F0		    LZMA compressed data, properties: 0x5D, dictionary size: 8388608 bytes, uncompressed size: 60784 bytes
+65584		  0x10030		    <span class="nb">gzip </span>compressed data, maximum compression, from Unix, last modified: 2013-12-31 15:00:48
+141408		0x22860		    LZMA compressed data, properties: 0x5D, dictionary size: 8388608 bytes, uncompressed size: 4119960 bytes
+1441792		0x160000	    Squashfs filesystem, little endian, version 4.0, compression:xz, size: 2489160 bytes, 1364 inodes, blocksize: 131072 bytes, created: 2021-04-19 03:14:42
+</code></pre></div></div>
+
+<p>binwalk 명령어의 분석 결과에서 파일시스템을 찾고, 파일시스템 시작 offset과 size를 확인합니다. 파일시스템의 offset에 맞춰, <code class="language-plaintext highlighter-rouge">dd</code> 명령어로 파일시스템을 추출할 수 있습니다. skip은 추출하려는 파일의 시작 오프셋, count는 크기를 의미합니다. skip값과 count값은 10진수로 전달해주어야 합니다.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">dd </span><span class="k">if</span><span class="o">=</span>./firmware.bin <span class="nv">of</span><span class="o">=</span>./extract_squashfs <span class="nv">skip</span><span class="o">=[</span>1441792] <span class="nv">bs</span><span class="o">=</span>1 <span class="nv">count</span><span class="o">=[</span>2489160]
+</code></pre></div></div>
+
+<p>저희의 분석장비 펌웨어에서 사용하는 파일시스템은 SquashFS 파일시스템입니다. 따라서 squashfs-tools를 사용하여 분석을 진행하겠습니다.</p>
+
+<p><code class="language-plaintext highlighter-rouge">firmware.bin</code> 파일을 skip부터 count까지를 추출하여 <code class="language-plaintext highlighter-rouge">extract_squashfs</code>로 저장하였습니다.</p>
+
+<p>unsquashfs를 사용해서 파일시스템을 마운트합니다.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt <span class="nb">install </span>squashfs-tools
+<span class="nv">$ </span><span class="nb">sudo </span>unsquashfs ./extract_squashfs
+</code></pre></div></div>
+
+<p>위 과정을 통해 파일시스템의 <code class="language-plaintext highlighter-rouge">squashfs-root</code> 를 획득하였습니다!</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/dd_extract.jpg" alt="dd extraction" /></p>
+
+<p>여기서 기기가 부팅된 후 초기에 실행되는 코드를 조작해보겠습니다.</p>
+
+<p>기기가 부팅될 때 가장 처음 실행되는 코드를 찾아봅시다. 보통은 <code class="language-plaintext highlighter-rouge">/etc/init.d</code>에 위치한 <code class="language-plaintext highlighter-rouge">rcS</code>가 가장 먼저 실행됩니다. 저희 분석 장비에서는 <code class="language-plaintext highlighter-rouge">/default/rcS</code> 입니다.</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/inittab.png" alt="inittab" /></p>
+
+<p>해당 파일의 제일 마지막줄에 원하는 명령어를 추가해볼겁니다.</p>
+
+<p><code class="language-plaintext highlighter-rouge">/bin</code> <code class="language-plaintext highlighter-rouge">/sbin</code> <code class="language-plaintext highlighter-rouge">/usr/bin</code> <code class="language-plaintext highlighter-rouge">/usr/sbin</code> 에서 사용 가능한 명령어들을 찾아봅시다. 제일 관심 있는 명령어는 <code class="language-plaintext highlighter-rouge">telnet</code>이나 <code class="language-plaintext highlighter-rouge">telnetd</code> 입니다.</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/sbin.jpg" alt="sbin" /></p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/telnetd.jpg" alt="telnetd" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">/default/rcS</code> 마지막줄에 아래 명령어를 추가합니다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/usr/sbin/telnetd -l /bin/sh
+</code></pre></div></div>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/firmware_modify.jpg" alt="firmware modify" /></p>
+
+<p>이 명령어가 실행되면 부팅 후 telnet을 통해 <code class="language-plaintext highlighter-rouge">/bin/sh</code>에 접속할 수 있을 것입니다.</p>
+
+<p>이제 우리가 삽입한 코드를 원본 파일시스템에 패치합니다.</p>
+
+<ul>
+  <li>수정한 파일 시스템을 원본 파일시스템에 패치
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>mksquashfs squashfs-root squashfs_patched <span class="nt">-comp</span> xz
+</code></pre></div>    </div>
+    <p><img src="/assets/2024-02-06-IoT-TechBlog/recompression.jpg" alt="recompression" /></p>
+  </li>
+</ul>
+
+<p>hex editor를 사용해 펌웨어의 파일시스템 영역을 조작한 파일 시스템으로 바꾸겠습니다. 파일시스템이 조작된 펌웨어를 <code class="language-plaintext highlighter-rouge">firmware_patched.bin</code> 으로 저장합니다.</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/010hexedit.jpg" alt="010 hexeditor" /></p>
+
+<p>조작한 펌웨어인 <code class="language-plaintext highlighter-rouge">firmware_patched.bin</code>을 기기의 SPI Flash 칩에 다시 써주면 완성입니다.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>flashrom <span class="nt">-p</span> linux_spi:dev<span class="o">=</span>/dev/spidev0.0 <span class="nt">-w</span> firmware_patched.bin
+</code></pre></div></div>
+
+<h1 id="5-soldering">5. Soldering</h1>
+
+<p>앞서 SPI Flash 칩을 디솔더링하여 분리하였다면 부팅을 위해 다시 기기의 PCB 기판에 연결해야합니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>장비</th>
+      <th>역할</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>솔더 페이스트</td>
+      <td>Flux를 포함하고 있어 납의 칙소성을 높여준다.</td>
+    </tr>
+    <tr>
+      <td>인두기</td>
+      <td>납을 데워서 녹인다.</td>
+    </tr>
+    <tr>
+      <td>납실</td>
+      <td>PCB와 Flash memory를 결합하여 고정한다.</td>
+    </tr>
+    <tr>
+      <td>면봉</td>
+      <td>납땜 후 잔여물을 닦아내는 데 사용한다.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>솔더 페이스트를 PCB 기판 위에 바르고 그 위에 인두기로 납을 녹여서 문지르면 납이 동그랗고 예쁘게 올라갑니다. SPI Flash 칩을 원위치에 올리고, 열풍기로 납을 살짝 녹여 리솔더링을 해줍니다.</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/solderpaste.jpg" alt="solder paste" /></p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/resoldering.jpg" alt="resoldering" /></p>
+
+<h1 id="6-glitching">6. Glitching</h1>
+
+<p>Fault Injection이라고도 하는 글리칭은 제조 시의 한계를 벗어나는 조건으로 공격 대상 장치에서 고장을 유발합니다. 이를 통해 인증 우회, 미인가된 코드 접근, 로직 값 변경, 장치의 종료 또는 재시작 등의 결과를 이끌어냅니다. 글리칭 공격 방법에는 여러 가지가 있는데, 전압 글리칭, 클록 글리킹, 전자기 폴트 인젝션, 광학 폴트 인젝션이 그 예시입니다.</p>
+
+<p>이 중 별도의 장비 없이 수-수 점퍼케이블로 해볼 수 있는 Serial Data Output Fault Injection을 수행해보겠습니다. 이 방법은 MCU가 펌웨어를 얻지 못하는 오류를 유발하는 공격입니다. 부팅 중 MCU가 펌웨어를 얻지 못했을 때의 결과가 제조사마다 다르고, 정교한 오류상태를 주입하는 것이 아니기 때문에 성공률이 높지 않은 편입니다.</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/spi_flashchip_glitching_point.jpg" alt="SPI Flash chip glitching point" /></p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/spi_flashchip_glitching.jpg" alt="SPI Flash chip glitching" /></p>
+
+<p>우선, 데이터시트를 참고하여 SPI Flash 칩의 Serial Data Output 핀과 GND 핀의 위치를 알아냅니다. 그리고 SPI Flash 칩의 Data Output 핀과 GND 핀을 수-수 점퍼 케이블로 연결합니다. MCU가 SPI Flash로 펌웨어를 요청했을 때의 output 데이터가 MCU가 아닌 GND 핀으로 빠지고, 결과적으로 MCU가 펌웨어를 제대로 얻지 못하게 됩니다.</p>
+
+<p><img src="/assets/2024-02-06-IoT-TechBlog/bootloader_shell.png" alt="bootloader shell" /></p>
+
+<p>UART를 연결한 상태에서 Serial Data Output Faul Injection 공격을 수행하였고, 부팅이 정상적으로 이루어지지 않은 결과로 부트 로더의 쉘에 접근이 가능해졌습니다.</p>
+
+<p>부트 로더의 Memory Reading을 통해 펌웨어를 추출할 수 있습니다.</p>
+
+<h1 id="7-마치며">7. 마치며</h1>
+
+<p>본 과정을 거쳐 기기의 원본 펌웨어를 얻을 수 있었고, 원격으로 쉘 접속이 가능해졌습니다. 따라서 취약점을 디버깅하기에 수월한 환경 구성이 끝나게 되었습니다.</p>
+
+<p>본 글 작성을 도와주신 김도현 팀장님과 임원빈 선임연구원님, 구본근 선임연구원님을 비롯한 선제대응팀 팀원분들께 감사드립니다.</p>
+
+<p>모두 즐거운 하드웨어 해킹하세요!👽</p>
+
+<hr />
+
+<p>[각주]</p>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>Printed Curcit Board, 인쇄회로조립체 <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:2" role="doc-endnote">
+      <p>일반적으로 검은색 선은 (-), 빨간색 선은 (+)이다. 따라서 검은색 리드선을 GND에 연결한다. <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:3" role="doc-endnote">
+      <p>symbol, 의미있는 데이터 묶음 <a href="#fnref:3" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:4" role="doc-endnote">
+      <p><a href="https://github.com/flashrom/flashrom">flashrom 빌드 방법</a></p>
+
+      <p>칩에 접근하는 모든 작업에 <code class="language-plaintext highlighter-rouge">-p</code> 또는 <code class="language-plaintext highlighter-rouge">--programmer</code> 옵션을 사용해야 한다.</p>
+
+      <p><code class="language-plaintext highlighter-rouge">-p &lt;programmername&gt;[:&lt;parameters&gt;]</code></p>
+
+      <ul>
+        <li><code class="language-plaintext highlighter-rouge">linux_spi</code> (for SPI flash ROMs accessible via /dev/spidevX.Y on Linux)</li>
+      </ul>
+
+      <p><code class="language-plaintext highlighter-rouge">-r</code>, <code class="language-plaintext highlighter-rouge">--read &lt;file&gt;</code></p>
+
+      <p><code class="language-plaintext highlighter-rouge">-w</code>, <code class="language-plaintext highlighter-rouge">--write &lt;file&gt;</code></p>
+
+      <p><code class="language-plaintext highlighter-rouge">-c</code>, <code class="language-plaintext highlighter-rouge">-chip &lt;chipname&gt;</code> <a href="#fnref:4" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+    <div class="page-profile-detail">
+        <div class="page-profile-detail-info">
+            <div>
+                <img class="page-profile_image-detail" src="/assets/stealien_inverse.png" />
+            </div>
+            <div style="position: relative; top: 12px;left: 10px;">
+                <div class="page-profile-author">이주협, 이주영</div>
+                <div class="page-profile-email">jhlee2@stealien.com, jylee3@stealien.com</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="recent-post-area">
+    <div class="posts container">
+        <div class="h1-recent-post">RECENT POST</div>
+            <div class="row">
+    <div class="col-sm-2 col-md-2">
+        <div class="profile">
+            <img src="/assets/stealien_inverse.png" class="profile_image" />
+            <div class="profile_author">이주협, 이주영</div>
+        </div>
+    </div>
+    <div class="col">
+        <a href="/2024-02-06/IoT-TechBlog-ko">
+            <div class="post-title">
+                뉴비들의 하드웨어 해킹 입문기
+            </div>
+        </a>
+        <div class="post-summary">뉴비들의 하드웨어 해킹 입문기</div>
+        <div class="post-info">
+            <span style="color: #545454" class="post-author-mobile">
+                이주협, 이주영
+                <span style="color: #f5f5f5; margin: 2px">|</span>
+            </span>
+            Feb 6, 2024
+            <span style="color: #f5f5f5; margin: 2px">|</span>
+            <span>R&D</span>
+        </div>
+    </div>
+</div><div class="row">
+    <div class="col-sm-2 col-md-2">
+        <div class="profile">
+            <img src="/assets/stealien_inverse.png" class="profile_image" />
+            <div class="profile_author">Hyerim Jeon</div>
+        </div>
+    </div>
+    <div class="col">
+        <a href="/2023-11-15/Android-malware-%EC%82%AC%EB%A7%88%EA%B7%80-%ED%95%B4%EB%B6%80%ED%95%99-ko">
+            <div class="post-title">
+                Android Malware : 사마귀 해부학
+            </div>
+        </a>
+        <div class="post-summary">about Roaming Mantis</div>
+        <div class="post-info">
+            <span style="color: #545454" class="post-author-mobile">
+                Hyerim Jeon
+                <span style="color: #f5f5f5; margin: 2px">|</span>
+            </span>
+            Nov 15, 2023
+            <span style="color: #f5f5f5; margin: 2px">|</span>
+            <span>R&D</span>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+</div>
+		</div>
+	</section><footer>
+  <div class="container" style="display: flex; justify-content: space-between;">
+    <!-- <a href="#top">
+      <img src="/assets/white_logo.png" class="footer-logo" />
+    </a> -->
+    <div class="footer-copyright">Copyright &copy; Stealien Inc.</div>
+    <div class="footer-icons">
+      <a target="_blank" href="https://twitter.com/stealien"><img class="sns" src="/assets/icons/twitter_ic.png"/></a>
+      <a target="_blank" href="https://blog.naver.com/stealien_official"><img class="sns" src="/assets/icons/blog_ic.png"/></a>
+      <a target="_blank" href="https://www.facebook.com/stealien/"><img class="sns" src="/assets/icons/facebook_ic.png"/></a>
+      <a target="_blank" href="https://www.youtube.com/c/STEALIEN"><img class="sns" src="/assets/icons/youtube_ic.png"/></a>
+    </div>
+  </div>
+</footer></body>
+</html>

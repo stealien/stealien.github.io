@@ -2,19 +2,19 @@
 layout: post
 markdown: kramdown
 highlighter: rouge
-title: "하드웨어 해킹: 뉴비 입문기"
+title: "뉴비들의 하드웨어 해킹 입문기"
 date: 2024-02-06 10:00:0 +0900
 category: R&D
 author: 이주협, 이주영
 author_email: jhlee2@stealien.com, jylee3@stealien.com
 background: /assets/bg.png
 profile_image: /assets/stealien_inverse.png
-summary: "하드웨어 해킹 방법론"
+summary: "뉴비들의 하드웨어 해킹 입문기"
 thumbnail: /assets/stealien.png
 lang: ko
 ---
 
-# 하드웨어 해킹: 뉴비 입문기
+# 뉴비들의 하드웨어 해킹 입문기
 
 > 이 포스트는 스틸리언 선제대응팀의 '이주협' 선임 연구원님과 '이주영' 연구원님이 정성스럽게 작성 해 주셨습니다.
 >
