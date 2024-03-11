@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/id/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/id/" rel="alternate" type="text/html" /><updated>2024-03-11T00:52:12-07:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">Android 1day Exploit Analysis (CVE-2019-2215)</title><link href="http://ufo.stealien.com/id/2024-03-10/Android-1day-Exploit-Analysis-ko" rel="alternate" type="text/html" title="Android 1day Exploit Analysis (CVE-2019-2215)" /><published>2024-03-10T08:00:00-07:00</published><updated>2024-03-10T08:00:00-07:00</updated><id>http://ufo.stealien.com/2024-03-10/Android-1day-Exploit-Analysis-ko</id><content type="html" xml:base="http://ufo.stealien.com/2024-03-10/Android-1day-Exploit-Analysis-ko">&lt;h1 id=&quot;1-introduction&quot;&gt;1. Introduction&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/id/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/id/" rel="alternate" type="text/html" /><updated>2024-03-11T01:03:33-07:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">Android 1day Exploit Analysis (CVE-2019-2215)</title><link href="http://ufo.stealien.com/id/2024-03-10/Android-1day-Exploit-Analysis-ko" rel="alternate" type="text/html" title="Android 1day Exploit Analysis (CVE-2019-2215)" /><published>2024-03-10T08:00:00-07:00</published><updated>2024-03-10T08:00:00-07:00</updated><id>http://ufo.stealien.com/2024-03-10/Android-1day-Exploit-Analysis-ko</id><content type="html" xml:base="http://ufo.stealien.com/2024-03-10/Android-1day-Exploit-Analysis-ko">&lt;h1 id=&quot;1-introduction&quot;&gt;1. Introduction&lt;/h1&gt;
 
 &lt;p&gt;평소에 관심이 많았던 Android 커널 exploit을 공부해보고자 이 게시물을 작성한다.&lt;/p&gt;
 
@@ -1170,13 +1170,8 @@ static void ep_remove_wait_queue(struct eppoll_entry *pwq)
 
 &lt;p&gt;UAF를 통해 kernel address가 어떻게 iovec.base에 들어갈 수 있는 지 알기 위해서는 iovec을 통해 입력한 값이 binder_thread의 각 맴버와 어떻게 매칭되는지를 먼저 확인해보면 알 수 있다.&lt;/p&gt;
 
-&lt;p&gt;| offset | binder_thread | iovecStack |
-| — | — | — |
-| … | … | … |
-| 0xA0 | wait.lock | iovecStack[10].iov_base = m_4gb_aligned_page |
-| 0xA8 | wait.head.next | iovecStack[10].iov_len = PAGE_SIZE |
-| 0xB0 | wait.head.prev | iovecStack[11].iov_base = 0x41414141 |
-| 0xB8 | … | iovecStack[11].iov_len = PAGE_SIZE |&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/2024-03-11-Android-1day-Exploit-Analysis/android16.png&quot; alt=&quot;그림 16. iovecStack&quot; /&gt;&lt;/p&gt;
+
 &lt;ul&gt;
   &lt;li&gt;iovecStack[10].iov_base에 값을 넣을 때 주의할 점은 wait.lock에 어떠한 값이 들어가 있게 될 경우 원하는 방향으로 writev 함수가 동작하지 않기 때문에, wait.lock에 해당하는 부분을 0으로 만들어야 한다. 따라서 iovecStack[10].iov_base에 들어가는 포인터는 하위 4byte값이 0으로 되어있어야한다.
     &lt;ul&gt;
