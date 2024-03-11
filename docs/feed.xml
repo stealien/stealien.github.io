@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2024-03-11T00:48:02-07:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">Android 1day Exploit Analysis (CVE-2019-2215)</title><link href="http://ufo.stealien.com/2024-03-10/Android-1day-Exploit-Analysis-ko" rel="alternate" type="text/html" title="Android 1day Exploit Analysis (CVE-2019-2215)" /><published>2024-03-10T08:00:00-07:00</published><updated>2024-03-10T08:00:00-07:00</updated><id>http://ufo.stealien.com/2024-03-10/Android-1day-Exploit-Analysis-ko</id><content type="html" xml:base="http://ufo.stealien.com/2024-03-10/Android-1day-Exploit-Analysis-ko">&lt;h1 id=&quot;1-introduction&quot;&gt;1. Introduction&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2024-03-11T00:52:12-07:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">Android 1day Exploit Analysis (CVE-2019-2215)</title><link href="http://ufo.stealien.com/2024-03-10/Android-1day-Exploit-Analysis-ko" rel="alternate" type="text/html" title="Android 1day Exploit Analysis (CVE-2019-2215)" /><published>2024-03-10T08:00:00-07:00</published><updated>2024-03-10T08:00:00-07:00</updated><id>http://ufo.stealien.com/2024-03-10/Android-1day-Exploit-Analysis-ko</id><content type="html" xml:base="http://ufo.stealien.com/2024-03-10/Android-1day-Exploit-Analysis-ko">&lt;h1 id=&quot;1-introduction&quot;&gt;1. Introduction&lt;/h1&gt;
 
 &lt;p&gt;평소에 관심이 많았던 Android 커널 exploit을 공부해보고자 이 게시물을 작성한다.&lt;/p&gt;
 
@@ -131,7 +131,7 @@ repo &lt;span class=&quot;nb&quot;&gt;sync&lt;/span&gt; &lt;span class=&quot;nt&
 
 &lt;ul&gt;
   &lt;li&gt;
-    &lt;p&gt;우리는 patch 내용을 보고 실제 코드에서 어떤 부분이 취약했는지 유추하고 이를 어떤 방법으로 막았는지 살펴본다.&lt;/p&gt;
+    &lt;p&gt;patch 내용을 보고 실제 코드에서 어떤 부분이 취약했는지 유추하고 이를 어떤 방법으로 막았는지 살펴본다.&lt;/p&gt;
 
     &lt;div class=&quot;language-diff highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  /drivers/android/binder.c patch diff
     
@@ -237,7 +237,7 @@ repo &lt;span class=&quot;nb&quot;&gt;sync&lt;/span&gt; &lt;span class=&quot;nt&
   &lt;li&gt;fd : binder file descripter&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;binder 드라이버의 파일 디스크립터는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;open(&quot;/dev/binder0&quot;, O_RDONLY);&lt;/code&gt; 코드를 통해 얻을 수 있고, epfd는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;epfd = epoll_create(1000);&lt;/code&gt; 이 코드를 통해 얻게 된다. 따라서 우리는 먼저 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;epoll_create&lt;/code&gt;를 분석한다.&lt;/p&gt;
+&lt;p&gt;binder 드라이버의 파일 디스크립터는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;open(&quot;/dev/binder0&quot;, O_RDONLY);&lt;/code&gt; 코드를 통해 얻을 수 있고, epfd는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;epfd = epoll_create(1000);&lt;/code&gt; 이 코드를 통해 얻게 된다. 따라서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;epoll_create&lt;/code&gt;를 먼저  분석한다.&lt;/p&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
@@ -495,7 +495,7 @@ binder thread 구조체는 아래와 같다.&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;br /&gt;
-우리는 앞서 패치 노트를 통해 epoll과 waitqueue에 어떤 부분에 의하여 UAF가 발생했다는 것을 추측할 수 있다. 따라서 이와 관련이 있어 보이는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;poll_wait(filp, &amp;amp;thread-&amp;gt;wait, wait);&lt;/code&gt; 코드를 볼 필요가 있다.&lt;/p&gt;
+앞서 패치 노트를 통해 epoll과 waitqueue에 어떤 부분에 의하여 UAF가 발생했다는 것을 추측할 수 있다. 따라서 이와 관련이 있어 보이는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;poll_wait(filp, &amp;amp;thread-&amp;gt;wait, wait);&lt;/code&gt; 코드를 볼 필요가 있다.&lt;/p&gt;
 
 &lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;//drivers/android/binder.c&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;unsigned&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;binder_poll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;file&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
@@ -1298,7 +1298,7 @@ static void ep_remove_wait_queue(struct eppoll_entry *pwq)
 
 &lt;h3 id=&quot;531-overwrite-threadaddr_limit&quot;&gt;5.3.1 Overwrite thread.addr_limit&lt;/h3&gt;
 
-&lt;p&gt;우리는 UAF를 통해 iovecStack[11].base와 iovecStack[10].len을 바꿀 수 있다. 간단하게 생각해서, readv를 통해 corrupt pointer로 입력을 넣을 수 있을 것으로 보이지만, 아래 이유로 인해 readv를 사용할 수 없다.&lt;/p&gt;
+&lt;p&gt;UAF를 통해 iovecStack[11].base와 iovecStack[10].len을 바꿀 수 있다. 간단하게 생각해서, readv를 통해 corrupt pointer로 입력을 넣을 수 있을 것으로 보이지만, 아래 이유로 인해 readv를 사용할 수 없다.&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;readv를 사용할 경우, iovecStack[10].len의 크기가 매우 커졌기 때문에, readv에서 iovecStack[10]만 출력하고 그 다음에 우리가 실제로 값을 넣어야 할 iovecStack[11].base에는 접근하지 못한다. 따라서 이 exploit에서는 readv대신 recvmsg를 사용한다.&lt;/li&gt;
