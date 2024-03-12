@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/id/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/id/" rel="alternate" type="text/html" /><updated>2024-03-11T01:06:42-07:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">Android 1day Exploit Analysis (CVE-2019-2215)</title><link href="http://ufo.stealien.com/id/2024-03-10/Android-1day-Exploit-Analysis-ko" rel="alternate" type="text/html" title="Android 1day Exploit Analysis (CVE-2019-2215)" /><published>2024-03-10T08:00:00-07:00</published><updated>2024-03-10T08:00:00-07:00</updated><id>http://ufo.stealien.com/2024-03-10/Android-1day-Exploit-Analysis-ko</id><content type="html" xml:base="http://ufo.stealien.com/2024-03-10/Android-1day-Exploit-Analysis-ko">&lt;h1 id=&quot;1-introduction&quot;&gt;1. Introduction&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/id/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/id/" rel="alternate" type="text/html" /><updated>2024-03-12T00:10:23-07:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">Android 1day Exploit Analysis (CVE-2019-2215)</title><link href="http://ufo.stealien.com/id/2024-03-10/Android-1day-Exploit-Analysis-ko" rel="alternate" type="text/html" title="Android 1day Exploit Analysis (CVE-2019-2215)" /><published>2024-03-10T08:00:00-07:00</published><updated>2024-03-10T08:00:00-07:00</updated><id>http://ufo.stealien.com/2024-03-10/Android-1day-Exploit-Analysis-ko</id><content type="html" xml:base="http://ufo.stealien.com/2024-03-10/Android-1day-Exploit-Analysis-ko">&lt;h1 id=&quot;1-introduction&quot;&gt;1. Introduction&lt;/h1&gt;
 
 &lt;p&gt;평소에 관심이 많았던 Android 커널 exploit을 공부해보고자 이 게시물을 작성한다.&lt;/p&gt;
 
@@ -909,11 +909,12 @@ static void ep_remove_wait_queue(struct eppoll_entry *pwq)
 
 &lt;h1 id=&quot;5-exploit&quot;&gt;5. Exploit&lt;/h1&gt;
 
-&lt;p&gt;아래에서 언급되는 exploit code는 아래 링크의 코드를 사용했다&lt;/p&gt;
+&lt;p&gt;아래에서 언급되는 exploit 방법과 code 아래 링크의 방식을 참고했다&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/chompie1337/s8_2019_2215_poc/tree/master/poc&quot;&gt;https://github.com/chompie1337/s8_2019_2215_poc/tree/master/poc&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/c3r34lk1ll3r/CVE-2019-2215&quot;&gt;https://github.com/c3r34lk1ll3r/CVE-2019-2215&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://cloudfuzz.github.io/android-kernel-exploitation/chapters/exploitation.html&quot;&gt;https://cloudfuzz.github.io/android-kernel-exploitation/chapters/exploitation.html&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
