@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta property="og:type" content="article">
+<meta property="og:image" content="http://ufo.stealien.com/assets/og_image.png">
+<meta property="og:title" content="STEALIEN Technical Blog">
+<meta property="og:description" content="How to root your RouterOS v7 Virtual Machine">
+<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700&display=swap" rel="stylesheet">
+<title>How to root your RouterOS v7 Virtual Machine</title>
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>How to root your RouterOS v7 Virtual Machine | STEALIEN Technical Blog</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="How to root your RouterOS v7 Virtual Machine" />
+<meta name="author" content="오세준" />
+<meta property="og:locale" content="ko" />
+<meta name="description" content="How to root your RouterOS v7 Virtual Machine" />
+<meta property="og:description" content="How to root your RouterOS v7 Virtual Machine" />
+<link rel="canonical" href="http://ufo.stealien.com/2022-06-01/how-to-root-your-routeros-v7-virtual-machine" />
+<meta property="og:url" content="http://ufo.stealien.com/2022-06-01/how-to-root-your-routeros-v7-virtual-machine" />
+<meta property="og:site_name" content="STEALIEN Technical Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-05-31T08:00:00-07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="How to root your RouterOS v7 Virtual Machine" />
+<script type="application/ld+json">
+{"headline":"How to root your RouterOS v7 Virtual Machine","dateModified":"2022-05-31T08:00:00-07:00","datePublished":"2022-05-31T08:00:00-07:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://ufo.stealien.com/2022-06-01/how-to-root-your-routeros-v7-virtual-machine"},"url":"http://ufo.stealien.com/2022-06-01/how-to-root-your-routeros-v7-virtual-machine","author":{"@type":"Person","name":"오세준"},"description":"How to root your RouterOS v7 Virtual Machine","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name=“naver-site-verification” content=“74a9ec74d48a1ffca92bf9ac4704ba73be9afd65" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"/>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/assets/css/style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
+
+<link href="/assets/css/syntax.css" rel="stylesheet" >
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-06FFJEF76M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-06FFJEF76M');
+</script>
+</head>
+<body>
+	<header>
+		<div class="container"></div><div id="header">
+    <div class="container" style="display: flex;justify-content: space-between;">
+        <a href="/">
+            <img
+                class="header_image_logo"
+                src="/assets/logo.png"
+                style="width: 140px; margin: 20px 28px 0px;"
+            />
+        </a>
+        <a href="https://www.stealien.com/" target="_blank" style="font-family: 'NotoSansKR Medium', sans-serif;font-size: 14px;margin-right: 30px; color: #000; line-height: 70px;">스틸리언 홈페이지</a>
+    </div>
+</div>
+</header>
+	<section>
+		<div>
+			<div class="header_image_bg header_image_post" style="background-image: url('/assets/bg.png');">
+    <div class="header_image_post_body">
+        <div class="container">
+            <div class="page-category">R&D</div>
+            <div class="page-title">How to root your RouterOS v7 Virtual Machine</div>
+            <div class="page-summary">
+                <div style="float:left;">
+                    <img class="page-profile_image" src="/assets/stealien_inverse.png" />
+                    <span>오세준</span>
+                </div>
+                <div style="float:right;" class="page-date">May 31, 2022</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container page-content">
+    <h1 id="how-to-root-your-routeros-v7-virtual-machine">How to root your RouterOS v7 Virtual Machine</h1>
+
+<p>Finding vulnerabilities in RouterOS is tricky, and this is especially because it does not provide a shell environment like ash or bash.</p>
+
+<p>Many vulnerability researchers working on RouterOS felt the same and found various ways to enable the root shell on RouterOS. Unfortunately, most of the methods are no longer available on the latest RouterOS version.</p>
+
+<p>Thankfully, there is a way to jailbreak RouterOS v7 using netboot functionality. <a href="https://github.com/adron-s/mtik_initrd_hacks/issues">This method</a> achieves a root shell by booting through a modified kernel image. However, You need an actual RouterBOARD to use this method, and it is a bit complicated process to generate a modified kernel image and network boot through it.</p>
+
+<p>While researching RouterOS, we eventually wanted to use virtual machines as a testing environment for various reasons. The netboot jailbreak method doesn’t work on virtual machines. So we had to find another way to acheive the root shell, and we did.</p>
+
+<p>This article suggests a simple trick to get a temporary root shell on RouterOS which can only be used on virtual machines and is easy to use.</p>
+
+<h2 id="previously-on-routeros">Previously on RouterOS…</h2>
+
+<p>RouterOS has a hidden “devel” login which is only enabled when specific conditions are met. When enabled, RouterOS gives you an ash shell if you login with id “devel” via telnet. Most of the RouterOS jailbreaking methods focus on enabling the “devel” login.</p>
+
+<p>Before RouterOS version 6.41, There were two options to enable the “devel” login feature.</p>
+<ul>
+  <li>‘option’ package is installed.</li>
+  <li>/nova/etc/devel-login file exists.</li>
+</ul>
+
+<p>/nova/etc/devel-login was removed in version 6.41. So the only option left is the ‘option’ package.</p>
+
+<h2 id="devel-login-on-routeros-v7">‘devel’ login on RouterOS v7</h2>
+
+<p>When the telnet connection is made, RouterOS uses /nova/bin/login binary for login authentication. This binary contains the code that checks whether the “devel” login option is enabled or not by checking the ‘option’ package.</p>
+
+<p>/nova/bin/login checks if the ‘option’ package is installed by executing nv::hasOptionPackage function. By analyzing /lib/libumsg.so library, you can see that nv::hasOptionPackage is equaviliant to nv::hasPackage(“option”).</p>
+
+<p>In RouterOS v7, nv::hasPackage returns true only when the following conditions are met</p>
+<ul>
+  <li>If the target is a symbolic link, it should point to “/bndl/(package_name)” which is located in the read-only file system.</li>
+  <li>If the target is not a symbolic link, it should be stored in the read-only(squashfs) file system.</li>
+</ul>
+
+<p>It is hard to bypass the nv::hasPackage function unless we have an arbitrary code execution vulnerability. Even if we somehow managed to pass the nv::hasPackage(“option”) check, the login binary explicitly executes “/pckg/option/bin/bash” as shell which does not exist by default. we still need to somehow write the shell binary on the location.</p>
+
+<h2 id="simple-trick">Simple trick</h2>
+
+<p>So, bypassing the “option” package verifying code is not easy, Unless we can change the program code itself. But that would require you to modify the code running on the live memory. That… is impossible. Isn’t it?</p>
+
+<p>Wait, actually it is possible! Of course, it is. It’s a ‘virtual’ machine after all.</p>
+
+<p>What if the login binary checks for an “ipv6” package instead of the “option” package? What if the login binary executes “/rw/disk/bash” as shell instead of “/pckg/option/bin/bash”?</p>
+
+<p>We can make that happen.</p>
+
+<h2 id="how-to-root-your-routeros-vm">How to root your RouterOS VM</h2>
+
+<p>What you need:</p>
+<ul>
+  <li>Ubuntu VM</li>
+  <li>RouterOS x86 ISO Image</li>
+  <li>VMWare Workstation</li>
+</ul>
+
+<p>Step:</p>
+<ol>
+  <li>
+    <p>First, install RotuerOS on your VM. After the installation, turn the VM off.</p>
+  </li>
+  <li>
+    <p>Attach RouterOS VM’s Disk to Ubuntu VM</p>
+  </li>
+  <li>
+    <p>Boot the Ubuntu VM, and browse into RouterOS Disk’s volume called ‘RouterOS’. Go to /RW/disk/ and execute the following command to download the busybox binary. Exit the Ubuntu VM.</p>
+  </li>
+</ol>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo mkdir </span>busybox <span class="o">&amp;&amp;</span> <span class="nb">cd </span>busybox
+<span class="nv">$ </span><span class="nb">sudo </span>wget <span class="nt">-O</span> ash https://www.busybox.net/downloads/binaries/1.31.0-i686-uclibc/busybox_ASH
+<span class="nv">$ </span><span class="nb">sudo </span>wget https://www.busybox.net/downloads/binaries/1.31.0-i686-uclibc/busybox
+<span class="nv">$ </span><span class="nb">chmod </span>a+x ash busybox
+</code></pre></div></div>
+
+<ol>
+  <li>
+    <p>Boot RouterOS VM and make several login attempts with the invalid credential.</p>
+  </li>
+  <li>
+    <p>Suspend the RouterOS VM. Go to the RouterOS VM folder and open vmem file with hex editor.</p>
+  </li>
+  <li>
+    <p>Find &amp; Replace as follows</p>
+  </li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Original: 00 2F 62 6E 64 6C 2F 00 6F 70 74 69 6F 6E 00
+Replaced: 00 2F 62 6E 64 6C 2F 00 69 70 76 36 00 00 00
+
+Original: 00 2F 70 63 6B 67 2F 6F 70 74 69 6F 6E 2F 62 69 6E 2F 62 61 73 68 00
+Replaced: 00 2F 72 77 2F 64 69 73 6B 2F 62 75 73 79 62 6F 78 2F 61 73 68 00 00
+</code></pre></div></div>
+
+<ol>
+  <li>
+    <p>Save the vmem file. Resume the RouterOS VM</p>
+  </li>
+  <li>
+    <p>Login with devel/(admin’s password)</p>
+  </li>
+  <li>
+    <p>You will get a shell. If not, repeat the process from stage 4.</p>
+  </li>
+  <li>Execute the following commands to install the busybox.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> /rw/disk/busybox
+./busybox <span class="nt">--install</span> <span class="nt">-s</span> <span class="nb">.</span>
+<span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/rw/disk/busybox/
+</code></pre></div>    </div>
+  </li>
+  <li>If everything is done correctly, you should get an ash shell with busybox as the screenshot.
+<img src="/assets/2022-06-01-how-to-root-routeros/6d99def97b5f4aa312ca4519056a67ffb624cd4059f38c21bd7f9a08b82c530b.png" alt="picture 4" /></li>
+</ol>
+
+<h2 id="limitation">Limitation</h2>
+
+<p>This is a ‘simple trick’ method and the shell is not persistent. If you reboot the RouterOS VM, you will have to repeat the process from stage 4.</p>
+
+    <div class="page-profile-detail">
+        <div class="page-profile-detail-info">
+            <div>
+                <img class="page-profile_image-detail" src="/assets/stealien_inverse.png" />
+            </div>
+            <div style="position: relative; top: 12px;left: 10px;">
+                <div class="page-profile-author">오세준</div>
+                <div class="page-profile-email">sjoh@stealien.com</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="recent-post-area">
+    <div class="posts container">
+        <div class="h1-recent-post">RECENT POST</div>
+            <div class="row">
+    <div class="col-sm-2 col-md-2">
+        <div class="profile">
+            <img src="/assets/stealien_inverse.png" class="profile_image" />
+            <div class="profile_author">Minjoong Kim</div>
+        </div>
+    </div>
+    <div class="col">
+        <a href="/2024-03-10/Android-1day-Exploit-Analysis-ko">
+            <div class="post-title">
+                Android 1day Exploit Analysis (CVE-2019-2215)
+            </div>
+        </a>
+        <div class="post-summary">Android 1day Exploit Analysis by Newbie</div>
+        <div class="post-info">
+            <span style="color: #545454" class="post-author-mobile">
+                Minjoong Kim
+                <span style="color: #f5f5f5; margin: 2px">|</span>
+            </span>
+            Mar 10, 2024
+            <span style="color: #f5f5f5; margin: 2px">|</span>
+            <span>R&D</span>
+        </div>
+    </div>
+</div><div class="row">
+    <div class="col-sm-2 col-md-2">
+        <div class="profile">
+            <img src="/assets/stealien_inverse.png" class="profile_image" />
+            <div class="profile_author">이주협, 이주영</div>
+        </div>
+    </div>
+    <div class="col">
+        <a href="/2024-02-05/IoT-TechBlog-ko">
+            <div class="post-title">
+                뉴비들의 하드웨어 해킹 입문기
+            </div>
+        </a>
+        <div class="post-summary">뉴비들의 하드웨어 해킹 입문기</div>
+        <div class="post-info">
+            <span style="color: #545454" class="post-author-mobile">
+                이주협, 이주영
+                <span style="color: #f5f5f5; margin: 2px">|</span>
+            </span>
+            Feb 5, 2024
+            <span style="color: #f5f5f5; margin: 2px">|</span>
+            <span>R&D</span>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+</div>
+		</div>
+	</section><footer>
+  <div class="container" style="display: flex; justify-content: space-between;">
+    <!-- <a href="#top">
+      <img src="/assets/white_logo.png" class="footer-logo" />
+    </a> -->
+    <div class="footer-copyright">Copyright &copy; Stealien Inc.</div>
+    <div class="footer-icons">
+      <a target="_blank" href="https://twitter.com/stealien"><img class="sns" src="/assets/icons/twitter_ic.png"/></a>
+      <a target="_blank" href="https://blog.naver.com/stealien_official"><img class="sns" src="/assets/icons/blog_ic.png"/></a>
+      <a target="_blank" href="https://www.facebook.com/stealien/"><img class="sns" src="/assets/icons/facebook_ic.png"/></a>
+      <a target="_blank" href="https://www.youtube.com/c/STEALIEN"><img class="sns" src="/assets/icons/youtube_ic.png"/></a>
+    </div>
+  </div>
+</footer></body>
+</html>

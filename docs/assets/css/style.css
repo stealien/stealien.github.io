@@ -1,0 +1,396 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
+body {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    margin: 0;
+    line-height: 28px;
+    font-size: 16px;
+}
+
+/* 2021-08-02 scyoon : Nanum Gothic -> NOto Sans KR */
+* {
+    /*font-family: 'Nanum Gothic', sans-serif;*/
+    font-family: 'Ubuntu', 'Noto Sans KR', sans-serif;
+}
+
+#header {
+}
+
+.header_image_logo {
+    width: 120px;
+    margin: 30px;
+}
+
+
+.header_image_bg {
+    background-image: url("/assets/bg.png");
+    background-size: cover;
+    background-position: center center;
+    width: 100vw;
+    padding: 100px 0px;
+    color: #fff;
+}
+
+.posts > div > div {
+    display: inline-block;
+}
+
+.posts > .row {
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 1px solid #f2f2f2;
+}
+
+.posts > .row:first-child {
+    border-top: 0px solid;
+}
+
+.posts > .row:last-child {
+    margin-bottom: 40px;
+}
+
+.posts .profile {
+    text-align: center;
+    margin-top: 7px;
+}
+
+.profile_image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50px;
+}
+
+.profile_author {
+    color: #aaa;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.post-title {
+    font-size: 25px;
+    font-weight: bold;
+    color: #000;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
+    max-width: 1200px;
+    white-space: nowrap;
+}
+
+.post-summary {
+    color: #777;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
+    max-width: 1200px;
+    white-space: nowrap;
+    word-break: break-all;
+}
+
+.post-info {
+    margin-top: 5px;
+    color: #aaa;
+    font-size: 12px;
+}
+
+.post-info > span {
+    color: #ff7777;
+}
+
+footer {
+    padding: 30px 10px;
+    background-color: #000;
+    padding-bottom: 100px;
+}
+
+.footer-logo {
+    width: 100px;
+    float: left;
+}
+
+.footer-copyright {
+    color: #fff;
+    font-size: 13px;
+}
+
+.footer-icons {
+    margin-top: -10px;
+    margin-right: 10px;
+}
+
+.footer-icons img {
+    width: 40px;
+    height: 40px;
+}
+
+.page {
+    padding: 50px 10px;
+}
+
+.header_image_post {
+    padding: 0px;
+}
+
+.header_image_post_body {
+    padding-top: 100px;
+    padding-bottom: 50px;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.page-profile_image {
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    margin-right: 3px;
+}
+
+.page-category {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.page-title {
+    font-size: 25px;
+    font-weight: 800;
+    margin-bottom: 5px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
+    max-width: 1200px;
+    white-space: nowrap;
+}
+
+.page-summary {
+    font-size: 14px;
+}
+
+.page-profile-detail {
+    margin-top: 50px;
+    width: 300px;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+.page-profile-detail-info > div {
+    display: inline-block;
+}
+
+.page-profile_image-detail {
+    width: 45px;
+    height: 45px;
+    border-radius: 30px;
+    margin-right: 3px;
+}
+
+.page-profile-author {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.page-profile-email {
+    font-size: 14px;
+}
+
+.recent-post-area {
+    padding: 50px;
+    background: #f7f7f7;
+    margin-top: 50px;
+    padding-bottom: 100px;
+}
+
+.h1-recent-post {
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.page-content {
+    font-size: 15px;
+    max-width: 780px;
+    width: 80%;
+    text-align: justify;
+    padding-top: 50px;
+    word-break: break-all;
+}
+
+.page-content table {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.page-content table td, .page-content table th {
+    text-align: center;
+}
+
+.page-content table td {
+    font-size: 13px;
+    color: #777;
+}
+
+.categories-text {
+    margin-top: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.categories {
+    font-size: 14px;
+    text-decoration: underline;
+    margin-top: 10px;
+}
+
+.categories a {
+    color: #414141;
+}
+
+.category-h-text {
+    font-size: 30px;
+    font-weight: bold;
+    color: #555;
+    margin-top: 50px;
+}
+
+.post-author-mobile {
+    display: none;
+}
+
+.post-thumbnail-mobile {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .header_image_logo {
+        margin: 20px 10px;
+    }
+    .post-title {
+        font-size: 15px;
+        margin-top: 10px;
+    }
+    .post-summary {
+        font-size: 12px;
+    }
+    .posts {
+
+    }
+    .posts > .row {
+        margin-top: 25px;
+        padding-top: 10px;
+    }
+    .page {
+        padding: 10px 10px;
+    }
+    .category-h-text {
+        margin-top: 20px;
+    }
+    .header_image_bg > div > div:first-child {
+        font-size: 30px !important;
+    }
+    .header_image_bg > div > div:last-child {
+        font-size: 20px !important;
+    }
+    .header_image_bg {
+        padding: 20px 10px;
+    }
+    .page-content img {
+        max-width: 100%;
+    }
+    .header_image_post {
+        padding: 0px;
+    }
+    .profile {
+        display: none;
+    }
+    .profile_image_mobile {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+    }
+    .post-author-mobile {
+        display: inline;
+    }
+    .post-thumbnail-mobile {
+        display: block;
+    }
+}
+
+h1 {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 48px;
+}
+
+h2 {
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 48px;
+    margin-bottom: 0;
+}
+
+h3 {
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 48px;
+    margin-bottom: 0;
+}
+
+/* 글쓴이 프로필 빼고 적용 */
+img:not(.profile_image, .page-profile_image, .page-profile_image-detail, .sns), div.highlight{
+    display: block;
+    margin-top: 28px;
+    margin-bottom: 28px;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+/* 상단바 */
+div.container:not(.page-content) {
+    max-width: 960px;
+}
+
+div.highlight {
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+
+div.posts.container {
+    max-width: 860px;
+    width: 88%;
+}
+
+div.highlight {
+    border-radius: 1em;
+    align-content: center;
+}
+
+pre.highlight {
+    max-width: 730px;
+    margin: 0 auto;
+    border-radius: 1em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+
+table {
+    width: 100%;
+    border: 1px solid #000000;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    border: 1px solid #000000;
+  }
+
+pre::-webkit-scrollbar{
+    height: 6px;
+}
+pre::-webkit-scrollbar-thumb{
+    background-color: #676c6b;
+    border-radius: 10px;
+}
