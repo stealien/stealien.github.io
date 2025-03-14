@@ -9,7 +9,7 @@ author: 김상현
 author_email: skim@stealien.com
 background: /assets/bg.png
 profile_image: /assets/stealien_inverse.png
-summary: React Native 환경 앱의 보안성을 높이기
+summary: "React Native 환경 앱의 소스코드를 보호하자"
 thumbnail: /assets/stealien.png
 lang: ko
 ---
