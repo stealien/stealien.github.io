@@ -20,9 +20,9 @@ lang: ko
 
 ## 소개
 
-안녕하세요. STEALIEN에서 모바일 앱 보안 솔루션 AppSuit 시리즈의 iOS 파트 개발을 담당하고 있는 김상현입니다. AppSuit 시리즈는 iOS, Android OS 앱 외에도 React Native, Flutter, Unity 등의 다양한 환경의 앱 또한 지원하는 통합 보안 솔루션입니다. 
+안녕하세요. STEALIEN에서 모바일 앱 보안 솔루션 AppSuit 시리즈의 iOS 파트 개발을 담당하고 있는 김상현입니다. AppSuit 시리즈는 iOS, Android OS 앱 외에도 React Native(이하 "RN"), Flutter, Unity 등의 다양한 환경의 앱 또한 지원하는 통합 보안 솔루션입니다. 
 
-본 포스팅에서는 자사 AppSuit Premium 제품이 React Native 으로 제작된 iOS 앱의 보안성을 제고하는 방법에 대하여 설명하려고 합니다. 이해를 돕기 위해 iOS 파일 시스템과 IPA의 구조에 대한 설명으로 시작하도록 하겠습니다.
+본 포스팅에서는 앱 위변조 방지 및 난독화 기능을 제공하는 AppSuit Premium 제품이 RN 으로 제작된 iOS 앱의 보안성을 제고하는 방법에 대하여 설명하려고 합니다. 이해를 돕기 위해 iOS 파일 시스템과 IPA의 구조에 대한 설명으로 시작하도록 하겠습니다.
 
 ---
 
@@ -116,7 +116,7 @@ StealPlateSwift.ipa/
 
 내부 파일들을 보면 코드 서명 관련 파일, 앱 실행 파일, 설정 관련 파일, 리소스 파일, 데이터 파일, Framework 등 으로 분류할 수 있습니다. 여기서 Framework, PlugIns 등을 제외한 대부분의 파일들은 디바이스에 설치될 시 Bundle Container 에 설치됩니다.
 
-이번에는 같은 방법으로 React Native 로 빌드된 ipa를 뜯어보도록 하겠습니다.
+이번에는 같은 방법으로 RN 로 빌드된 ipa를 뜯어보도록 하겠습니다.
 
 ![RNIpaStructure.png](/assets/2025-03-14-ReactNative-main.jsbundle-Encryption/RNIpaStructure.png)
 
@@ -254,7 +254,7 @@ ResourceHash.plist 파일 자신에 대한 무결성은 iOS에서 제공하는 _
 
 본 포스팅에선 iOS의 파일 시스템에 대한 설명과 네이티브앱, ReactNative 앱 각각의 IPA 구조를 사전 지식으로 설명하였습니다. 그리고 ReactNative IPA 의 main.jsbundle 이 가지는 보안상의 문제점과 이를 안전히 보호하는 기술을 설명하였습니다.
 
-본 포스팅에서 설명한 것과 같은 보안 기술들은 조금만 환경이 바뀌어도 무의미해지기도 합니다. 보안 솔루션을 개발하는 입장에서, 막으면 뚫고 뚫으면 막으며 기술을 발전시켜 나가다 보면 점점 더 견고한 보안성을 가진 기술이 완성되는 것을 보곤 합니다. 이런 검증 과정을 거친 기술들 또한 공개된 자료들이 많으니 소중한 정보 자산을 생각한다면 그런 기술들에도 관심을 기울이는 노력이 있으면 좋을 것 같습니다.
+본 포스팅에서 설명한 것과 같은 보안 기술들은 조금만 환경이 바뀌어도 무의미해지기도 합니다. 보안 솔루션을 개발하는 입장에서, 막으면 뚫고 뚫으면 막으며 기술을 발전시켜 나가다 보면 점점 더 견고한 보안성을 가진 기술이 완성되는 것을 보곤 합니다. 이런 검증 과정을 거친 기술들 또한 공개된 자료들이 많으니 소중한 정보 자산을 보호하기 위해서는 보호 기술들에 대한 지속적인 관심과 연구가 필요합니다.
 
 [AppSuit Series](https://www.stealien.com/products/series) 에서는 이번 포스팅에서 설명드린 main.jsbundle 암호화와 같은 보안 기능 외에도 더 많은 보안 기능들을 제공하고 있으니 한번 확인해주시면 감사하겠습니다. 
 
