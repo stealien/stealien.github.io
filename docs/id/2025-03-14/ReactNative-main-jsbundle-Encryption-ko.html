@@ -91,6 +91,25 @@
 
 <hr />
 
+<h2 id="목차">목차</h2>
+<ul>
+  <li><a href="#소개">소개</a></li>
+  <li><a href="#ios-파일-시스템">iOS 파일 시스템</a></li>
+  <li><a href="#앱-ipa-구조">앱 IPA 구조</a></li>
+  <li><a href="#mainjsbundle">main.jsbundle</a></li>
+  <li><a href="#mainjsbundle의-암호화">main.jsbundle의 암호화</a>
+    <ul>
+      <li><a href="#암호화-복호화">암호화, 복호화</a></li>
+      <li><a href="#resources-복사">Resources 복사</a></li>
+      <li><a href="#복사된-resources의-무결성-검증">복사된 Resources의 무결성 검증</a></li>
+      <li><a href="#resourcehashplist의-신뢰성">“ResourceHash.plist”의 신뢰성</a></li>
+    </ul>
+  </li>
+  <li><a href="#정리">정리</a></li>
+</ul>
+
+<hr />
+
 <h2 id="소개">소개</h2>
 
 <p>안녕하세요. STEALIEN에서 모바일 앱 보안 솔루션 AppSuit 시리즈의 iOS 파트 개발을 담당하고 있는 김상현입니다. AppSuit 시리즈는 iOS, Android OS 앱 외에도 React Native(이하 “RN”), Flutter, Unity 등의 다양한 환경의 앱 또한 지원하는 통합 보안 솔루션입니다.</p>
@@ -276,7 +295,7 @@
 
 <p>main.jsbundle 파일은 앱 빌드시에 별도의 암호화 과정없이 그대로 노출되어 배포됩니다. RN 자체적으로 일부 난독화를 적용할 수 있으므로 그대로 분석하고 수정하는 것은 불가능하지만 위에서 확인한 문자열과 같이 그대로 노출되는 데이터 또한 존재하므로 확실한 보안성 강화를 위해 암호화 과정이 필요합니다.</p>
 
-<h2 id="mainjsbundle-의-암호화">main.jsbundle 의 암호화</h2>
+<h2 id="mainjsbundle의-암호화">main.jsbundle의 암호화</h2>
 
 <p>ASCII text로 노출되는 main.jsbundle 파일을 배포하기 전에 암호화하고 앱이 단말기에서 실행되는 시점에 복호화하는 방법으로 보안성을 강화할 수 있습니다.</p>
 
@@ -308,7 +327,7 @@
 
 <p>Data Container 는 읽기, 쓰기 모두가 가능한 디렉토리이며 또 iOS 에서 실행시에 자체적으로 무결성 검사를 진행하지 않습니다. 그러므로, 자체적으로 무결성 검사 과정 또한 추가하여 resources를 안전하게 관리해줘야 합니다.</p>
 
-<h3 id="복사된-resources-의-무결성-검증">복사된 Resources 의 무결성 검증</h3>
+<h3 id="복사된-resources의-무결성-검증">복사된 Resources의 무결성 검증</h3>
 
 <p>이미 위에서 언급했듯이, IPA를 배포하기 전에 ResourceHash.plist 라는 이름의 파일을 생성합니다.</p>
 
@@ -318,7 +337,7 @@
 
 <p>앱이 실행되고 복호화 과정, resources 복사 과정이 모두 마무리되면, 마지막으로 복사된 resources에 대한 해시 값과 ResourceHash.plist에 담겨 있는 모든 원본 해시값을 각각 비교하여 복사된 resources에 대한 무결성 검사를 수행합니다.</p>
 
-<h3 id="resourcehashplist-의-신뢰성">“ResourceHash.plist” 의 신뢰성</h3>
+<h3 id="resourcehashplist의-신뢰성">“ResourceHash.plist”의 신뢰성</h3>
 
 <p>그렇다면 마지막으로 ResourceHash.plist 파일의 무결성만 검증이 된다면 암호화된 main.jsbundle 을 위한 새로운 보안 체인을 완성할 수 있습니다.</p>
 

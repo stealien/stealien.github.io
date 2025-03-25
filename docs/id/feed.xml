@@ -1,4 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/id/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/id/" rel="alternate" type="text/html" /><updated>2025-03-17T18:30:44+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">React Native 앱 main.jsbundle 파일 암호화</title><link href="http://ufo.stealien.com/id/2025-03-14/ReactNative-main-jsbundle-Encryption-ko" rel="alternate" type="text/html" title="React Native 앱 main.jsbundle 파일 암호화" /><published>2025-03-14T17:00:00+09:00</published><updated>2025-03-14T17:00:00+09:00</updated><id>http://ufo.stealien.com/2025-03-14/ReactNative-main-jsbundle-Encryption-ko</id><content type="html" xml:base="http://ufo.stealien.com/2025-03-14/ReactNative-main-jsbundle-Encryption-ko">&lt;h1 id=&quot;reactnative-mainjsbundle-암호화&quot;&gt;ReactNative main.jsbundle 암호화&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/id/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/id/" rel="alternate" type="text/html" /><updated>2025-03-25T17:19:06+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">React Native 앱 main.jsbundle 파일 암호화</title><link href="http://ufo.stealien.com/id/2025-03-14/ReactNative-main-jsbundle-Encryption-ko" rel="alternate" type="text/html" title="React Native 앱 main.jsbundle 파일 암호화" /><published>2025-03-14T17:00:00+09:00</published><updated>2025-03-14T17:00:00+09:00</updated><id>http://ufo.stealien.com/2025-03-14/ReactNative-main-jsbundle-Encryption-ko</id><content type="html" xml:base="http://ufo.stealien.com/2025-03-14/ReactNative-main-jsbundle-Encryption-ko">&lt;h1 id=&quot;reactnative-mainjsbundle-암호화&quot;&gt;ReactNative main.jsbundle 암호화&lt;/h1&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;목차&quot;&gt;목차&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;#소개&quot;&gt;소개&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ios-파일-시스템&quot;&gt;iOS 파일 시스템&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#앱-ipa-구조&quot;&gt;앱 IPA 구조&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#mainjsbundle&quot;&gt;main.jsbundle&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#mainjsbundle의-암호화&quot;&gt;main.jsbundle의 암호화&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#암호화-복호화&quot;&gt;암호화, 복호화&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#resources-복사&quot;&gt;Resources 복사&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#복사된-resources의-무결성-검증&quot;&gt;복사된 Resources의 무결성 검증&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#resourcehashplist의-신뢰성&quot;&gt;“ResourceHash.plist”의 신뢰성&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#정리&quot;&gt;정리&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;hr /&gt;
 
@@ -187,7 +206,7 @@
 
 &lt;p&gt;main.jsbundle 파일은 앱 빌드시에 별도의 암호화 과정없이 그대로 노출되어 배포됩니다. RN 자체적으로 일부 난독화를 적용할 수 있으므로 그대로 분석하고 수정하는 것은 불가능하지만 위에서 확인한 문자열과 같이 그대로 노출되는 데이터 또한 존재하므로 확실한 보안성 강화를 위해 암호화 과정이 필요합니다.&lt;/p&gt;
 
-&lt;h2 id=&quot;mainjsbundle-의-암호화&quot;&gt;main.jsbundle 의 암호화&lt;/h2&gt;
+&lt;h2 id=&quot;mainjsbundle의-암호화&quot;&gt;main.jsbundle의 암호화&lt;/h2&gt;
 
 &lt;p&gt;ASCII text로 노출되는 main.jsbundle 파일을 배포하기 전에 암호화하고 앱이 단말기에서 실행되는 시점에 복호화하는 방법으로 보안성을 강화할 수 있습니다.&lt;/p&gt;
 
@@ -219,7 +238,7 @@
 
 &lt;p&gt;Data Container 는 읽기, 쓰기 모두가 가능한 디렉토리이며 또 iOS 에서 실행시에 자체적으로 무결성 검사를 진행하지 않습니다. 그러므로, 자체적으로 무결성 검사 과정 또한 추가하여 resources를 안전하게 관리해줘야 합니다.&lt;/p&gt;
 
-&lt;h3 id=&quot;복사된-resources-의-무결성-검증&quot;&gt;복사된 Resources 의 무결성 검증&lt;/h3&gt;
+&lt;h3 id=&quot;복사된-resources의-무결성-검증&quot;&gt;복사된 Resources의 무결성 검증&lt;/h3&gt;
 
 &lt;p&gt;이미 위에서 언급했듯이, IPA를 배포하기 전에 ResourceHash.plist 라는 이름의 파일을 생성합니다.&lt;/p&gt;
 
@@ -229,7 +248,7 @@
 
 &lt;p&gt;앱이 실행되고 복호화 과정, resources 복사 과정이 모두 마무리되면, 마지막으로 복사된 resources에 대한 해시 값과 ResourceHash.plist에 담겨 있는 모든 원본 해시값을 각각 비교하여 복사된 resources에 대한 무결성 검사를 수행합니다.&lt;/p&gt;
 
-&lt;h3 id=&quot;resourcehashplist-의-신뢰성&quot;&gt;“ResourceHash.plist” 의 신뢰성&lt;/h3&gt;
+&lt;h3 id=&quot;resourcehashplist의-신뢰성&quot;&gt;“ResourceHash.plist”의 신뢰성&lt;/h3&gt;
 
 &lt;p&gt;그렇다면 마지막으로 ResourceHash.plist 파일의 무결성만 검증이 된다면 암호화된 main.jsbundle 을 위한 새로운 보안 체인을 완성할 수 있습니다.&lt;/p&gt;
 
