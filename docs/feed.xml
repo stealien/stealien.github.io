@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2025-04-22T16:16:41+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">IoT 보안의 시작, 펌웨어 분석 이야기 1부</title><link href="http://ufo.stealien.com/2025-04-22/IoT-Firmware-ko" rel="alternate" type="text/html" title="IoT 보안의 시작, 펌웨어 분석 이야기 1부" /><published>2025-04-22T14:00:00+09:00</published><updated>2025-04-22T14:00:00+09:00</updated><id>http://ufo.stealien.com/2025-04-22/IoT-Firmware-ko</id><content type="html" xml:base="http://ufo.stealien.com/2025-04-22/IoT-Firmware-ko">&lt;h1 id=&quot;iot-보안의-시작-펌웨어-분석-이야기-1부&quot;&gt;IoT 보안의 시작, 펌웨어 분석 이야기 1부&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2025-04-22T16:21:11+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">IoT 보안의 시작, 펌웨어 분석 이야기 1부</title><link href="http://ufo.stealien.com/2025-04-22/IoT-Firmware-ko" rel="alternate" type="text/html" title="IoT 보안의 시작, 펌웨어 분석 이야기 1부" /><published>2025-04-22T14:00:00+09:00</published><updated>2025-04-22T14:00:00+09:00</updated><id>http://ufo.stealien.com/2025-04-22/IoT-Firmware-ko</id><content type="html" xml:base="http://ufo.stealien.com/2025-04-22/IoT-Firmware-ko">&lt;h1 id=&quot;iot-보안의-시작-펌웨어-분석-이야기-1부&quot;&gt;IoT 보안의 시작, 펌웨어 분석 이야기 1부&lt;/h1&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;본 포스팅은 스틸리언 선제대응팀의 ‘김도환’ 선임 연구원과 ‘조준형’ 연구원의 IoT 분석 경험을 기반으로 작성되었습니다.&lt;/p&gt;
@@ -41,10 +41,10 @@
       &lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;
-    &lt;h2 id=&quot;결론&quot;&gt;&lt;a href=&quot;#결론&quot;&gt;결론&lt;/a&gt;&lt;/h2&gt;
-  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#결론&quot;&gt;결론&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;hr /&gt;
 
 &lt;h1 id=&quot;소개&quot;&gt;소개&lt;/h1&gt;
 
@@ -376,7 +376,7 @@
 
 &lt;p&gt;이후 확보한 펌웨어 파일을 기반으로, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;binwalk&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;firmwalker&lt;/code&gt; 등의 도구를 활용해 &lt;strong&gt;파일 시스템 구조 분석&lt;/strong&gt;, &lt;strong&gt;설정 파일 검색&lt;/strong&gt;, &lt;strong&gt;취약점 분석&lt;/strong&gt; 등의 정적 분석을 진행할 수 있습니다.&lt;/p&gt;
 
-&lt;h1 id=&quot;결론-1&quot;&gt;결론&lt;/h1&gt;
+&lt;h1 id=&quot;결론&quot;&gt;결론&lt;/h1&gt;
 
 &lt;p&gt;소개한 기술은 단순한 장비 조작을 넘어서, &lt;strong&gt;IoT 기기의 내부 동작 원리를 이해하고, 시스템 보안 상태를 정확히 진단할 수 있는 기반 기술&lt;/strong&gt;입니다.
 특히 제조사로부터 펌웨어가 제공되지 않거나 내부 구조가 문서화되어 있지 않은 경우, &lt;strong&gt;직접 기기를 분석하고 펌웨어를 획득해 구조를 파악하는 기술이 필수적입니다.&lt;/strong&gt;&lt;/p&gt;
