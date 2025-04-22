@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2025-04-22T15:31:59+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">IoT 보안의 시작, 펌웨어 분석 이야기 1부</title><link href="http://ufo.stealien.com/2025-04-22/IoT-Firmware-ko" rel="alternate" type="text/html" title="IoT 보안의 시작, 펌웨어 분석 이야기 1부" /><published>2025-04-22T14:00:00+09:00</published><updated>2025-04-22T14:00:00+09:00</updated><id>http://ufo.stealien.com/2025-04-22/IoT-Firmware-ko</id><content type="html" xml:base="http://ufo.stealien.com/2025-04-22/IoT-Firmware-ko">&lt;h1 id=&quot;iot-보안의-시작-펌웨어-분석-이야기-1부&quot;&gt;IoT 보안의 시작, 펌웨어 분석 이야기 1부&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2025-04-22T15:43:56+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Technical Blog</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">IoT 보안의 시작, 펌웨어 분석 이야기 1부</title><link href="http://ufo.stealien.com/2025-04-22/IoT-Firmware-ko" rel="alternate" type="text/html" title="IoT 보안의 시작, 펌웨어 분석 이야기 1부" /><published>2025-04-22T14:00:00+09:00</published><updated>2025-04-22T14:00:00+09:00</updated><id>http://ufo.stealien.com/2025-04-22/IoT-Firmware-ko</id><content type="html" xml:base="http://ufo.stealien.com/2025-04-22/IoT-Firmware-ko">&lt;h1 id=&quot;iot-보안의-시작-펌웨어-분석-이야기-1부&quot;&gt;IoT 보안의 시작, 펌웨어 분석 이야기 1부&lt;/h1&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;본 포스팅은 스틸리언 선제대응팀의 ‘김도환’ 선임 연구원과 ‘조준형’ 연구원의 IoT 분석 경험을 기반으로 작성되었습니다.&lt;/p&gt;
@@ -8,39 +8,39 @@
 &lt;h2 id=&quot;목차&quot;&gt;목차&lt;/h2&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;소개
+  &lt;li&gt;&lt;a href=&quot;#소개&quot;&gt;소개&lt;/a&gt;
     &lt;ul&gt;
-      &lt;li&gt;IoT 해킹과 펌웨어 분석의 중요성&lt;/li&gt;
-      &lt;li&gt;펌웨어(Firmware)란?&lt;/li&gt;
-      &lt;li&gt;펌웨어의 전체 구조&lt;/li&gt;
-      &lt;li&gt;펌웨어 추출 방법&lt;/li&gt;
-      &lt;li&gt;주요 도구&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#iot-해킹과-펌웨어-분석의-중요성&quot;&gt;IoT 해킹과 펌웨어 분석의 중요성&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#펌웨어firmware란&quot;&gt;펌웨어(Firmware)란?&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#펌웨어의-전체-구조&quot;&gt;펌웨어의 전체 구조&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#펌웨어-추출-방법&quot;&gt;펌웨어 추출 방법&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#주요-도구&quot;&gt;주요 도구&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;제조사 제공
+  &lt;li&gt;&lt;a href=&quot;#제조사-제공&quot;&gt;제조사 제공&lt;/a&gt;
     &lt;ul&gt;
-      &lt;li&gt;공식 경로로 펌웨어 받기&lt;/li&gt;
-      &lt;li&gt;펌웨어 분석 도구 – Binwalk&lt;/li&gt;
-      &lt;li&gt;부트로더(bootloader)는 포함되지 않는 이유&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#공식-경로로-펌웨어-받기&quot;&gt;공식 경로로 펌웨어 받기&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#펌웨어-분석-도구--binwalk&quot;&gt;펌웨어 분석 도구 – Binwalk&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#부트로더bootloader는-포함되지-않는-이유&quot;&gt;부트로더(bootloader)는 포함되지 않는 이유&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;UART
+  &lt;li&gt;&lt;a href=&quot;#uart&quot;&gt;UART&lt;/a&gt;
     &lt;ul&gt;
-      &lt;li&gt;연결
+      &lt;li&gt;&lt;a href=&quot;#연결&quot;&gt;연결&lt;/a&gt;
         &lt;ul&gt;
-          &lt;li&gt;홀 또는 핀이 표기가 되어있는 경우&lt;/li&gt;
-          &lt;li&gt;홀 또는 핀이 표기가 되어있지 않은 경우&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#홀-또는-핀이-표기가-되어있는-경우&quot;&gt;홀 또는 핀이 표기가 되어있는 경우&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#홀-또는-핀이-표기가-되어있지-않은-경우&quot;&gt;홀 또는 핀이 표기가 되어있지 않은 경우&lt;/a&gt;&lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
-      &lt;li&gt;추출
+      &lt;li&gt;&lt;a href=&quot;#추출&quot;&gt;추출&lt;/a&gt;
         &lt;ul&gt;
-          &lt;li&gt;메모리 덤프 (Bootloader 단계)&lt;/li&gt;
-          &lt;li&gt;직접 획득 (OS Shell)&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#메모리-덤프-bootloader-단계&quot;&gt;메모리 덤프 (Bootloader 단계)&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#직접-획득-os-shell&quot;&gt;직접 획득 (OS Shell)&lt;/a&gt;&lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;결론&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#결론&quot;&gt;결론&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h1 id=&quot;소개&quot;&gt;소개&lt;/h1&gt;
