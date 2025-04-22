@@ -7,10 +7,10 @@ date: 2025-04-22 14:00:0 +0900
 category: R&D
 author: 김도환, 조준형
 author_email: dhkim2@stealien.com, jhjo@stealien.com
-background: /assets/2025-04-22-IoT-Firmware/bg.png
-profile_image: /assets/2025-04-22-IoT-Firmware/stealien_inverse.png
+background: /assets/bg.png
+profile_image: /assets/stealien_inverse.png
 summary: "IoT 보안의 시작, 펌웨어 분석 이야기 1부"
-thumbnail: /assets/2025-04-22-IoT-Firmware/stealien.png
+thumbnail: /assets/stealien.png
 lang: ko
 ---
 
