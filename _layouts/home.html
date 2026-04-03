@@ -2,22 +2,18 @@
 layout: page
 ---
 <div class="header_image_bg">
-    <div class="container">
-        <div style="font-size: 50px; font-weight: 800; margin-bottom: 25px; padding-left: 27px;">UFO</div>
-        <div style="font-size: 30px; font-weight: 100; padding-left: 27px;">스틸리언 기술 블로그</div>
+    <div class="container" style="position: relative; z-index: 1;">
+        <div style="font-size: 48px; font-weight: 900; margin-bottom: 12px; padding-left: 27px; letter-spacing: -0.03em;">UFO</div>
+        <div style="font-size: 20px; font-weight: 400; padding-left: 27px; opacity: 0.85;">스틸리언 기술 블로그</div>
     </div>
 </div>
 
-<div class="container">
-    <div class="row">
-        {%- if site.posts.size > 0 -%}
-        <div class="posts col">
-            {% include posts.html posts=site.posts %}
-        </div>
-        {%- endif -%}
-        <div class="col-12 col-sm-2">
-            {%- include category.html -%}
-        </div>
+<div class="container" style="margin-top: 48px;">
+    {% include category_tabs.html active="All" %}
+    {%- if site.posts.size > 0 -%}
+    <div class="posts">
+        {% include posts.html posts=site.posts %}
     </div>
+    {%- endif -%}
 </div>
 <div style="margin-top: 50px;"></div>

@@ -1,0 +1,7 @@
+<div class="category-tabs">
+    <a href="/" class="category-tab {% if include.active == 'All' %}active{% endif %}">All</a>
+    {% assign tab_order = "R&D,Dev,CTI" | split: "," %}
+    {% for cat in tab_order %}
+    <a href="/categories/{{ cat }}" class="category-tab {% if include.active == cat %}active{% endif %}">{{ cat }}</a>
+    {% endfor %}
+</div>

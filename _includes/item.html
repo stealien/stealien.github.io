@@ -16,11 +16,9 @@
         <div class="post-info">
             <span style="color: #545454" class="post-author-mobile">
                 {{ include.author }}
-                <span style="color: #f5f5f5; margin: 2px">|</span>
             </span>
             {{ include.date | date: date_format }}
-            <span style="color: #f5f5f5; margin: 2px">|</span>
-            <span>{{ include.category }}</span>
+            <span class="post-category-badge">{{ include.category }}</span>
         </div>
     </div>
 </div>

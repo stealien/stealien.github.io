@@ -1,50 +1,144 @@
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+/* ===== CSS Custom Properties ===== */
+:root {
+    --color-bg: #ffffff;
+    --color-bg-secondary: #f8f9fb;
+    --color-bg-dark: #0f1117;
+    --color-text: #1a1a2e;
+    --color-text-secondary: #64748b;
+    --color-text-muted: #94a3b8;
+    --color-accent: #431785;
+    --color-accent-light: #501A9B;
+    --color-accent-soft: rgba(67, 23, 133, 0.08);
+    --color-accent-softer: #F5F1F9;
+    --color-border: #e8ecf1;
+    --color-border-light: #f1f5f9;
+    --color-card-shadow: rgba(15, 17, 23, 0.06);
+    --color-card-shadow-hover: rgba(15, 17, 23, 0.12);
+    --color-link: #501A9B;
+    --color-overlay: rgba(15, 17, 23, 0.55);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-medium: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --max-width: 960px;
+    --max-width-content: 780px;
+}
+
+/* ===== Base & Typography ===== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+* {
+    font-family: 'Inter', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    box-sizing: border-box;
+}
 
 body {
     overflow-y: scroll;
     overflow-x: hidden;
     margin: 0;
-    line-height: 28px;
+    line-height: 1.75;
     font-size: 16px;
+    color: var(--color-text);
+    background: var(--color-bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-/* 2021-08-02 scyoon : Nanum Gothic -> NOto Sans KR */
-* {
-    /*font-family: 'Nanum Gothic', sans-serif;*/
-    font-family: 'Ubuntu', 'Noto Sans KR', sans-serif;
+body > section {
+    flex: 1;
 }
 
+a {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--color-accent);
+    text-decoration: none;
+}
+
+::selection {
+    background: var(--color-accent);
+    color: #fff;
+}
+
+/* ===== Navigation / Header ===== */
 #header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border-light);
+    transition: box-shadow var(--transition-medium);
+}
+
+#header:hover {
+    box-shadow: 0 1px 12px var(--color-card-shadow);
 }
 
 .header_image_logo {
     width: 120px;
     margin: 30px;
+    transition: opacity var(--transition-fast);
 }
 
+.header_image_logo:hover {
+    opacity: 0.8;
+}
 
+/* ===== Hero Banner ===== */
 .header_image_bg {
     background-image: url("/assets/bg.png");
     background-size: cover;
     background-position: center center;
     width: 100vw;
-    padding: 100px 0px;
+    padding: 100px 0;
     color: #fff;
+    position: relative;
 }
 
+.header_image_bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(15, 17, 23, 0.45), rgba(30, 34, 50, 0.25));
+    pointer-events: none;
+}
+
+.header_image_bg > .container {
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== Post List ===== */
 .posts > div > div {
     display: inline-block;
 }
 
 .posts > .row {
-    margin-top: 40px;
-    padding-top: 40px;
-    border-top: 1px solid #f2f2f2;
+    margin-top: 0;
+    padding: 24px;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-medium);
+    margin-bottom: 16px;
+    background: var(--color-bg);
+}
+
+.posts > .row:hover {
+    background: var(--color-bg-secondary);
 }
 
 .posts > .row:first-child {
-    border-top: 0px solid;
+    border-top: 1px solid var(--color-border-light);
 }
 
 .posts > .row:last-child {
@@ -57,53 +151,74 @@ body {
 }
 
 .profile_image {
-    width: 40px;
-    height: 40px;
-    border-radius: 50px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 2px solid var(--color-border-light);
+    object-fit: cover;
 }
 
 .profile_author {
-    color: #aaa;
-    font-size: 13px;
-    margin-top: 5px;
+    color: var(--color-text-muted);
+    font-size: 12px;
+    margin-top: 6px;
+    font-weight: 500;
 }
 
 .post-title {
-    font-size: 25px;
-    font-weight: bold;
-    color: #000;
-
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-text);
     text-overflow: ellipsis;
     overflow: hidden;
     width: 100%;
     max-width: 1200px;
     white-space: nowrap;
+    letter-spacing: -0.02em;
+    transition: color var(--transition-fast);
+}
+
+.posts > .row:hover .post-title {
+    color: var(--color-accent);
 }
 
 .post-summary {
-    color: #777;
+    color: var(--color-text-secondary);
     text-overflow: ellipsis;
     overflow: hidden;
     width: 100%;
     max-width: 1200px;
     white-space: nowrap;
     word-break: break-all;
+    font-size: 14px;
+    margin-top: 4px;
+    line-height: 1.6;
 }
 
 .post-info {
-    margin-top: 5px;
-    color: #aaa;
+    margin-top: 10px;
+    color: var(--color-text-muted);
     font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
-.post-info > span {
-    color: #ff7777;
+.post-category-badge {
+    color: var(--color-accent);
+    font-weight: 600;
+    background: var(--color-accent-soft);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    letter-spacing: 0.02em;
 }
 
+/* ===== Footer ===== */
 footer {
-    padding: 30px 10px;
-    background-color: #000;
-    padding-bottom: 100px;
+    padding: 48px 10px 80px;
+    background-color: var(--color-bg-dark);
 }
 
 .footer-logo {
@@ -112,66 +227,187 @@ footer {
 }
 
 .footer-copyright {
-    color: #fff;
+    color: var(--color-text-muted);
     font-size: 13px;
+    font-weight: 500;
 }
 
 .footer-icons {
     margin-top: -10px;
     margin-right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .footer-icons img {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
+    opacity: 0.6;
+    transition: all var(--transition-fast);
+    border-radius: 8px;
 }
 
+.footer-icons img:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+/* ===== Page / About ===== */
 .page {
     padding: 50px 10px;
 }
 
+/* ===== Post Detail Header ===== */
 .header_image_post {
-    padding: 0px;
+    padding: 0;
+}
+
+.header_image_post::after {
+    background: linear-gradient(to top, rgba(15, 17, 23, 0.45), transparent);
 }
 
 .header_image_post_body {
-    padding-top: 100px;
-    padding-bottom: 50px;
-    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 180px;
+    padding-bottom: 72px;
+    position: relative;
+    z-index: 1;
 }
 
 .page-profile_image {
-    width: 20px;
-    height: 20px;
-    border-radius: 20px;
-    margin-right: 3px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+    border: 1.5px solid rgba(255,255,255,0.3);
 }
 
 .page-category {
-    font-size: 14px;
-    margin-bottom: 5px;
+    font-size: 13px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.8;
 }
 
 .page-title {
-    font-size: 25px;
+    font-size: 36px;
     font-weight: 800;
-    margin-bottom: 5px;
+    margin-bottom: 16px;
     text-overflow: ellipsis;
     overflow: hidden;
     width: 100%;
     max-width: 1200px;
     white-space: nowrap;
+    letter-spacing: -0.03em;
+    line-height: 1.3;
 }
 
 .page-summary {
     font-size: 14px;
+    opacity: 0.85;
 }
 
+.page-date {
+    opacity: 0.7;
+}
+
+/* ===== Post Content ===== */
+.page-content {
+    font-size: 16px;
+    max-width: var(--max-width-content);
+    width: 88%;
+    text-align: justify;
+    padding-top: 56px;
+    word-break: break-word;
+    line-height: 1.85;
+    color: var(--color-text);
+}
+
+.page-content p {
+    margin-bottom: 1.4em;
+}
+
+.page-content a {
+    color: var(--color-link);
+    text-decoration: underline;
+    text-decoration-color: rgba(37, 99, 235, 0.3);
+    text-underline-offset: 2px;
+    transition: text-decoration-color var(--transition-fast);
+}
+
+.page-content a:hover {
+    text-decoration-color: var(--color-link);
+}
+
+.page-content table {
+    width: 100%;
+    margin-bottom: 25px;
+    border-collapse: collapse;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.page-content table td, .page-content table th {
+    text-align: center;
+    padding: 10px 14px;
+}
+
+.page-content table th {
+    background: var(--color-bg-secondary);
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--color-text);
+}
+
+.page-content table td {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+}
+
+.page-content blockquote {
+    border-left: 3px solid var(--color-accent);
+    margin: 1.5em 0;
+    padding: 12px 20px;
+    background: var(--color-bg-secondary);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    color: var(--color-text-secondary);
+    font-size: 15px;
+}
+
+.page-content blockquote p {
+    margin-bottom: 0;
+}
+
+.page-content hr {
+    border: none;
+    height: 1px;
+    background: var(--color-border);
+    margin: 2.5em 0;
+}
+
+.page-content ul, .page-content ol {
+    padding-left: 1.5em;
+}
+
+.page-content li {
+    margin-bottom: 0.4em;
+}
+
+/* ===== Author Profile (Post Footer) ===== */
 .page-profile-detail {
-    margin-top: 50px;
-    width: 300px;
-    border-top: 1px solid #ddd;
-    padding-top: 20px;
+    margin-top: 64px;
+    width: 100%;
+    max-width: 360px;
+    border-top: 2px solid var(--color-border);
+    padding-top: 24px;
+}
+
+.page-profile-detail-info {
+    display: flex;
+    align-items: center;
 }
 
 .page-profile-detail-info > div {
@@ -179,80 +415,102 @@ footer {
 }
 
 .page-profile_image-detail {
-    width: 45px;
-    height: 45px;
-    border-radius: 30px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
     margin-right: 3px;
+    border: 2px solid var(--color-border-light);
+    object-fit: cover;
 }
 
 .page-profile-author {
-    font-weight: bold;
-    font-size: 16px;
+    font-weight: 700;
+    font-size: 15px;
 }
 
 .page-profile-email {
-    font-size: 14px;
+    font-size: 13px;
+    color: var(--color-text-muted);
 }
 
+/* ===== Recent Post Area ===== */
 .recent-post-area {
-    padding: 50px;
-    background: #f7f7f7;
-    margin-top: 50px;
-    padding-bottom: 100px;
+    padding: 56px 50px 100px;
+    background: var(--color-bg-secondary);
+    margin-top: 64px;
 }
 
 .h1-recent-post {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    margin-bottom: 8px;
 }
 
-.page-content {
-    font-size: 15px;
-    max-width: 780px;
-    width: 80%;
-    text-align: justify;
-    padding-top: 50px;
-    word-break: break-all;
+/* ===== Category Tabs ===== */
+.category-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
 }
 
-.page-content table {
-    width: 100%;
-    margin-bottom: 25px;
-}
-
-.page-content table td, .page-content table th {
-    text-align: center;
-}
-
-.page-content table td {
+.category-tab {
+    padding: 7px 20px;
     font-size: 13px;
-    color: #777;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    border: 1.5px solid var(--color-border);
+    border-radius: 100px;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+    white-space: nowrap;
 }
 
+.category-tab:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+    background: var(--color-accent-soft);
+}
+
+.category-tab.active {
+    color: #fff;
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+/* ===== Legacy Categories (sidebar) ===== */
 .categories-text {
     margin-top: 50px;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 700;
     margin-bottom: 10px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
 }
 
 .categories {
     font-size: 14px;
-    text-decoration: underline;
+    text-decoration: none;
     margin-top: 10px;
 }
 
 .categories a {
-    color: #414141;
+    color: var(--color-text-secondary);
+    font-weight: 500;
 }
 
 .category-h-text {
-    font-size: 30px;
-    font-weight: bold;
-    color: #555;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--color-text);
     margin-top: 50px;
+    letter-spacing: -0.02em;
 }
 
+/* ===== Mobile Author ===== */
 .post-author-mobile {
     display: none;
 }
@@ -261,29 +519,28 @@ footer {
     display: none;
 }
 
+/* ===== Responsive ===== */
 @media (max-width: 768px) {
     .header_image_logo {
         margin: 20px 10px;
     }
     .post-title {
-        font-size: 15px;
+        font-size: 16px;
         margin-top: 10px;
     }
     .post-summary {
-        font-size: 12px;
-    }
-    .posts {
-
+        font-size: 13px;
     }
     .posts > .row {
-        margin-top: 25px;
-        padding-top: 10px;
+        padding: 16px;
+        margin-bottom: 10px;
     }
     .page {
         padding: 10px 10px;
     }
     .category-h-text {
         margin-top: 20px;
+        font-size: 22px;
     }
     .header_image_bg > div > div:first-child {
         font-size: 30px !important;
@@ -294,11 +551,23 @@ footer {
     .header_image_bg {
         padding: 20px 10px;
     }
+    .page-content {
+        width: 92%;
+        font-size: 15px;
+        padding-top: 32px;
+    }
     .page-content img {
         max-width: 100%;
     }
     .header_image_post {
-        padding: 0px;
+        padding: 0;
+    }
+    .header_image_post_body {
+        padding-top: 80px;
+        padding-bottom: 36px;
+    }
+    .page-title {
+        font-size: 20px;
     }
     .profile {
         display: none;
@@ -314,83 +583,156 @@ footer {
     .post-thumbnail-mobile {
         display: block;
     }
+    .recent-post-area {
+        padding: 32px 16px 64px;
+    }
 }
 
+/* ===== Headings ===== */
 h1 {
     font-size: 26px;
     font-weight: 800;
-    line-height: 48px;
+    line-height: 1.4;
+    letter-spacing: -0.03em;
+    margin-top: 2em;
+    margin-bottom: 0.6em;
+    color: var(--color-text);
 }
 
 h2 {
-    font-size: 18px;
-    font-weight: 800;
-    line-height: 48px;
-    margin-bottom: 0;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-top: 1.8em;
+    margin-bottom: 0.5em;
+    color: var(--color-text);
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--color-border-light);
 }
 
 h3 {
-    font-size: 14px;
-    font-weight: 800;
-    line-height: 48px;
-    margin-bottom: 0;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-top: 1.5em;
+    margin-bottom: 0.4em;
+    color: var(--color-text);
 }
 
-/* 글쓴이 프로필 빼고 적용 */
-img:not(.profile_image, .page-profile_image, .page-profile_image-detail, .sns), div.highlight{
+h4 {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-top: 1.2em;
+    margin-bottom: 0.3em;
+}
+
+/* ===== Images ===== */
+img:not(.profile_image, .page-profile_image, .page-profile_image-detail, .sns, .header_image_logo),
+div.highlight {
     display: block;
-    margin-top: 28px;
-    margin-bottom: 28px;
     max-width: 100%;
-    margin: 0 auto;
+    margin: 24px auto;
+    border-radius: var(--radius-sm);
 }
 
-/* 상단바 */
+/* ===== Container ===== */
 div.container:not(.page-content) {
-    max-width: 960px;
+    max-width: var(--max-width);
 }
 
-div.highlight {
-    margin-top: 16px;
-    margin-bottom: 16px;
-}
-
-
-div.posts.container {
+div.posts.container,
+div.posts {
     max-width: 860px;
-    width: 88%;
+    width: 100%;
 }
 
+/* ===== Code Blocks ===== */
 div.highlight {
-    border-radius: 1em;
-    align-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    overflow: hidden;
 }
 
 pre.highlight {
     max-width: 730px;
     margin: 0 auto;
-    border-radius: 1em;
-    padding-top: 1em;
-    padding-bottom: 1em;
-    padding-left: 1em;
-    padding-right: 1em;
+    border-radius: var(--radius-md);
+    padding: 1.2em;
+    font-size: 14px;
+    line-height: 1.65;
+    font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    overflow-x: auto;
 }
 
+code {
+    font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.9em;
+}
 
+/* Inline code */
+.page-content code:not(.highlight code) {
+    background: var(--color-accent-softer);
+    border: 1px solid var(--color-border);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    color: var(--color-accent);
+}
+
+/* ===== Tables ===== */
 table {
     width: 100%;
-    border: 1px solid #000000;
+    border: 1px solid var(--color-border);
     border-collapse: collapse;
-  }
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    font-size: 14px;
+}
 
-  th, td {
-    border: 1px solid #000000;
-  }
+th, td {
+    border: 1px solid var(--color-border);
+    padding: 10px 14px;
+}
 
-pre::-webkit-scrollbar{
+th {
+    background: var(--color-bg-secondary);
+    font-weight: 600;
+}
+
+/* ===== Scrollbar ===== */
+pre::-webkit-scrollbar {
     height: 6px;
 }
-pre::-webkit-scrollbar-thumb{
-    background-color: #676c6b;
+
+pre::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+pre::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.15);
     border-radius: 10px;
+}
+
+pre::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+/* ===== Smooth Scroll ===== */
+html {
+    scroll-behavior: smooth;
+}
+
+/* ===== Figure / Caption ===== */
+figure {
+    margin: 1.5em 0;
+    text-align: center;
+}
+
+figcaption {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    margin-top: 8px;
 }
