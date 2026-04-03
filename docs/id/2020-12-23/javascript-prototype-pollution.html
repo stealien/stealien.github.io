@@ -1,71 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <meta property="og:type" content="article">
 <meta property="og:image" content="http://ufo.stealien.com/assets/og_image.png">
-<meta property="og:title" content="STEALIEN Technical Blog">
+<meta property="og:title" content="STEALIEN Tech">
 <meta property="og:description" content="Javascript Prototype Pollution in REALWORLD">
-<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700&display=swap" rel="stylesheet">
 <title>Javascript Prototype Pollution in REALWORLD</title>
-<!-- Begin Jekyll SEO tag v2.7.1 -->
-<title>Javascript Prototype Pollution in REALWORLD | STEALIEN Technical Blog</title>
-<meta name="generator" content="Jekyll v4.2.0" />
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="apple-touch-icon" href="/assets/favicon.png">
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Javascript Prototype Pollution in REALWORLD | STEALIEN Tech</title>
+<meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Javascript Prototype Pollution in REALWORLD" />
 <meta name="author" content="윤석찬" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Javascript Prototype Pollution in REALWORD" />
 <meta property="og:description" content="Javascript Prototype Pollution in REALWORD" />
-<link rel="canonical" href="http://ufo.stealien.com/id/2020-12-23/javascript-prototype-pollution" />
+<link rel="canonical" href="http://ufo.stealien.com/2020-12-23/javascript-prototype-pollution" />
 <meta property="og:url" content="http://ufo.stealien.com/2020-12-23/javascript-prototype-pollution" />
-<meta property="og:site_name" content="STEALIEN Technical Blog" />
+<meta property="og:site_name" content="STEALIEN Tech" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-12-23T16:00:00+09:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Javascript Prototype Pollution in REALWORLD" />
 <script type="application/ld+json">
-{"url":"http://ufo.stealien.com/2020-12-23/javascript-prototype-pollution","author":{"@type":"Person","name":"윤석찬"},"description":"Javascript Prototype Pollution in REALWORD","@type":"BlogPosting","headline":"Javascript Prototype Pollution in REALWORLD","dateModified":"2020-12-23T16:00:00+09:00","datePublished":"2020-12-23T16:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://ufo.stealien.com/2020-12-23/javascript-prototype-pollution"},"@context":"https://schema.org"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"윤석찬"},"dateModified":"2020-12-23T16:00:00+09:00","datePublished":"2020-12-23T16:00:00+09:00","description":"Javascript Prototype Pollution in REALWORD","headline":"Javascript Prototype Pollution in REALWORLD","mainEntityOfPage":{"@type":"WebPage","@id":"http://ufo.stealien.com/2020-12-23/javascript-prototype-pollution"},"url":"http://ufo.stealien.com/2020-12-23/javascript-prototype-pollution"}</script>
 <!-- End Jekyll SEO tag -->
 
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name=“naver-site-verification” content=“74a9ec74d48a1ffca92bf9ac4704ba73be9afd65" />
+<meta name="naver-site-verification" content="74a9ec74d48a1ffca92bf9ac4704ba73be9afd65" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"/>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/assets/css/style.css">
+<link href="/assets/css/syntax.css" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="/id//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
-
-<link href="/assets/css/syntax.css" rel="stylesheet" >
-
-
-<!-- Global site tag (gtag.js) - Google Analytics -->
+<!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-06FFJEF76M"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-06FFJEF76M');
 </script>
 </head>
 <body>
 	<header>
 		<div class="container"></div><div id="header">
-    <div class="container" style="display: flex;justify-content: space-between;">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
         <a href="/id/">
             <img
                 class="header_image_logo"
                 src="/assets/logo.png"
-                style="width: 140px; margin: 20px 28px 0px;"
+                style="width: 130px; margin: 16px 28px;"
             />
         </a>
-        <a href="https://www.stealien.com/" target="_blank" style="font-family: 'NotoSansKR Medium', sans-serif;font-size: 14px;margin-right: 30px; color: #000; line-height: 70px;">스틸리언 홈페이지</a>
+        <a href="https://www.stealien.com/" target="_blank"
+           style="font-size: 13px; margin-right: 30px; color: var(--color-text-secondary); font-weight: 500; text-decoration: none; border-bottom: 1.5px solid transparent; padding-bottom: 2px; transition: all 0.2s;"
+           onmouseover="this.style.borderBottomColor='var(--color-accent)';this.style.color='var(--color-accent)'"
+           onmouseout="this.style.borderBottomColor='transparent';this.style.color='var(--color-text-secondary)'">
+            스틸리언 홈페이지
+        </a>
     </div>
 </div>
 </header>
@@ -93,7 +90,7 @@
 
 <p>웹해킹을 배우고 나서 가장 첫번째로 슬럼프가 왔을 시기가 <code class="language-plaintext highlighter-rouge">APM(Apache + PHP + MySQL)</code> 환경을 떠나 새로운 환경에서 해킹해야 했을 때였다. Pure PHP에서는 보안 기술을 프로그래머가 직접 구현해야 하는 게 많아서 XSS와 SQL Injection, Webshell Upload 같은 굵직한 취약점을 쉽게 찾을 수 있었는데, 그에 비해 nodejs의 express나 python의 flask, django 같은 현대적인 웹프레임워크에서는 굵직한 취약점을 찾기 어려웠기 때문이다. SQL Injection의 경우도 Pure PHP에서는 addslashes() 함수를 통해 직접 막았던 반면에, Modern Web Framework에서는 아래와 같은 ` ? ` 인자를 통한 자동 매핑 기술이나 ORM (Object Relational Mapping) 기술의 등장으로 인해 database connection framework 자체의 n-day 취약점이 있는 것이 아니면 쉽게 공략하기 어려워졌다.</p>
 
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">rows</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">Database</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">rows</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">Database</span><span class="p">.</span><span class="nf">query</span><span class="p">(</span>
 	<span class="dl">"</span><span class="s2">SELECT * FROM `user` WHERE username = ?</span><span class="dl">"</span><span class="p">,</span> <span class="p">[</span> <span class="nx">username</span> <span class="p">]</span>
 <span class="p">)</span>
 </code></pre></div></div>
@@ -115,7 +112,7 @@
 	<span class="na">age</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="err">‘</span><span class="nx">name</span><span class="err">’</span><span class="p">));</span> <span class="c1">// true</span>
+<span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nf">hasOwnProperty</span><span class="p">(</span><span class="err">‘</span><span class="nx">name</span><span class="err">’</span><span class="p">));</span> <span class="c1">// true</span>
 </code></pre></div></div>
 
 <p>[참고] https://poiemaweb.com/js-prototype</p>
@@ -145,8 +142,8 @@
 
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">hi</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
 <span class="kd">let</span> <span class="nx">foo</span> <span class="o">=</span> <span class="p">{</span><span class="na">bar</span><span class="p">:</span> <span class="mi">1</span><span class="p">};</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">foo</span><span class="p">.</span><span class="nx">hi</span><span class="p">);</span> <span class="c1">// true</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">hi</span><span class="p">);</span> <span class="c1">// true</span>
+<span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="nx">foo</span><span class="p">.</span><span class="nx">hi</span><span class="p">);</span> <span class="c1">// true</span>
+<span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="nx">hi</span><span class="p">);</span> <span class="c1">// true</span>
 </code></pre></div></div>
 
 <p><code class="language-plaintext highlighter-rouge">foo</code>는 객체 리터럴로 생성된 객체이다. 따라서 <code class="language-plaintext highlighter-rouge">foo.__proto__</code> 는 <code class="language-plaintext highlighter-rouge">Object.prototype</code>이다.</p>
@@ -163,8 +160,8 @@
 
 <span class="nx">foo</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">isAdmin</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>	<span class="c1">// exploit</span>
 
-<span class="k">if</span> <span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">isAdmin</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="s2"> is admin`</span><span class="p">);</span>  <span class="c1">// console.log() will be executed</span>
+<span class="k">if </span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">isAdmin</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="s2"> is admin`</span><span class="p">);</span>  <span class="c1">// console.log() will be executed</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -174,78 +171,78 @@
 
 <p>이 글에서 설명할 CVE는 <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-8116">CVE-2020-8116</a> 이다. <code class="language-plaintext highlighter-rouge">dot-prop</code>이라는 javascript 패키지에서 발생한 취약점이며, 해당 패키지에 대한 설명은 아래 코드로 대체하겠다.</p>
 
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">dotProp</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">dot-prop</span><span class="dl">'</span><span class="p">);</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">dotProp</span> <span class="o">=</span> <span class="nf">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">dot-prop</span><span class="dl">'</span><span class="p">);</span>
  
 <span class="c1">// Getter</span>
-<span class="nx">dotProp</span><span class="p">.</span><span class="kd">get</span><span class="p">({</span><span class="na">foo</span><span class="p">:</span> <span class="p">{</span><span class="na">bar</span><span class="p">:</span> <span class="dl">'</span><span class="s1">unicorn</span><span class="dl">'</span><span class="p">}},</span> <span class="dl">'</span><span class="s1">foo.bar</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">dotProp</span><span class="p">.</span><span class="nf">get</span><span class="p">({</span><span class="na">foo</span><span class="p">:</span> <span class="p">{</span><span class="na">bar</span><span class="p">:</span> <span class="dl">'</span><span class="s1">unicorn</span><span class="dl">'</span><span class="p">}},</span> <span class="dl">'</span><span class="s1">foo.bar</span><span class="dl">'</span><span class="p">);</span>
 <span class="c1">//=&gt; 'unicorn'</span>
  
-<span class="nx">dotProp</span><span class="p">.</span><span class="kd">get</span><span class="p">({</span><span class="na">foo</span><span class="p">:</span> <span class="p">{</span><span class="na">bar</span><span class="p">:</span> <span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">}},</span> <span class="dl">'</span><span class="s1">foo.notDefined.deep</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">dotProp</span><span class="p">.</span><span class="nf">get</span><span class="p">({</span><span class="na">foo</span><span class="p">:</span> <span class="p">{</span><span class="na">bar</span><span class="p">:</span> <span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">}},</span> <span class="dl">'</span><span class="s1">foo.notDefined.deep</span><span class="dl">'</span><span class="p">);</span>
 <span class="c1">//=&gt; undefined</span>
  
-<span class="nx">dotProp</span><span class="p">.</span><span class="kd">get</span><span class="p">({</span><span class="na">foo</span><span class="p">:</span> <span class="p">{</span><span class="na">bar</span><span class="p">:</span> <span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">}},</span> <span class="dl">'</span><span class="s1">foo.notDefined.deep</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">default value</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">dotProp</span><span class="p">.</span><span class="nf">get</span><span class="p">({</span><span class="na">foo</span><span class="p">:</span> <span class="p">{</span><span class="na">bar</span><span class="p">:</span> <span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">}},</span> <span class="dl">'</span><span class="s1">foo.notDefined.deep</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">default value</span><span class="dl">'</span><span class="p">);</span>
 <span class="c1">//=&gt; 'default value'</span>
  
-<span class="nx">dotProp</span><span class="p">.</span><span class="kd">get</span><span class="p">({</span><span class="na">foo</span><span class="p">:</span> <span class="p">{</span><span class="dl">'</span><span class="s1">dot.dot</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">unicorn</span><span class="dl">'</span><span class="p">}},</span> <span class="dl">'</span><span class="s1">foo.dot</span><span class="se">\\</span><span class="s1">.dot</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">dotProp</span><span class="p">.</span><span class="nf">get</span><span class="p">({</span><span class="na">foo</span><span class="p">:</span> <span class="p">{</span><span class="dl">'</span><span class="s1">dot.dot</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">unicorn</span><span class="dl">'</span><span class="p">}},</span> <span class="dl">'</span><span class="s1">foo.dot</span><span class="se">\\</span><span class="s1">.dot</span><span class="dl">'</span><span class="p">);</span>
 <span class="c1">//=&gt; 'unicorn'</span>
  
 <span class="c1">// Setter</span>
 <span class="kd">const</span> <span class="nx">object</span> <span class="o">=</span> <span class="p">{</span><span class="na">foo</span><span class="p">:</span> <span class="p">{</span><span class="na">bar</span><span class="p">:</span> <span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">}};</span>
-<span class="nx">dotProp</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="dl">'</span><span class="s1">foo.bar</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">b</span><span class="dl">'</span><span class="p">);</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">object</span><span class="p">);</span>
+<span class="nx">dotProp</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="dl">'</span><span class="s1">foo.bar</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">b</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="nx">object</span><span class="p">);</span>
 <span class="c1">//=&gt; {foo: {bar: 'b'}}</span>
  
-<span class="kd">const</span> <span class="nx">foo</span> <span class="o">=</span> <span class="nx">dotProp</span><span class="p">.</span><span class="kd">set</span><span class="p">({},</span> <span class="dl">'</span><span class="s1">foo.bar</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">c</span><span class="dl">'</span><span class="p">);</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">foo</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">foo</span> <span class="o">=</span> <span class="nx">dotProp</span><span class="p">.</span><span class="nf">set</span><span class="p">({},</span> <span class="dl">'</span><span class="s1">foo.bar</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">c</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="nx">foo</span><span class="p">);</span>
 <span class="c1">//=&gt; {foo: {bar: 'c'}}</span>
  
-<span class="nx">dotProp</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="dl">'</span><span class="s1">foo.baz</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">x</span><span class="dl">'</span><span class="p">);</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">object</span><span class="p">);</span>
+<span class="nx">dotProp</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="dl">'</span><span class="s1">foo.baz</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">x</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="nx">object</span><span class="p">);</span>
 <span class="c1">//=&gt; {foo: {bar: 'b', baz: 'x'}}</span>
  
 <span class="c1">// Has</span>
-<span class="nx">dotProp</span><span class="p">.</span><span class="nx">has</span><span class="p">({</span><span class="na">foo</span><span class="p">:</span> <span class="p">{</span><span class="na">bar</span><span class="p">:</span> <span class="dl">'</span><span class="s1">unicorn</span><span class="dl">'</span><span class="p">}},</span> <span class="dl">'</span><span class="s1">foo.bar</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">dotProp</span><span class="p">.</span><span class="nf">has</span><span class="p">({</span><span class="na">foo</span><span class="p">:</span> <span class="p">{</span><span class="na">bar</span><span class="p">:</span> <span class="dl">'</span><span class="s1">unicorn</span><span class="dl">'</span><span class="p">}},</span> <span class="dl">'</span><span class="s1">foo.bar</span><span class="dl">'</span><span class="p">);</span>
 <span class="c1">//=&gt; true</span>
  
 <span class="c1">// Deleter</span>
 <span class="kd">const</span> <span class="nx">object</span> <span class="o">=</span> <span class="p">{</span><span class="na">foo</span><span class="p">:</span> <span class="p">{</span><span class="na">bar</span><span class="p">:</span> <span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">}};</span>
 <span class="nx">dotProp</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="dl">'</span><span class="s1">foo.bar</span><span class="dl">'</span><span class="p">);</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">object</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="nx">object</span><span class="p">);</span>
 <span class="c1">//=&gt; {foo: {}}</span>
  
 <span class="nx">object</span><span class="p">.</span><span class="nx">foo</span><span class="p">.</span><span class="nx">bar</span> <span class="o">=</span> <span class="p">{</span><span class="na">x</span><span class="p">:</span> <span class="dl">'</span><span class="s1">y</span><span class="dl">'</span><span class="p">,</span> <span class="na">y</span><span class="p">:</span> <span class="dl">'</span><span class="s1">x</span><span class="dl">'</span><span class="p">};</span>
 <span class="nx">dotProp</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="dl">'</span><span class="s1">foo.bar.x</span><span class="dl">'</span><span class="p">);</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">object</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="nx">object</span><span class="p">);</span>
 <span class="c1">//=&gt; {foo: {bar: {y: 'x'}}}</span>
 </code></pre></div></div>
 
 <p><code class="language-plaintext highlighter-rouge">CVE-2020-8116</code>은 <code class="language-plaintext highlighter-rouge">CVSS SCORE</code>로 6.3 점을 받았을 만큼 무시할 수만은 없는 취약점이다. 하지만 취약점의 위험도에 비해 그 원리는 너무나 단순하다.  이 취약점의 PoC이다.</p>
 
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">dotProp</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">dot-prop</span><span class="dl">"</span><span class="p">)</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">dotProp</span> <span class="o">=</span> <span class="nf">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">dot-prop</span><span class="dl">"</span><span class="p">)</span>
 <span class="kd">const</span> <span class="nx">object</span> <span class="o">=</span> <span class="p">{};</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Before </span><span class="dl">"</span> <span class="o">+</span> <span class="nx">object</span><span class="p">.</span><span class="nx">b</span><span class="p">);</span> <span class="c1">//Undefined</span>
-<span class="nx">dotProp</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="dl">'</span><span class="s1">__proto__.b</span><span class="dl">'</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">After </span><span class="dl">"</span> <span class="o">+</span> <span class="p">{}.</span><span class="nx">b</span><span class="p">);</span> <span class="c1">//true</span>
+<span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Before </span><span class="dl">"</span> <span class="o">+</span> <span class="nx">object</span><span class="p">.</span><span class="nx">b</span><span class="p">);</span> <span class="c1">//Undefined</span>
+<span class="nx">dotProp</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="dl">'</span><span class="s1">__proto__.b</span><span class="dl">'</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">After </span><span class="dl">"</span> <span class="o">+</span> <span class="p">{}.</span><span class="nx">b</span><span class="p">);</span> <span class="c1">//true</span>
 </code></pre></div></div>
 
 <p>객체 리터럴이 Object.prototype을 참조하는데, Object.prototype에 b가 <code class="language-plaintext highlighter-rouge">true</code>로 지정되어 있기 때문에 제일 마지막 console.log 에서는 <code class="language-plaintext highlighter-rouge">undefined</code>가 아닌 <code class="language-plaintext highlighter-rouge">true</code>가 출력된다. Prototype Pollution이 발생한 것이다. 내부 코드를 보면 더욱 별거 아니다.</p>
 
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">set</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">isObj</span><span class="p">(</span><span class="nx">object</span><span class="p">)</span> <span class="o">||</span> <span class="k">typeof</span> <span class="nx">path</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">string</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">set</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if </span><span class="p">(</span><span class="o">!</span><span class="nf">isObj</span><span class="p">(</span><span class="nx">object</span><span class="p">)</span> <span class="o">||</span> <span class="k">typeof</span> <span class="nx">path</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">string</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">object</span><span class="p">;</span>
 	<span class="p">}</span>
 
 	<span class="kd">const</span> <span class="nx">root</span> <span class="o">=</span> <span class="nx">object</span><span class="p">;</span>
-	<span class="kd">const</span> <span class="nx">pathArray</span> <span class="o">=</span> <span class="nx">getPathSegments</span><span class="p">(</span><span class="nx">path</span><span class="p">);</span>
+	<span class="kd">const</span> <span class="nx">pathArray</span> <span class="o">=</span> <span class="nf">getPathSegments</span><span class="p">(</span><span class="nx">path</span><span class="p">);</span>
 
-	<span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">pathArray</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">for </span><span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">pathArray</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
 		<span class="kd">const</span> <span class="nx">p</span> <span class="o">=</span> <span class="nx">pathArray</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
 
-		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">isObj</span><span class="p">(</span><span class="nx">object</span><span class="p">[</span><span class="nx">p</span><span class="p">]))</span> <span class="p">{</span>
+		<span class="k">if </span><span class="p">(</span><span class="o">!</span><span class="nf">isObj</span><span class="p">(</span><span class="nx">object</span><span class="p">[</span><span class="nx">p</span><span class="p">]))</span> <span class="p">{</span>
 			<span class="nx">object</span><span class="p">[</span><span class="nx">p</span><span class="p">]</span> <span class="o">=</span> <span class="p">{};</span>
 		<span class="p">}</span>
 
-		<span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">===</span> <span class="nx">pathArray</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if </span><span class="p">(</span><span class="nx">i</span> <span class="o">===</span> <span class="nx">pathArray</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
 			<span class="nx">object</span><span class="p">[</span><span class="nx">p</span><span class="p">]</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>	<span class="c1">// exploitable !</span>
 		<span class="p">}</span>
 
@@ -258,7 +255,7 @@
 
 <p><code class="language-plaintext highlighter-rouge">set()</code> 메소드를 실행 시, <code class="language-plaintext highlighter-rouge">__proto__</code>에 대한 검증을 하지 않았기 때문에 취약점이 발생했다. 해당 취약점을 막기 위해 <code class="language-plaintext highlighter-rouge">dot-prop</code> 패키지에서는 <code class="language-plaintext highlighter-rouge">disallowedKeys</code> 변수를 exploitable한 부분에서 검증하는 로직을 추가했다.</p>
 
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">disallowedKeys</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Set</span><span class="p">([</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">disallowedKeys</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Set</span><span class="p">([</span>
 	<span class="dl">'</span><span class="s1">__proto__</span><span class="dl">'</span><span class="p">,</span>
 	<span class="dl">'</span><span class="s1">prototype</span><span class="dl">'</span><span class="p">,</span>
 	<span class="dl">'</span><span class="s1">constructor</span><span class="dl">'</span>
@@ -306,14 +303,13 @@
         <div class="post-info">
             <span style="color: #545454" class="post-author-mobile">
                 이승용
-                <span style="color: #f5f5f5; margin: 2px">|</span>
             </span>
             Jan 26, 2026
-            <span style="color: #f5f5f5; margin: 2px">|</span>
-            <span>CTI</span>
+            <span class="post-category-badge">CTI</span>
         </div>
     </div>
-</div><div class="row">
+</div>
+<div class="row">
     <div class="col-sm-2 col-md-2">
         <div class="profile">
             <img src="/assets/stealien_inverse.png" class="profile_image" />
@@ -330,24 +326,20 @@
         <div class="post-info">
             <span style="color: #545454" class="post-author-mobile">
                 김도환, 조준형
-                <span style="color: #f5f5f5; margin: 2px">|</span>
             </span>
             Apr 22, 2025
-            <span style="color: #f5f5f5; margin: 2px">|</span>
-            <span>R&D</span>
+            <span class="post-category-badge">R&D</span>
         </div>
     </div>
 </div>
+
         </div>
     </div>
 </div>
 		</div>
 	</section><footer>
-  <div class="container" style="display: flex; justify-content: space-between;">
-    <!-- <a href="#top">
-      <img src="/assets/white_logo.png" class="footer-logo" />
-    </a> -->
-    <div class="footer-copyright">Copyright &copy; Stealien Inc.</div>
+  <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="footer-copyright">&copy; 2026 Stealien Inc.</div>
     <div class="footer-icons">
       <a target="_blank" href="https://twitter.com/stealien"><img class="sns" src="/assets/icons/twitter_ic.png"/></a>
       <a target="_blank" href="https://blog.naver.com/stealien_official"><img class="sns" src="/assets/icons/blog_ic.png"/></a>
@@ -355,5 +347,6 @@
       <a target="_blank" href="https://www.youtube.com/c/STEALIEN"><img class="sns" src="/assets/icons/youtube_ic.png"/></a>
     </div>
   </div>
-</footer></body>
+</footer>
+</body>
 </html>

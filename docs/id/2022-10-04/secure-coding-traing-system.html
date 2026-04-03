@@ -1,71 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <meta property="og:type" content="article">
 <meta property="og:image" content="http://ufo.stealien.com/assets/og_image.png">
-<meta property="og:title" content="STEALIEN Technical Blog">
+<meta property="og:title" content="STEALIEN Tech">
 <meta property="og:description" content="Secure Coding Training System 개발기">
-<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700&display=swap" rel="stylesheet">
 <title>Secure Coding Training System 개발기</title>
-<!-- Begin Jekyll SEO tag v2.7.1 -->
-<title>Secure Coding Training System 개발기 | STEALIEN Technical Blog</title>
-<meta name="generator" content="Jekyll v4.2.0" />
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="apple-touch-icon" href="/assets/favicon.png">
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Secure Coding Training System 개발기 | STEALIEN Tech</title>
+<meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Secure Coding Training System 개발기" />
 <meta name="author" content="윤석찬" />
 <meta property="og:locale" content="ko" />
 <meta name="description" content="개요" />
 <meta property="og:description" content="개요" />
-<link rel="canonical" href="http://ufo.stealien.com/id/2022-10-04/secure-coding-traing-system" />
+<link rel="canonical" href="http://ufo.stealien.com/2022-10-04/secure-coding-traing-system" />
 <meta property="og:url" content="http://ufo.stealien.com/2022-10-04/secure-coding-traing-system" />
-<meta property="og:site_name" content="STEALIEN Technical Blog" />
+<meta property="og:site_name" content="STEALIEN Tech" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2022-10-04T00:00:00+09:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Secure Coding Training System 개발기" />
 <script type="application/ld+json">
-{"url":"http://ufo.stealien.com/2022-10-04/secure-coding-traing-system","author":{"@type":"Person","name":"윤석찬"},"description":"개요","@type":"BlogPosting","headline":"Secure Coding Training System 개발기","dateModified":"2022-10-04T00:00:00+09:00","datePublished":"2022-10-04T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://ufo.stealien.com/2022-10-04/secure-coding-traing-system"},"@context":"https://schema.org"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"윤석찬"},"dateModified":"2022-10-04T00:00:00+09:00","datePublished":"2022-10-04T00:00:00+09:00","description":"개요","headline":"Secure Coding Training System 개발기","mainEntityOfPage":{"@type":"WebPage","@id":"http://ufo.stealien.com/2022-10-04/secure-coding-traing-system"},"url":"http://ufo.stealien.com/2022-10-04/secure-coding-traing-system"}</script>
 <!-- End Jekyll SEO tag -->
 
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name=“naver-site-verification” content=“74a9ec74d48a1ffca92bf9ac4704ba73be9afd65" />
+<meta name="naver-site-verification" content="74a9ec74d48a1ffca92bf9ac4704ba73be9afd65" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"/>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/assets/css/style.css">
+<link href="/assets/css/syntax.css" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="/id//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
-
-<link href="/assets/css/syntax.css" rel="stylesheet" >
-
-
-<!-- Global site tag (gtag.js) - Google Analytics -->
+<!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-06FFJEF76M"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-06FFJEF76M');
 </script>
 </head>
 <body>
 	<header>
 		<div class="container"></div><div id="header">
-    <div class="container" style="display: flex;justify-content: space-between;">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
         <a href="/id/">
             <img
                 class="header_image_logo"
                 src="/assets/logo.png"
-                style="width: 140px; margin: 20px 28px 0px;"
+                style="width: 130px; margin: 16px 28px;"
             />
         </a>
-        <a href="https://www.stealien.com/" target="_blank" style="font-family: 'NotoSansKR Medium', sans-serif;font-size: 14px;margin-right: 30px; color: #000; line-height: 70px;">스틸리언 홈페이지</a>
+        <a href="https://www.stealien.com/" target="_blank"
+           style="font-size: 13px; margin-right: 30px; color: var(--color-text-secondary); font-weight: 500; text-decoration: none; border-bottom: 1.5px solid transparent; padding-bottom: 2px; transition: all 0.2s;"
+           onmouseover="this.style.borderBottomColor='var(--color-accent)';this.style.color='var(--color-accent)'"
+           onmouseout="this.style.borderBottomColor='transparent';this.style.color='var(--color-text-secondary)'">
+            스틸리언 홈페이지
+        </a>
     </div>
 </div>
 </header>
@@ -104,21 +101,21 @@
 <p>실제로 공식홈페이지에 들어가보면 도커 명령어를 파이썬 명령어로 실행시킬 수 있음을 확인할 수 있습니다.</p>
 
 <p><strong><em>Using echo command in alpine image</em></strong></p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">docker</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">client</span> <span class="o">=</span> <span class="n">docker</span><span class="p">.</span><span class="n">from_env</span><span class="p">()</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">client</span><span class="p">.</span><span class="n">containers</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="s">'alpine'</span><span class="p">,</span> <span class="s">'echo hello world'</span><span class="p">)</span>
-<span class="sa">b</span><span class="s">'hello world</span><span class="se">\n</span><span class="s">'</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="n">docker</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">client</span> <span class="o">=</span> <span class="n">docker</span><span class="p">.</span><span class="nf">from_env</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">client</span><span class="p">.</span><span class="n">containers</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="sh">'</span><span class="s">alpine</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">echo hello world</span><span class="sh">'</span><span class="p">)</span>
+<span class="sa">b</span><span class="sh">'</span><span class="s">hello world</span><span class="se">\n</span><span class="sh">'</span>
 </code></pre></div></div>
 
 <p><strong><em>Managing your containers</em></strong></p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">client</span><span class="p">.</span><span class="n">containers</span><span class="p">.</span><span class="nb">list</span><span class="p">()</span>
-<span class="p">[</span><span class="o">&lt;</span><span class="n">Container</span> <span class="s">'45e6d2de7c54'</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Container</span> <span class="s">'db18e4f20eaa'</span><span class="o">&gt;</span><span class="p">,</span> <span class="p">...]</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">container</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">containers</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'45e6d2de7c54'</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">container</span><span class="p">.</span><span class="n">attrs</span><span class="p">[</span><span class="s">'Config'</span><span class="p">][</span><span class="s">'Image'</span><span class="p">]</span>
-<span class="s">"bfirsh/reticulate-splines"</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">container</span><span class="p">.</span><span class="n">logs</span><span class="p">()</span>
-<span class="s">"Reticulating spline 1...</span><span class="se">\n</span><span class="s">"</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">container</span><span class="p">.</span><span class="n">stop</span><span class="p">()</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">client</span><span class="p">.</span><span class="n">containers</span><span class="p">.</span><span class="nf">list</span><span class="p">()</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">Container</span> <span class="sh">'</span><span class="s">45e6d2de7c54</span><span class="sh">'</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Container</span> <span class="sh">'</span><span class="s">db18e4f20eaa</span><span class="sh">'</span><span class="o">&gt;</span><span class="p">,</span> <span class="p">...]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">container</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">containers</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">45e6d2de7c54</span><span class="sh">'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">container</span><span class="p">.</span><span class="n">attrs</span><span class="p">[</span><span class="sh">'</span><span class="s">Config</span><span class="sh">'</span><span class="p">][</span><span class="sh">'</span><span class="s">Image</span><span class="sh">'</span><span class="p">]</span>
+<span class="sh">"</span><span class="s">bfirsh/reticulate-splines</span><span class="sh">"</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">container</span><span class="p">.</span><span class="nf">logs</span><span class="p">()</span>
+<span class="sh">"</span><span class="s">Reticulating spline 1...</span><span class="se">\n</span><span class="sh">"</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">container</span><span class="p">.</span><span class="nf">stop</span><span class="p">()</span>
 </code></pre></div></div>
 
 <p>[참고] : <a href="https://docker-py.readthedocs.io/en/stable/">https://docker-py.readthedocs.io/en/stable/</a></p>
@@ -245,14 +242,13 @@
         <div class="post-info">
             <span style="color: #545454" class="post-author-mobile">
                 이승용
-                <span style="color: #f5f5f5; margin: 2px">|</span>
             </span>
             Jan 26, 2026
-            <span style="color: #f5f5f5; margin: 2px">|</span>
-            <span>CTI</span>
+            <span class="post-category-badge">CTI</span>
         </div>
     </div>
-</div><div class="row">
+</div>
+<div class="row">
     <div class="col-sm-2 col-md-2">
         <div class="profile">
             <img src="/assets/stealien_inverse.png" class="profile_image" />
@@ -269,24 +265,20 @@
         <div class="post-info">
             <span style="color: #545454" class="post-author-mobile">
                 김도환, 조준형
-                <span style="color: #f5f5f5; margin: 2px">|</span>
             </span>
             Apr 22, 2025
-            <span style="color: #f5f5f5; margin: 2px">|</span>
-            <span>R&D</span>
+            <span class="post-category-badge">R&D</span>
         </div>
     </div>
 </div>
+
         </div>
     </div>
 </div>
 		</div>
 	</section><footer>
-  <div class="container" style="display: flex; justify-content: space-between;">
-    <!-- <a href="#top">
-      <img src="/assets/white_logo.png" class="footer-logo" />
-    </a> -->
-    <div class="footer-copyright">Copyright &copy; Stealien Inc.</div>
+  <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="footer-copyright">&copy; 2026 Stealien Inc.</div>
     <div class="footer-icons">
       <a target="_blank" href="https://twitter.com/stealien"><img class="sns" src="/assets/icons/twitter_ic.png"/></a>
       <a target="_blank" href="https://blog.naver.com/stealien_official"><img class="sns" src="/assets/icons/blog_ic.png"/></a>
@@ -294,5 +286,6 @@
       <a target="_blank" href="https://www.youtube.com/c/STEALIEN"><img class="sns" src="/assets/icons/youtube_ic.png"/></a>
     </div>
   </div>
-</footer></body>
+</footer>
+</body>
 </html>

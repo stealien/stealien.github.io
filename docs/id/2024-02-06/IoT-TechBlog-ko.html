@@ -1,71 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <meta property="og:type" content="article">
 <meta property="og:image" content="http://ufo.stealien.com/assets/og_image.png">
-<meta property="og:title" content="STEALIEN Technical Blog">
+<meta property="og:title" content="STEALIEN Tech">
 <meta property="og:description" content="뉴비들의 하드웨어 해킹 입문기">
-<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700&display=swap" rel="stylesheet">
 <title>뉴비들의 하드웨어 해킹 입문기</title>
-<!-- Begin Jekyll SEO tag v2.7.1 -->
-<title>뉴비들의 하드웨어 해킹 입문기 | STEALIEN Technical Blog</title>
-<meta name="generator" content="Jekyll v4.2.0" />
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="apple-touch-icon" href="/assets/favicon.png">
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>뉴비들의 하드웨어 해킹 입문기 | STEALIEN Tech</title>
+<meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="뉴비들의 하드웨어 해킹 입문기" />
 <meta name="author" content="이주협, 이주영" />
 <meta property="og:locale" content="ko" />
 <meta name="description" content="뉴비들의 하드웨어 해킹 입문기" />
 <meta property="og:description" content="뉴비들의 하드웨어 해킹 입문기" />
-<link rel="canonical" href="http://ufo.stealien.com/id/2024-02-06/IoT-TechBlog-ko" />
+<link rel="canonical" href="http://ufo.stealien.com/2024-02-06/IoT-TechBlog-ko" />
 <meta property="og:url" content="http://ufo.stealien.com/2024-02-06/IoT-TechBlog-ko" />
-<meta property="og:site_name" content="STEALIEN Technical Blog" />
+<meta property="og:site_name" content="STEALIEN Tech" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2024-02-06T10:00:00+09:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="뉴비들의 하드웨어 해킹 입문기" />
 <script type="application/ld+json">
-{"url":"http://ufo.stealien.com/2024-02-06/IoT-TechBlog-ko","author":{"@type":"Person","name":"이주협, 이주영"},"description":"뉴비들의 하드웨어 해킹 입문기","@type":"BlogPosting","headline":"뉴비들의 하드웨어 해킹 입문기","dateModified":"2024-02-06T10:00:00+09:00","datePublished":"2024-02-06T10:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://ufo.stealien.com/2024-02-06/IoT-TechBlog-ko"},"@context":"https://schema.org"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"이주협, 이주영"},"dateModified":"2024-02-06T10:00:00+09:00","datePublished":"2024-02-06T10:00:00+09:00","description":"뉴비들의 하드웨어 해킹 입문기","headline":"뉴비들의 하드웨어 해킹 입문기","mainEntityOfPage":{"@type":"WebPage","@id":"http://ufo.stealien.com/2024-02-06/IoT-TechBlog-ko"},"url":"http://ufo.stealien.com/2024-02-06/IoT-TechBlog-ko"}</script>
 <!-- End Jekyll SEO tag -->
 
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name=“naver-site-verification” content=“74a9ec74d48a1ffca92bf9ac4704ba73be9afd65" />
+<meta name="naver-site-verification" content="74a9ec74d48a1ffca92bf9ac4704ba73be9afd65" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"/>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/assets/css/style.css">
+<link href="/assets/css/syntax.css" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="/id//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
-
-<link href="/assets/css/syntax.css" rel="stylesheet" >
-
-
-<!-- Global site tag (gtag.js) - Google Analytics -->
+<!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-06FFJEF76M"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-06FFJEF76M');
 </script>
 </head>
 <body>
 	<header>
 		<div class="container"></div><div id="header">
-    <div class="container" style="display: flex;justify-content: space-between;">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
         <a href="/id/">
             <img
                 class="header_image_logo"
                 src="/assets/logo.png"
-                style="width: 140px; margin: 20px 28px 0px;"
+                style="width: 130px; margin: 16px 28px;"
             />
         </a>
-        <a href="https://www.stealien.com/" target="_blank" style="font-family: 'NotoSansKR Medium', sans-serif;font-size: 14px;margin-right: 30px; color: #000; line-height: 70px;">스틸리언 홈페이지</a>
+        <a href="https://www.stealien.com/" target="_blank"
+           style="font-size: 13px; margin-right: 30px; color: var(--color-text-secondary); font-weight: 500; text-decoration: none; border-bottom: 1.5px solid transparent; padding-bottom: 2px; transition: all 0.2s;"
+           onmouseover="this.style.borderBottomColor='var(--color-accent)';this.style.color='var(--color-accent)'"
+           onmouseout="this.style.borderBottomColor='transparent';this.style.color='var(--color-text-secondary)'">
+            스틸리언 홈페이지
+        </a>
     </div>
 </div>
 </header>
@@ -252,7 +249,7 @@
 
 <h3 id="231-uart-gnd-pin-식별">2.3.1. UART GND PIN 식별</h3>
 
-<p>UART의 GND 핀은 멀티미터를 통해 찾을 수 있습니다. 멀티미터의 Conductivity 모드는 전기회로가 서로 연결 되어있을 때 부저음을 출력합니다. PCB<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>에서 SPI Flash 칩의 GND 핀과 UART의 GND 핀은 연결되어 있습니다.</p>
+<p>UART의 GND 핀은 멀티미터를 통해 찾을 수 있습니다. 멀티미터의 Conductivity 모드는 전기회로가 서로 연결 되어있을 때 부저음을 출력합니다. PCB<sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup>에서 SPI Flash 칩의 GND 핀과 UART의 GND 핀은 연결되어 있습니다.</p>
 
 <p>따라서 SPI Flash 칩의 GND 핀 위치를 찾고 각 UART 핀과 한번씩 연결해보는 방식으로 부저음을 통해서 UART의 GND 핀을 찾을 수 있습니다.</p>
 
@@ -272,7 +269,7 @@
 
 <p><img src="/assets/2024-02-06-IoT-TechBlog/conductivity_mode.jpg" alt="conductivity mode" /></p>
 
-<p>멀티미터의 검은 리드선<sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>을 SPI Flash 칩의 GND 핀에 고정한 상태에서 빨간 리드선을 각 UART 핀에 한번씩 연결합니다.</p>
+<p>멀티미터의 검은 리드선<sup id="fnref:2"><a href="#fn:2" class="footnote" rel="footnote" role="doc-noteref">2</a></sup>을 SPI Flash 칩의 GND 핀에 고정한 상태에서 빨간 리드선을 각 UART 핀에 한번씩 연결합니다.</p>
 
 <p><strong>(2) Other Method</strong></p>
 
@@ -358,7 +355,7 @@
 
 <p>GND, TX, RX 핀을 모두 식별하였으니 UART 통신에 필요한 Baud Rate 개념을 알아야 합니다.</p>
 
-<p>Baud Rate는 1초에 전송할 수 있는 symbol<sup id="fnref:3" role="doc-noteref"><a href="#fn:3" class="footnote" rel="footnote">3</a></sup>의 수입니다. 따라서 IoT 기기와 UART Serial 통신을 하기 위해서는 각 기기마다 사용하는 Baud Rate에 맞춰 통신 속도를 설정해야 합니다.</p>
+<p>Baud Rate는 1초에 전송할 수 있는 symbol<sup id="fnref:3"><a href="#fn:3" class="footnote" rel="footnote" role="doc-noteref">3</a></sup>의 수입니다. 따라서 IoT 기기와 UART Serial 통신을 하기 위해서는 각 기기마다 사용하는 Baud Rate에 맞춰 통신 속도를 설정해야 합니다.</p>
 
 <p>아래는 UART에서 흔히 사용하는 Baud Rate 리스트입니다. <code class="language-plaintext highlighter-rouge">115200</code> 이하 값을 주로 사용합니다.</p>
 
@@ -509,7 +506,7 @@
 
 <p>일반적으로 MCU는 부팅 단계에서 SPI Flash 칩과 통신하여 펌웨어를 얻습니다. 우리는 동일한 방법을 통해서 SPI Flash 칩으로부터 펌웨어를 얻으려고 합니다. 따라서 SPI Flash 칩의 데이터 시트를 참고하여 SPI 통신에 필요한 정보를 수집해야 합니다.</p>
 
-<p>저희는 flashrom<sup id="fnref:4" role="doc-noteref"><a href="#fn:4" class="footnote" rel="footnote">4</a></sup> 프로그램을 사용할 것입니다. flashrom은 Flash 칩을 식별하여 reading, writing, verifying, erasing 등의 작업을 수행해주는 유틸리티 프로그램입니다. 476개 이상의 Flash 칩, 291개의 칩셋, 500개의 메인보드 등과 통신할 수 있습니다. 따라서 SPI Flash 칩의 데이터시트에 명시된 명령어들을 몰라도 flashrom 명령어를 통해 읽기, 쓰기 등의 작업을 수행할 수 있습니다.</p>
+<p>저희는 flashrom<sup id="fnref:4"><a href="#fn:4" class="footnote" rel="footnote" role="doc-noteref">4</a></sup> 프로그램을 사용할 것입니다. flashrom은 Flash 칩을 식별하여 reading, writing, verifying, erasing 등의 작업을 수행해주는 유틸리티 프로그램입니다. 476개 이상의 Flash 칩, 291개의 칩셋, 500개의 메인보드 등과 통신할 수 있습니다. 따라서 SPI Flash 칩의 데이터시트에 명시된 명령어들을 몰라도 flashrom 명령어를 통해 읽기, 쓰기 등의 작업을 수행할 수 있습니다.</p>
 
 <p>최신 버전의 flashrom을 라즈베리파이에 빌드하여 사용합니다.</p>
 
@@ -775,16 +772,16 @@ DECIMAL		HEXADECIMAL	  DESCRIPTION
 
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1" role="doc-endnote">
+    <li id="fn:1">
       <p>Printed Curcit Board, 인쇄회로조립체 <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:2" role="doc-endnote">
+    <li id="fn:2">
       <p>일반적으로 검은색 선은 (-), 빨간색 선은 (+)이다. 따라서 검은색 리드선을 GND에 연결한다. <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:3" role="doc-endnote">
+    <li id="fn:3">
       <p>symbol, 의미있는 데이터 묶음 <a href="#fnref:3" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:4" role="doc-endnote">
+    <li id="fn:4">
       <p><a href="https://github.com/flashrom/flashrom">flashrom 빌드 방법</a></p>
 
       <p>칩에 접근하는 모든 작업에 <code class="language-plaintext highlighter-rouge">-p</code> 또는 <code class="language-plaintext highlighter-rouge">--programmer</code> 옵션을 사용해야 한다.</p>
@@ -837,14 +834,13 @@ DECIMAL		HEXADECIMAL	  DESCRIPTION
         <div class="post-info">
             <span style="color: #545454" class="post-author-mobile">
                 이승용
-                <span style="color: #f5f5f5; margin: 2px">|</span>
             </span>
             Jan 26, 2026
-            <span style="color: #f5f5f5; margin: 2px">|</span>
-            <span>CTI</span>
+            <span class="post-category-badge">CTI</span>
         </div>
     </div>
-</div><div class="row">
+</div>
+<div class="row">
     <div class="col-sm-2 col-md-2">
         <div class="profile">
             <img src="/assets/stealien_inverse.png" class="profile_image" />
@@ -861,24 +857,20 @@ DECIMAL		HEXADECIMAL	  DESCRIPTION
         <div class="post-info">
             <span style="color: #545454" class="post-author-mobile">
                 김도환, 조준형
-                <span style="color: #f5f5f5; margin: 2px">|</span>
             </span>
             Apr 22, 2025
-            <span style="color: #f5f5f5; margin: 2px">|</span>
-            <span>R&D</span>
+            <span class="post-category-badge">R&D</span>
         </div>
     </div>
 </div>
+
         </div>
     </div>
 </div>
 		</div>
 	</section><footer>
-  <div class="container" style="display: flex; justify-content: space-between;">
-    <!-- <a href="#top">
-      <img src="/assets/white_logo.png" class="footer-logo" />
-    </a> -->
-    <div class="footer-copyright">Copyright &copy; Stealien Inc.</div>
+  <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="footer-copyright">&copy; 2026 Stealien Inc.</div>
     <div class="footer-icons">
       <a target="_blank" href="https://twitter.com/stealien"><img class="sns" src="/assets/icons/twitter_ic.png"/></a>
       <a target="_blank" href="https://blog.naver.com/stealien_official"><img class="sns" src="/assets/icons/blog_ic.png"/></a>
@@ -886,5 +878,6 @@ DECIMAL		HEXADECIMAL	  DESCRIPTION
       <a target="_blank" href="https://www.youtube.com/c/STEALIEN"><img class="sns" src="/assets/icons/youtube_ic.png"/></a>
     </div>
   </div>
-</footer></body>
+</footer>
+</body>
 </html>
