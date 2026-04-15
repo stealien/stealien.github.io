@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2026-04-15T10:28:36+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Tech</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">에픽 퓨리 작전으로 살펴보는 현대 사이버전의 양상 1부</title><link href="http://ufo.stealien.com/2026-04-14/Epic-Fury-Operations_part1" rel="alternate" type="text/html" title="에픽 퓨리 작전으로 살펴보는 현대 사이버전의 양상 1부" /><published>2026-04-14T00:00:00+09:00</published><updated>2026-04-14T00:00:00+09:00</updated><id>http://ufo.stealien.com/2026-04-14/Epic-Fury-Operations_part1</id><content type="html" xml:base="http://ufo.stealien.com/2026-04-14/Epic-Fury-Operations_part1"><![CDATA[<h2 id="감사의-말씀">감사의 말씀</h2>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2026-04-15T10:50:19+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Tech</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">에픽 퓨리 작전으로 살펴보는 현대 사이버전의 양상 1부</title><link href="http://ufo.stealien.com/2026-04-14/Operation-Epic-Fury-Part1" rel="alternate" type="text/html" title="에픽 퓨리 작전으로 살펴보는 현대 사이버전의 양상 1부" /><published>2026-04-14T00:00:00+09:00</published><updated>2026-04-14T00:00:00+09:00</updated><id>http://ufo.stealien.com/2026-04-14/Operation-Epic-Fury-Part1</id><content type="html" xml:base="http://ufo.stealien.com/2026-04-14/Operation-Epic-Fury-Part1"><![CDATA[<h2 id="감사의-말씀">감사의 말씀</h2>
 
 <p>본 글을 작성하는 데 많은 도움을 주신 스틸리언 컨설팅사업본부 레드팀의 홍재민님, 정다윗님, 김채원님, 마케팅팀의 김유민님, 김광연님께 진심으로 감사드립니다.</p>
 
@@ -85,7 +85,7 @@
 <p>즉, 오늘날의 정밀 타격은 단순히 무기의 정확도에 의해 좌우되지 않는다. 실제로 무기가 어디를 향해야 하는지는 사이버 공간에서 수집된 정보의 정확성에 큰 영향을 받는다.</p>
 
 <figure style="text-align: center;">
-  <img src="/assets/2026-04-14-Epic-Fury-Operations_part1/pattern_of_life_analysis_flow.png" alt="Pattern-of-Life 분석 흐름도" style="border: 1px solid #ddd; padding: 8px;" />
+  <img src="/assets/2026-04-14-Operation-Epic-Fury-Part1/pattern_of_life_analysis_flow.png" alt="Pattern-of-Life 분석 흐름도" style="border: 1px solid #ddd; padding: 8px;" />
   <figcaption style="margin-top: 8px; color: #666; font-style: italic;">이스라엘이 어떻게 pattern-of-life 분석을 수행했는지 나타낸 다이어그램</figcaption>
 </figure>
 
@@ -154,7 +154,7 @@
 <p>공습이 시작된 직후, 이란에서 널리 사용되는 예배 시간을 관리해주는 달력 앱인 BadeSaba가 해킹되어 사용자들에게 반정부 성격의 메시지가 전송된 것으로 Reuters와 WSJ로부터 보도되었다. 이어 약 1시간 후에는 이란 국영 통신사 IRNA 웹사이트가 변조되고, ISNA에서는 접속 장애가 발생했다.</p>
 
 <figure style="text-align: center;">
-  <img src="/assets/2026-04-14-Epic-Fury-Operations_part1/badesaba.jpeg" alt="Pattern-of-Life 분석 흐름도" style="border: 1px solid #ddd; padding: 8px;" />
+  <img src="/assets/2026-04-14-Operation-Epic-Fury-Part1/badesaba.jpeg" alt="Pattern-of-Life 분석 흐름도" style="border: 1px solid #ddd; padding: 8px;" />
   <figcaption style="margin-top: 8px; color: #666; font-style: italic;">
   공습 직후 BadeSaba 애플리케이션에서 확인된 메시지 화면<br />[ https://x.com/YossiBenYakar/status/2027646779718545651/photo/1 ]
 </figcaption>
@@ -191,7 +191,7 @@
 <p>디지털 플랫폼을 활용한 심리전은 과거에도 반복적으로 나타났다. 2016년 러시아의 미국 대선 개입에서는 소셜 미디어를 통해 허위 정보와 선전 메시지가 확산되며 여론 형성에 영향을 미쳤고, 2022년 우크라이나 침공 초기에는 정부 웹사이트 변조를 통해 공포와 혼란을 유도하려는 시도가 있었다.</p>
 
 <figure style="text-align: center;">
-  <img src="/assets/2026-04-14-Epic-Fury-Operations_part1/ukraine_gov_website_defacement_2022.webp" alt="Pattern-of-Life 분석 흐름도" style="border: 1px solid #ddd; padding: 8px;" />
+  <img src="/assets/2026-04-14-Operation-Epic-Fury-Part1/ukraine_gov_website_defacement_2022.webp" alt="Pattern-of-Life 분석 흐름도" style="border: 1px solid #ddd; padding: 8px;" />
   <figcaption style="margin-top: 8px; color: #666; font-style: italic;">
   2022년 1월 14일 금요일 약 70개 이상의 정부 웹사이트에 표시된 메시지<br />[ https://www.bbc.com/news/world-europe-59992531 ]
 </figcaption>
@@ -291,8 +291,8 @@
 
 <figure style="text-align: center;">
   <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
-    <img src="/assets/2026-04-14-Epic-Fury-Operations_part1/handala_lockheed_martin_telegram_post.png" alt="한달라 그룹 텔레그램 게시물" style="border: 1px solid #ddd; padding: 8px; max-width: 48%;" />
-    <img src="/assets/2026-04-14-Epic-Fury-Operations_part1/handala_lockheed_martin_data_leak.png" alt="한달라 그룹 데이터 유출 화면" style="border: 1px solid #ddd; padding: 8px; max-width: 48%;" />
+    <img src="/assets/2026-04-14-Operation-Epic-Fury-Part1/handala_lockheed_martin_telegram_post.png" alt="한달라 그룹 텔레그램 게시물" style="border: 1px solid #ddd; padding: 8px; max-width: 48%;" />
+    <img src="/assets/2026-04-14-Operation-Epic-Fury-Part1/handala_lockheed_martin_data_leak.png" alt="한달라 그룹 데이터 유출 화면" style="border: 1px solid #ddd; padding: 8px; max-width: 48%;" />
   </div>
   <figcaption style="margin-top: 8px; color: #666; font-style: italic;">한달라 그룹의 텔레그램 채널에 직접 접근해 확인한 결과</figcaption>
 </figure>
