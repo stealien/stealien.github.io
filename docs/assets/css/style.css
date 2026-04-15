@@ -569,22 +569,25 @@ footer {
     .page-title {
         font-size: 20px;
     }
-    .profile {
-        display: none;
-    }
     .profile_image_mobile {
         width: 15px;
         height: 15px;
         border-radius: 50%;
-    }
-    .post-author-mobile {
-        display: inline;
     }
     .post-thumbnail-mobile {
         display: block;
     }
     .recent-post-area {
         padding: 32px 16px 64px;
+    }
+}
+
+@media (max-width: 575px) {
+    .profile {
+        display: none;
+    }
+    .post-author-mobile {
+        display: inline;
     }
 }
 
@@ -645,6 +648,20 @@ div.posts.container,
 div.posts {
     max-width: 860px;
     width: 100%;
+}
+
+.category-tabs,
+div.posts {
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+@media (min-width: 769px) {
+    .category-tabs,
+    div.posts {
+        padding-left: 0;
+        padding-right: 0;
+    }
 }
 
 /* ===== Code Blocks ===== */
