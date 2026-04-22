@@ -292,7 +292,7 @@ lang: ko
 > <https://www.iranwatch.org/iranian-entities/natanz>
 
 - Wikipedia - Stuxnet
-> <https://en.wikipedia.org/wiki/Stuxnet
+> <https://en.wikipedia.org/wiki/Stuxnet>
 
 - New Book Claims President Obama Ordered Stuxnet Attack On Iran
 > <https://www.eweek.com/security/new-book-claims-president-obama-ordered-stuxnet-attack-on-iran>
