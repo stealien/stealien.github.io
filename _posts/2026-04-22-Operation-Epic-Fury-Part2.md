@@ -9,7 +9,7 @@ author: 이승용
 author_email: sylee@stealien.com
 background: /assets/bg.png
 profile_image: /assets/stealien_inverse.png
-summary: "보이지 않는 전선에서 벌어진 전쟁 해부"
+summary: "사이버전 진화의 출발점"
 thumbnail: /assets/stealien.png
 lang: ko
 ---
