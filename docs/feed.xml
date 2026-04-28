@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2026-04-28T16:15:15+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Tech</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">[Diffuto] CVE-2026-20840 Windows NTFS 힙 버퍼 오버플로우 취약점 분석</title><link href="http://ufo.stealien.com/2026-04-28/CVE-2026-20840-analysis-ko" rel="alternate" type="text/html" title="[Diffuto] CVE-2026-20840 Windows NTFS 힙 버퍼 오버플로우 취약점 분석" /><published>2026-04-28T09:00:00+09:00</published><updated>2026-04-28T09:00:00+09:00</updated><id>http://ufo.stealien.com/2026-04-28/CVE-2026-20840-analysis-ko</id><content type="html" xml:base="http://ufo.stealien.com/2026-04-28/CVE-2026-20840-analysis-ko"><![CDATA[<p><strong>본 글은 스틸리언 선제대응팀에서 진행 중인 Diffuto 프로젝트에서 산출된 분석 보고서입니다.</strong></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://ufo.stealien.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://ufo.stealien.com/" rel="alternate" type="text/html" /><updated>2026-04-28T17:27:15+09:00</updated><id>http://ufo.stealien.com/feed.xml</id><title type="html">STEALIEN Tech</title><subtitle>첨단기술을 간편하게 제공하는 기업, 스틸리언이 운영하는 기술블로그입니다.</subtitle><entry xml:lang="ko"><title type="html">CVE-2026-20840 Windows NTFS 힙 버퍼 오버플로우 취약점 분석</title><link href="http://ufo.stealien.com/2026-04-28/CVE-2026-20840-analysis-ko" rel="alternate" type="text/html" title="CVE-2026-20840 Windows NTFS 힙 버퍼 오버플로우 취약점 분석" /><published>2026-04-28T09:00:00+09:00</published><updated>2026-04-28T09:00:00+09:00</updated><id>http://ufo.stealien.com/2026-04-28/CVE-2026-20840-analysis-ko</id><content type="html" xml:base="http://ufo.stealien.com/2026-04-28/CVE-2026-20840-analysis-ko"><![CDATA[<p><strong>본 글은 스틸리언 선제대응팀에서 진행 중인 Diffuto 프로젝트에서 산출된 분석 보고서입니다.</strong></p>
 
 <p>2026년 1월, 모든 Windows 시스템에 기본 탑재되는 파일 시스템 드라이버인 ntfs.sys에서 취약점이 패치되었습니다. 이번에 분석한 CVE-2026-20840은 조작된 USB 드라이브나 VHD를 마운트하는 것만으로 시스템이 다운되거나 원격 코드 실행(RCE)으로 이어질 수 있는 취약점입니다.</p>
 
@@ -220,32 +220,32 @@ Microsoft는 보안 패치를 공개할 때 “무엇을 고쳤는지”만 알�
 
 <p><code class="language-plaintext highlighter-rouge">EntrySize</code>가 정상 범위(0x30 등)일 때와 취약한 값(0x18)일 때를 비교하면 경계 검사가 어떻게 무력화되는지 명확해집니다.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>정상: EntrySize = 0x30
-  NewEntrySize = 0x30 - 4 = 0x2C
-  r8 = 0x2C - 0x28 = 0x04
-  → 8 × LcnsToFollow &lt; 0x04? → LcnsToFollow &gt; 0이면 실패 → memmove 스킵
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">정상</span><span class="o">:</span> <span class="n">EntrySize</span> <span class="o">=</span> <span class="mh">0x30</span>
+  <span class="n">NewEntrySize</span> <span class="o">=</span> <span class="mh">0x30</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">=</span> <span class="mh">0x2C</span>
+  <span class="n">r8</span> <span class="o">=</span> <span class="mh">0x2C</span> <span class="o">-</span> <span class="mh">0x28</span> <span class="o">=</span> <span class="mh">0x04</span>
+  <span class="err">→</span> <span class="mi">8</span> <span class="err">×</span> <span class="n">LcnsToFollow</span> <span class="o">&lt;</span> <span class="mh">0x04</span><span class="o">?</span> <span class="err">→</span> <span class="n">LcnsToFollow</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="err">이면</span> <span class="err">실패</span> <span class="err">→</span> <span class="n">memmove</span> <span class="err">스킵</span>
 
-취약: EntrySize = 0x18
-  NewEntrySize = 0x18 - 4 = 0x14
-  r8 = 0x14 - 0x28 = 0xFFFFFFFFFFFFFFEC (unsigned 언더플로우)
-  → 8 × LcnsToFollow &lt; 0xFFFFFFFFFFFFFFEC? → 어떤 값이든 TRUE → memmove 실행
+<span class="err">취약</span><span class="o">:</span> <span class="n">EntrySize</span> <span class="o">=</span> <span class="mh">0x18</span>
+  <span class="n">NewEntrySize</span> <span class="o">=</span> <span class="mh">0x18</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">=</span> <span class="mh">0x14</span>
+  <span class="n">r8</span> <span class="o">=</span> <span class="mh">0x14</span> <span class="o">-</span> <span class="mh">0x28</span> <span class="o">=</span> <span class="mh">0xFFFFFFFFFFFFFFEC</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="err">언더플로우</span><span class="p">)</span>
+  <span class="err">→</span> <span class="mi">8</span> <span class="err">×</span> <span class="n">LcnsToFollow</span> <span class="o">&lt;</span> <span class="mh">0xFFFFFFFFFFFFFFEC</span><span class="o">?</span> <span class="err">→</span> <span class="err">어떤</span> <span class="err">값이든</span> <span class="n">TRUE</span> <span class="err">→</span> <span class="n">memmove</span> <span class="err">실행</span>
 </code></pre></div></div>
 
 <p>실제 어셈블리에서도 동일한 흐름을 확인할 수 있습니다.</p>
 
-<pre><code class="language-asm">; ntfs!InitializeRestartState+0x600
-lea     r8, [rax-28h]           ; r8 = NewEntrySize - 0x28
-                                 ; 0x14일 때 → 0xFFFFFFFFFFFFFFEC
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">;</span> <span class="n">ntfs</span><span class="o">!</span><span class="n">InitializeRestartState</span><span class="o">+</span><span class="mh">0x600</span>
+<span class="n">lea</span>     <span class="n">r8</span><span class="p">,</span> <span class="p">[</span><span class="n">rax</span><span class="o">-</span><span class="mi">28</span><span class="n">h</span><span class="p">]</span>           <span class="p">;</span> <span class="n">r8</span> <span class="o">=</span> <span class="n">NewEntrySize</span> <span class="o">-</span> <span class="mh">0x28</span>
+                                 <span class="p">;</span> <span class="mh">0x14</span><span class="err">일</span> <span class="err">때</span> <span class="err">→</span> <span class="mh">0xFFFFFFFFFFFFFFEC</span>
 
-movzx   ecx, word ptr [rsi+0Ch] ; ecx = LcnsToFollow (공격자 제어)
-shl     rcx, 3                   ; rcx = 8 * LcnsToFollow
+<span class="n">movzx</span>   <span class="n">ecx</span><span class="p">,</span> <span class="n">word</span> <span class="n">ptr</span> <span class="p">[</span><span class="n">rsi</span><span class="o">+</span><span class="mi">0</span><span class="n">Ch</span><span class="p">]</span> <span class="p">;</span> <span class="n">ecx</span> <span class="o">=</span> <span class="n">LcnsToFollow</span> <span class="p">(</span><span class="err">공격자</span> <span class="err">제어</span><span class="p">)</span>
+<span class="n">shl</span>     <span class="n">rcx</span><span class="p">,</span> <span class="mi">3</span>                   <span class="p">;</span> <span class="n">rcx</span> <span class="o">=</span> <span class="mi">8</span> <span class="o">*</span> <span class="n">LcnsToFollow</span>
 
-cmp     rcx, r8                  ; 0x320 &lt; 0xFFFFFFFFFFFFFFEC?
-jb      do_memmove               ; unsigned less-than → 항상 점프
+<span class="n">cmp</span>     <span class="n">rcx</span><span class="p">,</span> <span class="n">r8</span>                  <span class="p">;</span> <span class="mh">0x320</span> <span class="o">&lt;</span> <span class="mh">0xFFFFFFFFFFFFFFEC</span><span class="o">?</span>
+<span class="n">jb</span>      <span class="n">do_memmove</span>               <span class="p">;</span> <span class="kt">unsigned</span> <span class="n">less</span><span class="o">-</span><span class="n">than</span> <span class="err">→</span> <span class="err">항상</span> <span class="err">점프</span>
 
-do_memmove:
-    call    memmove              ; 힙 오버플로우 발생
-</code></pre>
+<span class="n">do_memmove</span><span class="o">:</span>
+    <span class="n">call</span>    <span class="n">memmove</span>              <span class="p">;</span> <span class="err">힙</span> <span class="err">오버플로우</span> <span class="err">발생</span>
+</code></pre></div></div>
 
 <h3 id="오버플로우-크기-계산">오버플로우 크기 계산</h3>
 
@@ -261,13 +261,13 @@ memmove 끝:   NewTable + 0x38 + 0x320 = NewTable + 0x358
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>           NewTable (0x298바이트 할당)
 ┌────────────────────────────────────────┐
-│ RESTART_TABLE_HEADER (0x18바이트)      │
+│ RESTART_TABLE_HEADER (0x18바이트)        │
 ├────────────────────────────────────────┤ ← NewEntry 시작
-│ Entry[0] (0x20바이트)                  │
+│ Entry[0] (0x20바이트)                    │
 ├────────────────────────────────────────┤ ← memmove dest 시작
 │ Entry[1]~Entry[0x13]                   │
 ├════════════════════════════════════════┤ ← 할당 경계 (0x298바이트)
-│ ██████ 0xC0바이트 오버플로우 █████████ │ ← 커널 힙 손상
+│ ██████ 0xC0바이트 오버플로우 █████████      │ ← 커널 힙 손상
 └────────────────────────────────────────┘ ← memmove 종료 (0x358바이트)
 </code></pre></div></div>
 
